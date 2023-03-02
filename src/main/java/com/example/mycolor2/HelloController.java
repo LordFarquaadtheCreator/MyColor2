@@ -1,14 +1,17 @@
 package com.example.mycolor2;
 
-import javafx.fxml.FXML;
+import javafx.application.Application;
+import javafx.event.EventHandler;
+import javafx.geometry.Insets;
+import javafx.scene.Node;
+import javafx.scene.Scene;
+import javafx.scene.canvas.Canvas;
 import javafx.scene.control.Label;
+import javafx.scene.layout.*;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
+import java.util.Optional;
 
-public class HelloController {
-    @FXML
-    private Label welcomeText;
-
-    @FXML
-    protected void onHelloButtonClick() {
-        welcomeText.setText("Welcome to JavaFX Application!");
-    }
+public class TestMyColor extends Application{
+    MyColor [] mycolors = MyColor.getMyColors();
 }
