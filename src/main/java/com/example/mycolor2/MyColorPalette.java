@@ -11,8 +11,8 @@ import java.util.Arrays;
 
 public class MyColorPalette {
 
-    MyColor colorPicked;
-    MyColor []colors = MyColor.getMyColors();
+    myColor colorPicked;
+    myColor[]colors = myColor.getMyColors();
     int sizeMyColor = colors.length;
     double widthTile, heightTile;
 
@@ -21,8 +21,8 @@ public class MyColorPalette {
         this.heightTile = this.widthTile;
     }
 
-    public void setColorsPicked(MyColor color){colorPicked = color;}
-    public MyColor getColorPicked(){return colorPicked;}
+    public void setColorsPicked(myColor color){colorPicked = color;}
+    public myColor getColorPicked(){return colorPicked;}
     public TilePane getPalette(){
         TilePane TP = new TilePane();
         TP.setPrefTileWidth(widthTile);
@@ -32,22 +32,22 @@ public class MyColorPalette {
         TP.setPadding(new Insets(1));
 
         for (int j = 0; j < sizeMyColor; j++){
-            MyColor color = colors[j];
+            myColor color = colors[j];
             String tileId = color.toString();
 
             Pane tileMyColor = new Pane();
             tileMyColor.setId(tileId);
-            tileMyColor.setBackground((new Background(new BackgroundFill(color.getJavaFxColor(), CornerRadii.EMPTY))));
+            tileMyColor.setBackground((new Background(new BackgroundFill(color.getJavaFXColor(), CornerRadii.EMPTY, Insets.EMPTY))));
 
             tileMyColor.setOnMouseClicked(e->{
-                MyColor colorClicked = colors[Arrays.asList(MyColor.getMyColorIds()).indexOf(tileId)];
+                myColor colorClicked = colors[Arrays.asList(myColor.getMyColorIds()).indexOf(tileId)];
                 setColorsPicked(colorClicked);
             });
 
             tileMyColor.setOnMouseClicked(new EventHandler<MouseEvent>(){
                 @Override
                 public void handle(MouseEvent mouseEvent){
-                    MyColor colorClicked = colors[Arrays.asList(MyColor.getMyColorIds()).indexOf(tileId)];
+                    myColor colorClicked = colors[Arrays.asList(myColor.getMyColorIds()).indexOf(tileId)];
                     setColorsPicked(colorClicked);
                 }
             });

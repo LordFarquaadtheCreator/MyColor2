@@ -1,7 +1,6 @@
 package com.example.mycolor2;
 
 import javafx.application.Application;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
@@ -14,17 +13,17 @@ import javafx.stage.Stage;
 import java.util.Optional;
 public class TestMyColor extends Application{
 
-    MyColor [] mycolors = MyColor.getMyColors();
-    int sizeMyColor = mycolors.length;
+    myColor[] myColors = myColor.getMyColors();
+    int sizeMyColor = myColors.length;
 
-    public Vbox addLeftVBox(doubele widthLeftCanvas, double heightCanvas, TilePane TP, MyColor color){
-        Vbox VB = new VBox();
+    public VBox addLeftVBox(double widthLeftCanvas, double heightCanvas, TilePane TP, myColor color){
+        VBox VB = new VBox();
         VB.setPrefWidth(widthLeftCanvas);
         VB.setPadding(new Insets(5));
 
         Label lblMyColorPalette = new Label("MyColor Pallete");
         lblMyColorPalette.setPrefWidth(widthLeftCanvas);
-        lblMyColorPalette.setTextFill(MyColor.WHITE.getJavaFXColor());
+        lblMyColorPalette.setTextFill(myColor.WHITE.getJavaFXColor());
         lblMyColorPalette.setBackground(new Background(new BackgroundFill(Optional.ofNullable(color).orElse(MyColor.WHITE))));
 
         VB.getChildren().addAll(lblMyColorPalette, TP);
@@ -32,18 +31,18 @@ public class TestMyColor extends Application{
         return VB;
     }
 
-    public Canvas addCenterCanvas(double widthCanvas, double heightCanvas, MyColor color){
-        MyColor colorPicked = Optional.ofNullable(color).orElse(MyColor.WHITE);
+    public Canvas addCenterCanvas(double widthCanvas, double heightCanvas, myColor color){
+        myColor colorPicked = Optional.ofNullable(color).orElse(myColor.WHITE);
         Canvas CV = new Canvas(widthCanvas, heightCanvas);
         GraphicsContext GC = CV.getGraphicsContext2D();
 
         GC.clearRect(0,0,widthCanvas, heightCanvas);
-        GC.setFill(colorPicked.getJavaFxColor());
+        GC.setFill(colorPicked.getJavaFXColor());
         GC.fillRect(0,0,widthCanvas,heightCanvas);
 
         double xText = 5.0; double yText = 20.0;
         GC.setStroke(colorPicked.invertColor());
-        GC.setFont(Font.font("Comic Sans", 13));
+        GC.setFont(Font.font("Comic Sans MS", 13));
         GC.strokeText(colorPicked.toString(), xText, yText);
 
         return CV;
@@ -64,7 +63,7 @@ public class TestMyColor extends Application{
         MyColorPalette CP = new MyColorPalette(widthLeftCanvas, heightCanvas);
         TilePane TP = CP.getPalette();
 
-        leftPane.getChildren().add(addLeftVBox(widthLeftCanvas, heightCanvas, TP, MyColor.BLACK));
+        leftPane.getChildren().add(addLeftVBox(widthLeftCanvas, heightCanvas, TP, myColor.BLACK));
         BP.setLeft(leftPane);
 
         centerPane.getChildren().add(addCenterCanvas(widthCenterCanvas, heightCanvas, null));
@@ -72,7 +71,7 @@ public class TestMyColor extends Application{
 
         TP.setOnMouseClicked(e->{
 
-            MyColor color = CP.getColorPicked();
+            myColor color = CP.getColorPicked();
             String tileID = color.toString();
             for(Node tile : TP.getChildren()){
                 if (tile.getId() == tileId) {
