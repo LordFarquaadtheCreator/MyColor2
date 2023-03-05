@@ -9,6 +9,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.*;
 import java.util.Arrays;
 
+//left box that contains the color palette that the user can click on
 public class MyColorPalette {
 
     myColor colorPicked;
