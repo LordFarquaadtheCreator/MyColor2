@@ -10,15 +10,15 @@ import javafx.scene.layout.*;
 import java.util.Arrays;
 
 //left box that contains the color palette that the user can click on
-public class MyColorPalette {
+public class myColorPalette {
 
     myColor colorPicked;
     myColor[]colors = myColor.getMyColors();
     int sizeMyColor = colors.length;
     double widthTile, heightTile;
 
-    public MyColorPalette(double widthPalette, double heightPalette){
-        this.widthTile = widthPalette / 12.0 - 1.0;
+    public myColorPalette(double widthPalette, double heightPalette){
+        this.widthTile = widthPalette / 12.0;
         this.heightTile = this.widthTile;
     }
 
