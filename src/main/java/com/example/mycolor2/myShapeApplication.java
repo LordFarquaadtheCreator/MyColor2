@@ -11,6 +11,7 @@ import javafx.scene.control.*;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -250,7 +251,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
 
                 for(Node tile : TP.getChildren()){
                     if(tile.getId() == tileId){
-                        myLine L = new myLine(p,g,color);
+                        myLine L = new myLine(p,q,color);
 
                         GC.clearRect(0,0,widthCenterCanvas,heightCenterCanvas);
                         L.draw(GC);

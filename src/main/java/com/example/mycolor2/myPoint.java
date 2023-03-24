@@ -22,7 +22,7 @@ public class myPoint {
     public void setPoint(double x, double y){
         this.x = x; this.y = y;
     }
-    public void setPoint(myPoint P){this.x = p.getX(); this.y=p.getY();}
+    public void setPoint(myPoint p){this.x = p.getX(); this.y=p.getY();}
     public void setColor(myColor color){this.color = color;}
 
     public double getX(){return x;}
