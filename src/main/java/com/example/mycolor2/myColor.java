@@ -88,13 +88,13 @@ public enum myColor {
     LIGHTSKYBLUE(135,206,250,255),
     LIGHTSTEELBLUE(176,196,222,255),
     LIGHTYELLOW(255,255,224,255),
-    LIIME(0,255,0,255),
+    LIME(0,255,0,255),
     LIMEGREEN(50,205,50,255),
     LINEN(250,240,230,255),
     MAGENTA(255,0,255,255),
     FUCHSIA(255,0,255,255),
     MAROON(128,9,0,255),
-    MEDIUMAQUAMARINE(102,205,170,250),
+    MEDIUMAQUAMARINE(102,205,170,255),
     MEDIUMBLUE(0,0,205,255),
     MEDIUMORCHIDD(186,85,211,255),
     MEDIUMPURPLE(147,112,219,255),
@@ -182,7 +182,7 @@ public enum myColor {
     public Color getJavaFXColor(){
         return Color.rgb(r,g,b,(double)(a)/255.0);
     }
-    public Color getJavaFXOpaqueColor(){return Color.rgb(r,g,b);}
+//    public Color getJavaFXOpaqueColor(){return Color.rgb(r,g,b);}
     public static myColor[] getMyColors(){return myColor.values();}
     public static String[] getMyColorIds(){
         myColor[] colors = getMyColors();

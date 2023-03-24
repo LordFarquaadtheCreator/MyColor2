@@ -4,18 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="done, but i need to change it up a bit yk to make it my own">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Arc.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Intersection.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Line.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Oval.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Polygon.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Rectangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Triangle.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="2/3 done">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColorPalette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColorPalette.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/TestMyColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,11 +55,6 @@
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;
   }
 }</component>
-  <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\java\com\example\mycolor2" />
-    </key>
-  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -75,14 +64,6 @@
       <option name="presentableId" value="Default" />
       <updated>1677703730750</updated>
     </task>
-    <task id="LOCAL-00001" summary="done, but i need to change it up a bit yk to make it my own">
-      <created>1677992195374</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1677992195374</updated>
-    </task>
-    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -95,9 +76,5 @@
         </entry>
       </map>
     </option>
-  </component>
-  <component name="VcsManagerConfiguration">
-    <MESSAGE value="done, but i need to change it up a bit yk to make it my own" />
-    <option name="LAST_COMMIT_MESSAGE" value="done, but i need to change it up a bit yk to make it my own" />
   </component>
 </project>
