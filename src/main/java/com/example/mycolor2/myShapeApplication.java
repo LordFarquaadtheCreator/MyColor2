@@ -315,7 +315,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
             return null;
         });
 
-        Optional<List<String>> Result - dialog.showAndWait();
+        Optional<List<String>> Result = dialog.showAndWait();
 
         Pane centerPane = new Pane();
 
@@ -327,7 +327,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
             double h = Double.parseDouble(geometricImageInputs.get(3))*heightCenterCanvas;
 
             TP.setOnMouseClicked(e-> {
-                myColor color = CP.getColorPicked());
+                myColor color = CP.getColorPicked();
                 String tileId = myColors.toString();
                 for (Node tile : TP.getChildren()) {
                     if (tile.getId() == tileId) {
