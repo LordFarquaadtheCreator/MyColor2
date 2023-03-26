@@ -54,7 +54,13 @@ public class myOval extends myShape{
 
 //    @Override
     public double perimeter(){return (Math.sqrt(2)*Math.PI*Math.sqrt(Math.pow(semiMajor,2)+Math.pow(semiMinor,2)));}
-//    @Override
+
+    @Override
+    public void draw(GraphicsContext gc) {
+
+    }
+
+    //    @Override
     public double area(){return Math.PI*semiMajor*semiMinor;}
 //    @Override
     public void stroke(GraphicsContext GC){

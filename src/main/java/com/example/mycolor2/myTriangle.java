@@ -90,7 +90,13 @@ public class myTriangle extends myShape{
     }
 //    @Override
     public double perimeter(){return 2.0*s;}
-//    @Override
+
+    @Override
+    public void draw(GraphicsContext gc) {
+
+    }
+
+    //    @Override
     public double area(){return Math.sqrt(s*(s-s1)*(s-s2)*(s-s3));}
     public myRectangle getMyBoundingRectangle(){
         double x1 = p1.getX(); double y1 = p1.getY();

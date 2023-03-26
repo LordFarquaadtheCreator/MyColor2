@@ -45,9 +45,9 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
 
             geometryImage.setOnMouseClicked(e->{
                 switch (nameImage){
-                    case "Arc":
-                        dialogArc(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes);
-                        break;
+//                    case "Arc":
+//                        dialogArc(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes);
+//                        break;
                     case "Line":
                         dialogLine(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes);
                         break;
@@ -111,93 +111,93 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
 
     // functions describing the dialog boxes for all of the shapes are described here
 
-    public void dialogArc(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes){
-        Dialog<List<String>> dialog = new Dialog<>();
-        dialog.setTitle("myOval");
-        dialog.setHeaderText(null);
-
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        GridPane gridDialog = new GridPane();
-        gridDialog.setHgap(10);
-        gridDialog.setVgap(10);
-        gridDialog.setPadding(new Insets(20,100,10,10));
-
-        TextField xCenter = new TextField();
-        TextField yCenter = new TextField();
-        TextField width = new TextField();
-        TextField height = new TextField();
-        TextField startingAngle = new TextField();
-        TextField extentAngle = new TextField();
-
-        gridDialog.add(new Label("Oval Center"),0,0);
-        gridDialog.add(xCenter,1,0);
-        gridDialog.add(new Label("x-cord as a fraction of canvas width"), 2,0);
-        gridDialog.add(yCenter, 1,1);
-        gridDialog.add(new Label("y-cord as a fraction of canvas width"), 2,1);
-        gridDialog.add(new Label("Oval Width"),0,2);
-        gridDialog.add(width,1,2);
-        gridDialog.add(new Label("Width as a fraction of canvas width"), 2,2);
-        gridDialog.add(new Label("Oval Height"),0,3);
-        gridDialog.add(height, 1,3);
-        gridDialog.add(new Label("Arc Starting Angle"),0,4);
-        gridDialog.add(startingAngle, 1,4);
-        gridDialog.add(new Label("In Degrees"), 2,4);
-        gridDialog.add(new Label("Arc (extent) angle"),0,5);
-        gridDialog.add(extentAngle,1,5);
-        gridDialog.add(new Label("In Degrees"), 2,5);
-
-        dialog.getDialogPane().setContent(gridDialog);
-        Platform.runLater(() -> xCenter.requestFocus());
-
-        List<String> geometryImageInputs = new ArrayList<>();
-        dialog.setResultConverter(dialogButton -> {
-            if(dialogButton == ButtonType.OK){
-                geometryImageInputs.add(xCenter.getText());
-                geometryImageInputs.add(yCenter.getText());
-                geometryImageInputs.add(width.getText());
-                geometryImageInputs.add(height.getText());
-                geometryImageInputs.add(startingAngle.getText());
-                geometryImageInputs.add(extentAngle.getText());
-                return geometryImageInputs;
-            }
-            return null;
-        });
-
-        Optional<List<String>> Result = dialog.showAndWait();
-        Pane centerPane = new Pane();
-
-        Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
-        GraphicsContext GC = CV.getGraphicsContext2D();
-        Result.ifPresent(event->{
-            myPoint pTLC = new myPoint(Double.parseDouble(geometryImageInputs.get(0)) * widthCenterCanvas, Double.parseDouble(geometryImageInputs.get(1)) * heightCenterCanvas, null);
-            double w = Double.parseDouble(geometryImageInputs.get(2))*widthCenterCanvas;
-            double h = Double.parseDouble(geometryImageInputs.get(3))*heightCenterCanvas;
-            double startAngle = Double.parseDouble(geometryImageInputs.get(4));
-            double arcAngle = Double.parseDouble(geometryImageInputs.get(5));
-
-            TP.setOnMouseClicked(e->{
-                myColor color = CP.getColorPicked();
-                String tileID = color.toString();
-                for(Node tile : TP.getChildren()) {
-                    if (tile.getId() == tileID) {
-                        myOval O = new myOval(pTLC, w, h, color);
-                        myArc A = new myArc(0, startingAngle, extentAngle, color);
-
-                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
-                        O.stroke(GC);
-                        A.draw(GC);
-                        A.getBoundingRectangle().stroke(GC);
-
-                        stackMyShapes.push(A);
-                        break;
-                    }
-                }
-            });
-            centerPane.getChildren().add(CV);
-            BP.setCenter(centerPane);
-        });
-    }
+//    public void dialogArc(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes){
+//        Dialog<List<String>> dialog = new Dialog<>();
+//        dialog.setTitle("myOval");
+//        dialog.setHeaderText(null);
+//
+//        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+//
+//        GridPane gridDialog = new GridPane();
+//        gridDialog.setHgap(10);
+//        gridDialog.setVgap(10);
+//        gridDialog.setPadding(new Insets(20,100,10,10));
+//
+//        TextField xCenter = new TextField();
+//        TextField yCenter = new TextField();
+//        TextField width = new TextField();
+//        TextField height = new TextField();
+//        TextField startingAngle = new TextField();
+//        TextField extentAngle = new TextField();
+//
+//        gridDialog.add(new Label("Oval Center"),0,0);
+//        gridDialog.add(xCenter,1,0);
+//        gridDialog.add(new Label("x-cord as a fraction of canvas width"), 2,0);
+//        gridDialog.add(yCenter, 1,1);
+//        gridDialog.add(new Label("y-cord as a fraction of canvas width"), 2,1);
+//        gridDialog.add(new Label("Oval Width"),0,2);
+//        gridDialog.add(width,1,2);
+//        gridDialog.add(new Label("Width as a fraction of canvas width"), 2,2);
+//        gridDialog.add(new Label("Oval Height"),0,3);
+//        gridDialog.add(height, 1,3);
+//        gridDialog.add(new Label("Arc Starting Angle"),0,4);
+//        gridDialog.add(startingAngle, 1,4);
+//        gridDialog.add(new Label("In Degrees"), 2,4);
+//        gridDialog.add(new Label("Arc (extent) angle"),0,5);
+//        gridDialog.add(extentAngle,1,5);
+//        gridDialog.add(new Label("In Degrees"), 2,5);
+//
+//        dialog.getDialogPane().setContent(gridDialog);
+//        Platform.runLater(() -> xCenter.requestFocus());
+//
+//        List<String> geometryImageInputs = new ArrayList<>();
+//        dialog.setResultConverter(dialogButton -> {
+//            if(dialogButton == ButtonType.OK){
+//                geometryImageInputs.add(xCenter.getText());
+//                geometryImageInputs.add(yCenter.getText());
+//                geometryImageInputs.add(width.getText());
+//                geometryImageInputs.add(height.getText());
+//                geometryImageInputs.add(startingAngle.getText());
+//                geometryImageInputs.add(extentAngle.getText());
+//                return geometryImageInputs;
+//            }
+//            return null;
+//        });
+//
+//        Optional<List<String>> Result = dialog.showAndWait();
+//        Pane centerPane = new Pane();
+//
+//        Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
+//        GraphicsContext GC = CV.getGraphicsContext2D();
+//        Result.ifPresent(event->{
+//            myPoint pTLC = new myPoint(Double.parseDouble(geometryImageInputs.get(0)) * widthCenterCanvas, Double.parseDouble(geometryImageInputs.get(1)) * heightCenterCanvas, null);
+//            double w = Double.parseDouble(geometryImageInputs.get(2))*widthCenterCanvas;
+//            double h = Double.parseDouble(geometryImageInputs.get(3))*heightCenterCanvas;
+//            double startAngle = Double.parseDouble(geometryImageInputs.get(4));
+//            double arcAngle = Double.parseDouble(geometryImageInputs.get(5));
+//
+//            TP.setOnMouseClicked(e->{
+//                myColor color = CP.getColorPicked();
+//                String tileID = color.toString();
+//                for(Node tile : TP.getChildren()) {
+//                    if (tile.getId() == tileID) {
+//                        myOval O = new myOval(pTLC, w, h, color);
+//                        myArc A = new myArc(0, startingAngle, extentAngle, color);
+//
+//                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
+//                        O.stroke(GC);
+//                        A.draw(GC);
+//                        A.getBoundingRectangle().stroke(GC);
+//
+//                        stackMyShapes.push(A);
+//                        break;
+//                    }
+//                }
+//            });
+//            centerPane.getChildren().add(CV);
+//            BP.setCenter(centerPane);
+//        });
+//    }
 
     public void dialogLine(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes){
         Dialog<List<String>> dialog = new Dialog<>();
@@ -286,7 +286,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         TextField height = new TextField();
 
         gridDialog.add(new Label("Center"), 0, 0);
-        gridDialog.add((xCenter,1,0));
+        gridDialog.add(xCenter,1,0);
         gridDialog.add(new Label("x-Coordiante as fraction of canvas width"), 2,0);
         gridDialog.add(yCenter,1,1);
         gridDialog.add(new Label("y-Coordinate as fraction of canvas width"), 2, 1);
@@ -298,7 +298,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         gridDialog.add(new Label("Width as fraction of canvas width"), 2,2);
         gridDialog.add(new Label("Height"), 0,3);
         gridDialog.add(height,1,3);
-        gridDialog.add((new Label("Height as fraction of canvas height"), 2, 3));
+        gridDialog.add(new Label("Height as fraction of canvas height"), 2, 3);
 
         dialog.getDialogPane().setContent(gridDialog);
 
@@ -474,7 +474,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
                     myRectangle R = new myRectangle(pTLC, w,h,color);
                     GC.clearRect(0,0,widthCenterCanvas,heightCenterCanvas);
                     R.draw(GC);
-                    R.getMyBoundingRectangle.stroke(GC);
+                    R.getMyBoundingRectangle().stroke(GC);
 
                     stackMyShapes.push(R);
                     break;
@@ -547,7 +547,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
 
                         GC.clearRect(0,0,widthCenterCanvas,heightCenterCanvas);
                         T.draw(GC);
-                        T.getMyBoundingRectangle.stroke(GC);
+                        T.getMyBoundingRectangle().stroke(GC);
 
                         stackMyShapes.push(T);
                         break;
@@ -594,7 +594,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
 
     }
 
-    public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, myshape s1, myshape s2, myColor color){
+    public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, myShape s1, myShape s2, myColor color){
         return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);
     }
 
@@ -626,7 +626,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         PS.setScene(SC);
 
         myPoint r = new myPoint(widthCenterCanvas, 0.5*heightCenterCanvas, null);
-        myPoint n - new myPoint(widthCenterCanvas, heightCenterCanvas, null);
+        myPoint n = new myPoint(widthCenterCanvas, heightCenterCanvas, null);
         myPoint v = new myPoint(0.5*widthCenterCanvas,heightCenterCanvas, null);
         myPoint h = new myPoint(0,widthCenterCanvas, null);
         myPoint u = new myPoint(0,0.5*heightCenterCanvas,null);
@@ -659,11 +659,11 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         System.out.println("\n"+T);
 
         double startAngle = 40;
-        doubel arcAngle = 210;
-        myArc A = new myArc(O,startAngle, arcAngle, GREY);
+        double arcAngle = 210;
+//        myArc A = new myArc(O,startAngle, arcAngle, GREY);
         System.out.println("\n"+A);
 
-        myShapesInterface [] shapes = new myShape[7];
+        myShapeInterface [] shapes = new myShape[7];
         shapes[0] = l1; shapes[1]=l2; shapes[2]=R; shapes[3]=O; shapes[4]=C; shapes[5]=T; shapes[6]=A;
 
         for(myShapeInterface shape : shapes){
@@ -675,7 +675,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         myOval OO = (myOval) shapes[3];
         myCircle CC = (myCircle) shapes[4];
         myTriangle TT = (myTriangle) shapes[5];
-        myArc AA = (myArc) shapes[6];
+//        myArc AA = (myArc) shapes[6];
 
         System.out.println("\n"+myShapeInterface.overlapMyShapes(TT,AA));
 

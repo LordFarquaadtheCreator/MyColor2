@@ -42,6 +42,12 @@ public class myRectangle extends myShape{
         GC.fillRect(pTLC.getX(),pTLC.getY(),width,height);
     }
     public myRectangle getMyBoundingRectangle(){return new myRectangle(pTLC,width,height,null);}
+
+    @Override
+    public boolean pointInMyShape(myPoint p) {
+        return false;
+    }
+
     public boolean containsMyPoint(myPoint p){
         double x = p.getX(); double y = p.getY();
         double xR = pTLC.getX(); double yR = pTLC.getY();
