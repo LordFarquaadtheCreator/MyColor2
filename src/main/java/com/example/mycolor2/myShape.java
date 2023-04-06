@@ -9,8 +9,6 @@ public abstract class myShape implements myShapeInterface {
     myPoint p;
     myColor color;
 
-
-
     myShape() {
         this.p = new myPoint();
         this.color = myColor.BLACK;
@@ -20,9 +18,7 @@ public abstract class myShape implements myShapeInterface {
         setColor(color);
     }
 
-
-    myShape(double x , double y, myColor color)
-    {
+    myShape(double x , double y, myColor color) {
         setPoint(p);
         this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
     }
@@ -36,13 +32,11 @@ public abstract class myShape implements myShapeInterface {
         this.color = color;
     }
 
-    public myPoint getPoint() {
-        return p;
-    }
+    public myPoint getPoint() {return p;}
 
-    //public MyColor getColor() {return color;}
-    //public double getX(){return p.getX();}
-    //public double getY(){return p.getY();}
+    public myColor getColor() {return color;}
+    public double getX(){return p.getX();}
+    public double getY(){return p.getY();}
     public abstract double area();
     public abstract double perimeter();
 
@@ -56,7 +50,7 @@ public abstract class myShape implements myShapeInterface {
     //public abstract boolean containsMyPoint(MyPoint p);
     //public abstract boolean similarObject(myShape S);
 
-    //@Override
+//    @Override
     public Canvas drawIntersectMyShapes(double widthCenterCanvas, double heightCenterCanvas, myShape s1, myShape s2, myColor color) {
         return myShapeInterface.super.drawIntersectMyShapes(s1, s2, widthCenterCanvas, heightCenterCanvas, color);
     }

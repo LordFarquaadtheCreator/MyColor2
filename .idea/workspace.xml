@@ -4,14 +4,19 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="some debugging">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="got the other functions but myArc is missing, gotta debug">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/musicMakeYouLoseControl.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Arc.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Line.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Polygon.png" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Triangle.png" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myTriangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myTriangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -59,6 +64,7 @@
 }</component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\resources" />
       <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\java\com\example\mycolor2" />
     </key>
   </component>
@@ -92,7 +98,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679761752033</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="got the other functions but myArc is missing, gotta debug">
+      <created>1679792338027</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1679792338027</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -110,6 +123,17 @@
     <MESSAGE value="done, but i need to change it up a bit yk to make it my own" />
     <MESSAGE value="missing some classes, gotta followup bout that" />
     <MESSAGE value="some debugging" />
-    <option name="LAST_COMMIT_MESSAGE" value="some debugging" />
+    <MESSAGE value="got the other functions but myArc is missing, gotta debug" />
+    <option name="LAST_COMMIT_MESSAGE" value="got the other functions but myArc is missing, gotta debug" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" type="java-exception">
+          <properties class="java.lang.IllegalArgumentException" package="java.lang" />
+          <option name="timeStamp" value="6" />
+        </breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
 </project>

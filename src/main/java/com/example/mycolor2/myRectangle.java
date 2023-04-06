@@ -10,33 +10,33 @@ public class myRectangle extends myShape{
     myColor color;
 
     myRectangle(myPoint p, double w, double h, myColor color){
-//        super(new myPoint(), null);
+        super(new myPoint(), null);
         this.pTLC = p; this.width = w; this.height = h;
         this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
     }
     myRectangle(myRectangle r, myColor color){
-//        super(new myPoint(),null);
+        super(new myPoint(),null);
         this.pTLC = r.getTLC(); this.width = r.getWidth(); this.height = r.getHeight();
         this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
     }
 
-//    @Override
+    @Override
     public void setColor(myColor color){this.color = color;}
     public myPoint getTLC(){return pTLC;}
     public double getWidth(){return width;}
     public double getHeight(){return height;}
     public myColor getColor(){return color;}
 //
-//    @Override
+    @Override
     public double perimeter(){return 2*(width+height);}
-//    @Override
+    @Override
     public double area(){return width*height;}
-//    @Override
+    @Override
     public void stroke(GraphicsContext GC){
         GC.setStroke(color.getJavaFXColor());
         GC.strokeRect(pTLC.getX(),pTLC.getY(),width,height);
     }
-//    @Override
+    @Override
     public void draw(GraphicsContext GC){
         GC.setFill(color.getJavaFXColor());
         GC.fillRect(pTLC.getX(),pTLC.getY(),width,height);

@@ -16,12 +16,11 @@ public class myPoint {
         this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
     }
     myPoint(myPoint p, myColor color){
-        setPoint(p); this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        setPoint(p);
+        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
     }
 
-    public void setPoint(double x, double y){
-        this.x = x; this.y = y;
-    }
+    public void setPoint(double x, double y){this.x = x; this.y = y;}
     public void setPoint(myPoint p){this.x = p.getX(); this.y=p.getY();}
     public void setColor(myColor color){this.color = color;}
 

@@ -13,11 +13,11 @@ public class myOval extends myShape{
     double eccentricity;
 
     myOval(myPoint center, double width, double height, myColor color){
-//        super(new myPoint(), null);
-        this.center = center; this.width = width; this.halfWidth = 0.5*this.width;
-        this.halfHeight = 0.5*this.halfHeight;
+        super(new myPoint(), null);
+        this.center = center; this.width = width; this.height = height;
+        this.halfWidth = 0.5*this.width; this.halfHeight = 0.5*this.height;
         semiMajor = Math.max(halfWidth,halfHeight);
-        semiMajor = Math.min(halfHeight, halfHeight);
+        semiMinor = Math.min(halfHeight, halfWidth);
 
         this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
         focus = Math.sqrt(Math.pow(semiMajor,2)-Math.pow(semiMinor,2));
@@ -25,7 +25,7 @@ public class myOval extends myShape{
     }
 
     myOval(myOval o, myColor color){
-//        super(new myPoint(),null);
+        super(new myPoint(),null);
         this.center = o.getCenter();
         this.width = o.getWidth();
         this.height = o.getHeight();
@@ -40,7 +40,7 @@ public class myOval extends myShape{
         eccentricity = o.getEccentricity();
     }
 
-//    @Override
+    @Override
     public void setColor(myColor color){this.color = color;}
     public myPoint getCenter(){return center;}
     public double getWidth(){return width;}
@@ -52,17 +52,18 @@ public class myOval extends myShape{
     public double getFocus(){return focus;}
     public double getEccentricity(){return eccentricity;}
 
-//    @Override
+    @Override
     public double perimeter(){return (Math.sqrt(2)*Math.PI*Math.sqrt(Math.pow(semiMajor,2)+Math.pow(semiMinor,2)));}
 
     @Override
     public void draw(GraphicsContext gc) {
-
+        gc.setFill(color.getJavaFXColor());
+        gc.fillOval(center.getX()-halfWidth,center.getY()-halfHeight,width,height);
     }
 
-    //    @Override
+    @Override
     public double area(){return Math.PI*semiMajor*semiMinor;}
-//    @Override
+    @Override
     public void stroke(GraphicsContext GC){
         GC.setStroke(color.getJavaFXColor());
         GC.fillOval(center.getX()-halfWidth, center.getY()-halfHeight,width,height);
@@ -92,10 +93,11 @@ public class myOval extends myShape{
         }
         else {return false;}
     }
-     @Override
+    @Override
     public String toString(){
         return "Oval Center (" + center.getX() + " , " + center.getY() + ")\n" +
                 "Major Axis " + semiMajor + " Minor Axis " + semiMinor + "\n"+
+                "Perimeter" + perimeter() + "\n" +
                 "Area " + area();
-     }
+        }
 }
