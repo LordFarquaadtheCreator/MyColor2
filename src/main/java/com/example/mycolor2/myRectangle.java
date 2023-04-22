@@ -36,18 +36,15 @@ public class myRectangle extends myShape{
         GC.setStroke(color.getJavaFXColor());
         GC.strokeRect(pTLC.getX(),pTLC.getY(),width,height);
     }
+
     @Override
     public void draw(GraphicsContext GC){
         GC.setFill(color.getJavaFXColor());
         GC.fillRect(pTLC.getX(),pTLC.getY(),width,height);
     }
+
     public myRectangle getMyBoundingRectangle(){return new myRectangle(pTLC,width,height,null);}
-
     @Override
-    public boolean pointInMyShape(myPoint p) {
-        return false;
-    }
-
     public boolean containsMyPoint(myPoint p){
         double x = p.getX(); double y = p.getY();
         double xR = pTLC.getX(); double yR = pTLC.getY();

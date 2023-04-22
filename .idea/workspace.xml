@@ -5,14 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="got the other functions but myArc is missing, gotta debug">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/musicMakeYouLoseControl.png" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Arc.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Line.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Polygon.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Triangle.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" afterDir="false" />
@@ -32,6 +26,19 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="0ff39af3-9e12-4f17-8252-95a2f5c3a9af" />
+        <option name="url" value="https://github.com/LordFarquaadtheCreator/MyColor2.git" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />

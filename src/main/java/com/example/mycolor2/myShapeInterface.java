@@ -9,10 +9,8 @@ import java.util.List;
 public interface myShapeInterface {
 
     myRectangle getMyBoundingRectangle();
-    boolean pointInMyShape(myPoint p);
-
-     boolean containsMyPoint(myPoint p);
-     boolean similarObject(myShape S);
+    boolean containsMyPoint(myPoint p);
+    boolean similarObject(myShape S);
 
     static boolean similarObject(myShape S1, myShape S2) {
         String sClassS1 = S1.getClass().toString();

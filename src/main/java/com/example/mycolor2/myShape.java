@@ -33,13 +33,12 @@ public abstract class myShape implements myShapeInterface {
     }
 
     public myPoint getPoint() {return p;}
-
     public myColor getColor() {return color;}
     public double getX(){return p.getX();}
     public double getY(){return p.getY();}
+
     public abstract double area();
     public abstract double perimeter();
-
     public abstract void draw(GraphicsContext gc);
     public abstract void stroke(GraphicsContext GC);
 
@@ -58,11 +57,6 @@ public abstract class myShape implements myShapeInterface {
     @Override
     public myRectangle getMyBoundingRectangle() {
         return null;
-    }
-
-    @Override
-    public boolean pointInMyShape(myPoint p) {
-        return false;
     }
 
     @Override

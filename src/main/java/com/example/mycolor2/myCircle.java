@@ -27,7 +27,7 @@ public class myCircle extends myOval{
     @Override
     public String toString(){
         return "Circle Center (" +center.getX() + ", " + center.getY() + ")\n"+
-                "Radius: " + radius + "\nPermieter: " + perimeter() +"\nArea: " +
+                "Radius: " + radius + "\nPerimeter: " + perimeter() +"\nArea: " +
                 area();
     }
 }

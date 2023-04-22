@@ -23,7 +23,7 @@ import java.io.LineNumberInputStream;
 import java.util.*;
 
 public class myShapeApplication extends Application{ // formerly "testMyColor"
-    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP) throws FileNotFoundException {
+    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
         HBox HB = new HBox();
         HB.setPrefWidth(widthTopCanvas);
         HB.setPrefHeight(heightTopCanvas);
@@ -42,14 +42,14 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
             //draw a geometric shape on mouse click: lambda expression
             geometricImage.setOnMouseClicked(e -> {
                 switch (nameImage){
-                    case "Oval":  //MyOval object
-                        dialogOval(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes);
+                    case "Oval":
+                        dialogOval(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
                         break;
-                    case "Rectangle": //Myrectangle object
-                        dialogRectangle(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes);
+                    case "Rectangle":
+                        dialogRectangle(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
                         break;
-                    case "Intersection": //Intersection of 2 myshape objects
-                        dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes);
+                    case "Intersection":
+                        dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
                 }
             });
             HB.getChildren().add(geometricImage);
@@ -80,7 +80,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);
     }
 
-    public void dialogOval(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShape){
+    public void dialogOval(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShape, Pane centerPane){
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("MyOval");
         dialog.setHeaderText(null);
@@ -125,9 +125,6 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         });
 
         Optional<List<String>> Result = dialog.showAndWait();
-
-        Pane centerPane = new Pane();
-
         Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
         GraphicsContext GC = CV.getGraphicsContext2D();
         Result.ifPresent(event -> {
@@ -156,7 +153,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         });
     }
 
-    public void dialogRectangle(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes){
+    public void dialogRectangle(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes, Pane centerPane){
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("myRectangle");
         dialog.setHeaderText(null);
@@ -198,8 +195,6 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
 
         Optional<List<String>> Result = dialog.showAndWait();
 
-        Pane centerPane = new Pane();
-
         Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
         GraphicsContext GC = CV.getGraphicsContext2D();
         Result.ifPresent(event ->{
@@ -228,7 +223,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         });
     }
 
-    public void dialogIntersection(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes){
+    public void dialogIntersection(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes, Pane centerPane){
         Dialog dialog = new Dialog<>();
         dialog.setTitle("Intersection of 2 myShape Objects");
         dialog.setHeaderText(null);
@@ -240,7 +235,7 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         gridDialog.setVgap(10);
         gridDialog.setPadding(new Insets(20,100,10,10));
 
-        gridDialog.add(new Label("Draw the intersection of the last two myShape objects"),0,0);
+        gridDialog.add(new Label("Click OK and chose a color for the intersection of the last two shapes (only works once)"),1,0);
 
         dialog.getDialogPane().setContent(gridDialog);
         dialog.showAndWait().ifPresent(response ->{
@@ -250,8 +245,6 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
                     String tileId = color.toString();
                     for(Node tile : TP.getChildren()) {
                         if (tile.getId() == tileId) {
-                            Pane centerPane = new Pane();
-
                             myShape s1 = stackMyShapes.pop();
                             myShape s2 = stackMyShapes.pop();
                             centerPane.getChildren().add(addCenterCanvas(widthCenterCanvas, heightCenterCanvas, s1, s2, color));
@@ -286,18 +279,16 @@ public class myShapeApplication extends Application{ // formerly "testMyColor"
         PS.getIcons().add(icon);
 
         Scene SC = new Scene(BP, widthCanvas, heightCanvas, myColor.WHITE.getJavaFXColor());
-        Deque<myShape> stackMyShapes;
         PS.setTitle("MyShape!");
         PS.setScene(SC);
 
-        topPane.getChildren().add(addTopHBox(widthCanvas, heightTopCanvas, widthCenterCanvas, heightCenterCanvas, BP, CP, TP));
+        topPane.getChildren().add(addTopHBox(widthCanvas, heightTopCanvas, widthCenterCanvas, heightCenterCanvas, BP, CP, TP, centerPane));
         BP.setTop(topPane);
 
         leftPane.getChildren().add(addLeftVBox(widthLeftCanvas, heightCenterCanvas, TP, myColor.ORANGE));
         BP.setLeft(leftPane);
         PS.setResizable(false);
         PS.show();
-
     }
 
     public static void main(String[] args) {launch(args);}
