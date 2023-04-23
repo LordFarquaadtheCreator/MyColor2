@@ -35,7 +35,7 @@ public class MyShapeApplication extends Application{ // formerly "testMyColor"
         HB.setPrefHeight(heightTopCanvas);
         HB.setStyle("-fx-background-color: #B2A4FF;");
 
-        String [] nameImages = new String [] {"Oval", "Rectangle", "Intersection"};
+        String [] nameImages = new String [] {"Oval", "Rectangle", "Intersection", "pieChart"};
         String pathFile = "src/main/java/com/example/mycolor2/";
         Deque<MyShape> stackMyShapes = new ArrayDeque<>();
         HB.setSpacing(50);
@@ -56,6 +56,8 @@ public class MyShapeApplication extends Application{ // formerly "testMyColor"
                         break;
                     case "Intersection":
                         dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
+                    case "pieChart":
+                        dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP, CP, TP, stackMyShapes);
                 }
             });
             HB.getChildren().add(geometricImage);
@@ -86,7 +88,7 @@ public class MyShapeApplication extends Application{ // formerly "testMyColor"
         return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);
     }
 
-    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP, MyColorPalette CP, TilePane TP){
+    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShape){
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("Pie Chart");
         dialog.setHeaderText(null);
