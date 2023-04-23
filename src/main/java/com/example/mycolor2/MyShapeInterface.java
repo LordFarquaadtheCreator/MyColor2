@@ -6,30 +6,30 @@ import javafx.scene.canvas.GraphicsContext;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface myShapeInterface {
+public interface MyShapeInterface {
 
-    myRectangle getMyBoundingRectangle();
-    boolean containsMyPoint(myPoint p);
-    boolean similarObject(myShape S);
+    MyRectangle getMyBoundingRectangle();
+    boolean containsMyPoint(MyPoint p);
+    boolean similarObject(MyShape S);
 
-    static boolean similarObject(myShape S1, myShape S2) {
+    static boolean similarObject(MyShape S1, MyShape S2) {
         String sClassS1 = S1.getClass().toString();
         String sClassS2 = S2.getClass().toString();
         if (sClassS1.equals(sClassS2)) {
             switch (sClassS1) {
 
                 case "class MyRectangle":
-                    myRectangle R1 = (myRectangle) S1;
-                    myRectangle R2 = (myRectangle) S2;
+                    MyRectangle R1 = (MyRectangle) S1;
+                    MyRectangle R2 = (MyRectangle) S2;
                     return R1.getWidth() == R2.getWidth() && R1.getHeight() == R2.getHeight();
 
                 case "class MyOval":
-                    myOval O1 = (myOval) S1;
-                    myOval O2 = (myOval) S2;
+                    MyOval O1 = (MyOval) S1;
+                    MyOval O2 = (MyOval) S2;
                     return O1.getSemiMajor() == O2.getSemiMajor() && O1.getSemiMinor() == O2.getSemiMinor();
                 case "class MyCircle":
-                    myCircle C1 = (myCircle) S1;
-                    myCircle C2 = (myCircle) S2;
+                    MyCircle C1 = (MyCircle) S1;
+                    MyCircle C2 = (MyCircle) S2;
                     return C1.getRadius() == C2.getRadius();
 
                 default:
@@ -40,10 +40,10 @@ public interface myShapeInterface {
         }
     }
 
-    static List<myPoint> intersectMyShapes(myShape s1, myShape s2) {
-        myRectangle r1 = s1.getMyBoundingRectangle();
-        myRectangle r2 = s2.getMyBoundingRectangle();
-        myRectangle r = overlapMyShapes(r1,r2);
+    static List<MyPoint> intersectMyShapes(MyShape s1, MyShape s2) {
+        MyRectangle r1 = s1.getMyBoundingRectangle();
+        MyRectangle r2 = s2.getMyBoundingRectangle();
+        MyRectangle r = overlapMyShapes(r1,r2);
 
         if(r!=null) {
 
@@ -52,12 +52,12 @@ public interface myShapeInterface {
             double w = r.getWidth();
             double h = r.getHeight();
 
-            List<myPoint> intersect = new ArrayList<>();
+            List<MyPoint> intersect = new ArrayList<>();
 
             for (double i = 0; i <= w; i++) {
                 double xi = x + i;
                 for (double j = 0; j <= h; j++) {
-                    myPoint p = new myPoint(xi, y + j, null);
+                    MyPoint p = new MyPoint(xi, y + j, null);
                     if (s1.containsMyPoint(p) && s2.containsMyPoint(p)) {
                         intersect.add(p);
                     }
@@ -68,28 +68,28 @@ public interface myShapeInterface {
         else{return null;}
     }
 
-    static myRectangle overlapMyShapes(myShape s1,myShape s2) {
-        myRectangle r1 = s1.getMyBoundingRectangle();
-        myRectangle r2 = s2.getMyBoundingRectangle();
+    static MyRectangle overlapMyShapes(MyShape s1, MyShape s2) {
+        MyRectangle r1 = s1.getMyBoundingRectangle();
+        MyRectangle r2 = s2.getMyBoundingRectangle();
         return intersectMyRectangles(r1,r2);
     }
 
-    default Canvas drawIntersectMyShapes(myShape s1, myShape s2, double w, double h, myColor color) {
-        List<myPoint> intersect = intersectMyShapes(s1,s2);
+    default Canvas drawIntersectMyShapes(MyShape s1, MyShape s2, double w, double h, MyColor color) {
+        List<MyPoint> intersect = intersectMyShapes(s1,s2);
         Canvas overlayCV = new Canvas(w,h);
         GraphicsContext overlayGC = overlayCV.getGraphicsContext2D();
 
         s1.draw(overlayGC);
         s2.draw(overlayGC);
 
-        myRectangle r = overlapMyShapes(s1,s2);
-        myColor colorR = myColor.AQUA;
+        MyRectangle r = overlapMyShapes(s1,s2);
+        MyColor colorR = MyColor.AQUA;
         r.setColor(colorR);
 
         if(intersect !=null)
         {
             System.out.println("intersect");
-            for(myPoint p : intersect)
+            for(MyPoint p : intersect)
             {
                 p.setColor(color);
                 p.draw(overlayGC);
@@ -99,7 +99,7 @@ public interface myShapeInterface {
         return  overlayCV;
     }
 
-    static myRectangle intersectMyRectangles(myRectangle R1, myRectangle R2) {
+    static MyRectangle intersectMyRectangles(MyRectangle R1, MyRectangle R2) {
         double x1 = R1.getTLC().getX();
         double y1 = R1.getTLC().getY();
         double w1 = R1.getWidth();
@@ -119,7 +119,7 @@ public interface myShapeInterface {
         double xMin = Math.min(x1+w1,x2+w2);
         double yMin = Math.min(y1 +h1,y2 + h2);
 
-        myPoint p = new myPoint(xMax,yMax, null);
-        return new myRectangle(p,Math.abs(xMax - xMin), Math.abs(yMax - yMin), null);
+        MyPoint p = new MyPoint(xMax,yMax, null);
+        return new MyRectangle(p,Math.abs(xMax - xMin), Math.abs(yMax - yMin), null);
     }
 }

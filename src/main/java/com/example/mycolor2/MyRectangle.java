@@ -4,28 +4,28 @@ import javafx.scene.canvas.GraphicsContext;
 
 import java.util.Optional;
 
-public class myRectangle extends myShape{
-    myPoint pTLC;
+public class MyRectangle extends MyShape {
+    MyPoint pTLC;
     double width, height;
-    myColor color;
+    MyColor color;
 
-    myRectangle(myPoint p, double w, double h, myColor color){
-        super(new myPoint(), null);
+    MyRectangle(MyPoint p, double w, double h, MyColor color){
+        super(new MyPoint(), null);
         this.pTLC = p; this.width = w; this.height = h;
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
     }
-    myRectangle(myRectangle r, myColor color){
-        super(new myPoint(),null);
+    MyRectangle(MyRectangle r, MyColor color){
+        super(new MyPoint(),null);
         this.pTLC = r.getTLC(); this.width = r.getWidth(); this.height = r.getHeight();
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
     }
 
     @Override
-    public void setColor(myColor color){this.color = color;}
-    public myPoint getTLC(){return pTLC;}
+    public void setColor(MyColor color){this.color = color;}
+    public MyPoint getTLC(){return pTLC;}
     public double getWidth(){return width;}
     public double getHeight(){return height;}
-    public myColor getColor(){return color;}
+    public MyColor getColor(){return color;}
 //
     @Override
     public double perimeter(){return 2*(width+height);}
@@ -43,16 +43,16 @@ public class myRectangle extends myShape{
         GC.fillRect(pTLC.getX(),pTLC.getY(),width,height);
     }
 
-    public myRectangle getMyBoundingRectangle(){return new myRectangle(pTLC,width,height,null);}
+    public MyRectangle getMyBoundingRectangle(){return new MyRectangle(pTLC,width,height,null);}
     @Override
-    public boolean containsMyPoint(myPoint p){
+    public boolean containsMyPoint(MyPoint p){
         double x = p.getX(); double y = p.getY();
         double xR = pTLC.getX(); double yR = pTLC.getY();
         return (xR <= x && x <= xR+width) && (yR <= y && y <= yR+height);
     }
-    public boolean similarObject(myShape S){
-        if(S.getClass().toString().equals("class myRectangle")){
-            myRectangle r = (myRectangle) S;
+    public boolean similarObject(MyShape S){
+        if(S.getClass().toString().equals("class MyRectangle")){
+            MyRectangle r = (MyRectangle) S;
             return (width == r.getWidth() && height == r.getHeight());
         }
         else{return false;}

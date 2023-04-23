@@ -2,30 +2,30 @@ package com.example.mycolor2;
 import javafx.scene.canvas.GraphicsContext;
 import java.util.Optional;
 
-public class myOval extends myShape{
-    myPoint center;
+public class MyOval extends MyShape {
+    MyPoint center;
     double width, height;
     double halfWidth, halfHeight;
     double semiMajor, semiMinor;
-    myColor color;
+    MyColor color;
 
     double focus;
     double eccentricity;
 
-    myOval(myPoint center, double width, double height, myColor color){
-        super(new myPoint(), null);
+    MyOval(MyPoint center, double width, double height, MyColor color){
+        super(new MyPoint(), null);
         this.center = center; this.width = width; this.height = height;
         this.halfWidth = 0.5*this.width; this.halfHeight = 0.5*this.height;
         semiMajor = Math.max(halfWidth,halfHeight);
         semiMinor = Math.min(halfHeight, halfWidth);
 
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
         focus = Math.sqrt(Math.pow(semiMajor,2)-Math.pow(semiMinor,2));
         eccentricity = focus/semiMajor;
     }
 
-    myOval(myOval o, myColor color){
-        super(new myPoint(),null);
+    MyOval(MyOval o, MyColor color){
+        super(new MyPoint(),null);
         this.center = o.getCenter();
         this.width = o.getWidth();
         this.height = o.getHeight();
@@ -34,21 +34,21 @@ public class myOval extends myShape{
         semiMajor = Math.max(halfWidth, halfHeight);
         semiMinor = Math.min(halfWidth, halfHeight);
 
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
 
         focus = o.getFocus();
         eccentricity = o.getEccentricity();
     }
 
     @Override
-    public void setColor(myColor color){this.color = color;}
-    public myPoint getCenter(){return center;}
+    public void setColor(MyColor color){this.color = color;}
+    public MyPoint getCenter(){return center;}
     public double getWidth(){return width;}
     public double getHeight(){return height;}
     public double getSemiMajor(){return semiMajor;}
     public double getSemiMinor(){return semiMinor;}
 //    @Override
-    public myColor getColor(){return color;}
+    public MyColor getColor(){return color;}
     public double getFocus(){return focus;}
     public double getEccentricity(){return eccentricity;}
 
@@ -69,13 +69,13 @@ public class myOval extends myShape{
         GC.fillOval(center.getX()-halfWidth, center.getY()-halfHeight,width,height);
     }
 
-    public myRectangle getMyBoundingRectangle(){
+    public MyRectangle getMyBoundingRectangle(){
         double x = center.getX()-halfWidth;
         double y = center.getY()-halfHeight;
-        myPoint pLTC = new myPoint(x,y,null);
-        return new myRectangle(pLTC,width,height,null);
+        MyPoint pLTC = new MyPoint(x,y,null);
+        return new MyRectangle(pLTC,width,height,null);
     }
-    public boolean containsMyPoint(myPoint p){
+    public boolean containsMyPoint(MyPoint p){
         if(halfWidth==halfHeight){
             return p.distance(center) <= halfWidth;
         }
@@ -86,9 +86,9 @@ public class myOval extends myShape{
             return dx*dx+dy*dy<=hxh*hxh;
         }
     }
-    public boolean similarObject(myShape s){
-        if(s.getClass().toString().equals("class myOval")){
-            myOval o = (myOval) s;
+    public boolean similarObject(MyShape s){
+        if(s.getClass().toString().equals("class MyOval")){
+            MyOval o = (MyOval) s;
             return semiMajor == o.getSemiMajor() && semiMinor == o.getSemiMinor();
         }
         else {return false;}

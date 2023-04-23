@@ -8,7 +8,7 @@ look if we need the functions that aren't used and DELETE them or comment away
 */
 
 //the whole file is an enum
-public enum myColor {
+public enum MyColor {
     //enums seperated by COMMAS not semicolons
     WHITE(255,255,255,255),
     ALICEBLUE(240,248,255,255),
@@ -150,7 +150,7 @@ public enum myColor {
 
     private int r,g,b,a,argb; // ints that store rgba values
 
-    myColor(int r, int g, int b, int a){ //constructors that set rgba values
+    MyColor(int r, int g, int b, int a){ //constructors that set rgba values
         setR(r);
         setG(g);
         setB(b);
@@ -183,21 +183,21 @@ public enum myColor {
         return Color.rgb(r,g,b,(double)(a)/255.0);
     }
 //    public Color getJavaFXOpaqueColor(){return Color.rgb(r,g,b);}
-    public static myColor[] getMyColors(){return myColor.values();}
+    public static MyColor[] getMyColors(){return MyColor.values();}
     public static String[] getMyColorIds(){
-        myColor[] colors = getMyColors();
+        MyColor[] colors = getMyColors();
         String[] myColorsID = new String[colors.length];
         int i = 0;
-        for(myColor color : colors){
+        for(MyColor color : colors){
             myColorsID[i] = color.toString();
             ++i;
         }
         return myColorsID;
     }
 
-    public static myColor getRandomColor(){
+    public static MyColor getRandomColor(){
         Random rand = new Random();
-        return myColor.values()[rand.nextInt(myColor.values().length - 1)];
+        return MyColor.values()[rand.nextInt(MyColor.values().length - 1)];
     }
     public Color getRandomOpaqueColor(){
         Random rand = new Random();
@@ -207,7 +207,7 @@ public enum myColor {
         return Color.rgb(255-r,255-g,255-b,(double)(a)/255.0);
     }
 
-    public Color blendColors(myColor otherColor, double scale) {
+    public Color blendColors(MyColor otherColor, double scale) {
         int rBlend, gBlend, bBlend;
         double aBlend;
 

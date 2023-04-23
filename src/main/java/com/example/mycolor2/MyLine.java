@@ -1,33 +1,32 @@
 package com.example.mycolor2;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Rectangle;
 
 import java.util.Optional;
 
-public class myLine extends myShape{
-    myPoint p1,p2;
-    myPoint[] pLine = new myPoint[2];
-    myColor color;
+public class MyLine extends MyShape {
+    MyPoint p1,p2;
+    MyPoint[] pLine = new MyPoint[2];
+    MyColor color;
 
-    myLine(myPoint p1, myPoint p2, myColor color){
-//        super(new myPoint(), null);
+    MyLine(MyPoint p1, MyPoint p2, MyColor color){
+//        super(new MyPoint(), null);
         this.p1 = p1; this.p2 = p2;
         pLine[0] = p1; pLine[1] =p2;
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
     }
-    myLine(myLine l, myColor color){
-//        super(new myPoint(), null);
+    MyLine(MyLine l, MyColor color){
+//        super(new MyPoint(), null);
         this.p1 = (l.getLine())[0]; this.p2 = (l.getLine())[1];
         pLine[0] = p1; pLine[1] = p2;
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
     }
 
 //    @Override
-    public void setColor(myColor color){this.color = color;}
-    public myPoint[] getLine(){return pLine;}
+    public void setColor(MyColor color){this.color = color;}
+    public MyPoint[] getLine(){return pLine;}
 //    @Override
-    public myColor getColor(){return color;}
+    public MyColor getColor(){return color;}
     public double angleX(){return p1.angleX(p2);}
     public double length(){return p1.distance(p2);}
 //    @Override
@@ -44,16 +43,16 @@ public class myLine extends myShape{
         GC.setStroke(color.getJavaFXColor());
         GC.strokeLine(p1.getX(),p1.getY(),p2.getX(),p2.getY());
     }
-    public myRectangle getMyBoundingRectangle(){
+    public MyRectangle getMyBoundingRectangle(){
         double x1 = p1.getX(); double y1 = p1.getY();
         double x2 = p2.getX(); double y2 = p2.getY();
-        myPoint pTLC = new myPoint(Math.min(x1,x2), Math.min(y1,y2),null);
-        return new myRectangle(pTLC, Math.abs(x1-x2), Math.abs(y1-y2), null);
+        MyPoint pTLC = new MyPoint(Math.min(x1,x2), Math.min(y1,y2),null);
+        return new MyRectangle(pTLC, Math.abs(x1-x2), Math.abs(y1-y2), null);
     }
-    public boolean containsMyPoint(myPoint p){return (p1.distance(p)+p2.distance(p) == length());}
-    public boolean similarObject(myShape s){
-        if(s.getClass().toString().equals("class myLine")){
-            myLine l = (myLine) s;
+    public boolean containsMyPoint(MyPoint p){return (p1.distance(p)+p2.distance(p) == length());}
+    public boolean similarObject(MyShape s){
+        if(s.getClass().toString().equals("class MyLine")){
+            MyLine l = (MyLine) s;
             return (this.length() == l.length());
         }
         else {return false;}

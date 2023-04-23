@@ -2,24 +2,24 @@ package com.example.mycolor2;
 
 import java.util.Optional;
 
-public class myCircle extends myOval{
-    myPoint center; double radius; myColor color;
-    myCircle(myPoint p, double r, myColor color){
+public class MyCircle extends MyOval {
+    MyPoint center; double radius; MyColor color;
+    MyCircle(MyPoint p, double r, MyColor color){
         super(p,2.0*r,2.0*r,color);
         this.center = p; this.radius = r;
-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
+        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
     }
 
     @Override
-    public void setColor(myColor color){this.color = color;}
-    public myPoint getCenter(){return center;}
+    public void setColor(MyColor color){this.color = color;}
+    public MyPoint getCenter(){return center;}
     public double getRadius(){return radius;}
     @Override
-    public myColor getColor(){return color;}
+    public MyColor getColor(){return color;}
     @Override
-    public boolean similarObject(myShape S){
+    public boolean similarObject(MyShape S){
         if(S.getClass().toString().equals("class myCicle")){
-            myCircle C = (myCircle) S;
+            MyCircle C = (MyCircle) S;
             return radius == C.getRadius();
         }
         else {return false;}

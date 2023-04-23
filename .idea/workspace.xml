@@ -4,13 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="got the other functions but myArc is missing, gotta debug">
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="p2 done!">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyCircle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColorPalette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColorPalette.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyLine.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyOval.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyPoint.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyRectangle.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShape.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeApplication.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myTriangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyTriangle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,11 +34,11 @@
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
   </component>
-  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
-  "lastFilter": {
-    "state": "OPEN"
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;
   }
-}]]></component>
+}</component>
   <component name="GithubPullRequestsUISettings">
     <option name="selectedUrlAndAccountId">
       <UrlAndAccount>
@@ -112,7 +119,14 @@
       <option name="project" value="LOCAL" />
       <updated>1679792338027</updated>
     </task>
-    <option name="localTasksCounter" value="5" />
+    <task id="LOCAL-00005" summary="p2 done!">
+      <created>1682198946805</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1682198946805</updated>
+    </task>
+    <option name="localTasksCounter" value="6" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -131,7 +145,8 @@
     <MESSAGE value="missing some classes, gotta followup bout that" />
     <MESSAGE value="some debugging" />
     <MESSAGE value="got the other functions but myArc is missing, gotta debug" />
-    <option name="LAST_COMMIT_MESSAGE" value="got the other functions but myArc is missing, gotta debug" />
+    <MESSAGE value="p2 done!" />
+    <option name="LAST_COMMIT_MESSAGE" value="p2 done!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
