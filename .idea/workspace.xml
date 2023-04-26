@@ -4,20 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="p2 done!">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="old version????">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyCircle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColor.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColorPalette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColorPalette.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyLine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyOval.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyPoint.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyRectangle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShape.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeApplication.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeInterface.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myTriangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyTriangle.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
