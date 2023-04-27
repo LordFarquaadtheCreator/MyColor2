@@ -4,8 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="old version????">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="added historgramaplhabet">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -115,7 +114,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682198946805</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="added historgramaplhabet">
+      <created>1682545296308</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1682545296308</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -135,7 +141,8 @@
     <MESSAGE value="some debugging" />
     <MESSAGE value="got the other functions but myArc is missing, gotta debug" />
     <MESSAGE value="p2 done!" />
-    <option name="LAST_COMMIT_MESSAGE" value="p2 done!" />
+    <MESSAGE value="added historgramaplhabet" />
+    <option name="LAST_COMMIT_MESSAGE" value="added historgramaplhabet" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
