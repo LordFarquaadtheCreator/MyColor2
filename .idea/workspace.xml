@@ -4,11 +4,20 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="added more photos of p3">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/mobyDick.txt" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="made some changes">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hisHistrogram.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hisSlice.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/myApplication.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Intersection.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/Intersection.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Oval.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/Oval.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Rectangle.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/Rectangle.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/pieChart.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/pieChart.png" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/mobyDick.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/Moby Dick.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/musicMakeYouLoseControl.png" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/musicMakeYouLoseControl.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -75,6 +84,7 @@
 }]]></component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\resources\com\example\mycolor2" />
       <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\resources" />
       <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\java\com\example\mycolor2" />
     </key>
@@ -158,7 +168,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682708761302</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="made some changes">
+      <created>1682711173560</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1682711173560</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -181,7 +198,8 @@
     <MESSAGE value="p2 done!" />
     <MESSAGE value="added historgramaplhabet" />
     <MESSAGE value="added more photos of p3" />
-    <option name="LAST_COMMIT_MESSAGE" value="added more photos of p3" />
+    <MESSAGE value="made some changes" />
+    <option name="LAST_COMMIT_MESSAGE" value="made some changes" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

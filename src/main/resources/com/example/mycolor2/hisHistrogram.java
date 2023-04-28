@@ -1,6 +1,7 @@
-package com.example.mycolor2;
+package com.example.myshape;
 
 import javafx.scene.canvas.GraphicsContext;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -57,71 +58,76 @@ public class HistogramAlphaBet {
         }
         return output;
     }
+
     private static<k> void incrementFrequency(Map<k,Integer>m,k key){
         m.putIfAbsent(key,0);
         m.put(key,m.get(key)+1);
     }
 
     class MyPieChart{
-        Map<Character, Slice> slices = new HashMap<Character, Slice>();
-        int N, M;
+        Map<Character,Slice>slices = new HashMap<>();
+        int N,M;
         MyPoint center;
-        double width, height, rotateAngle;
+        double width,height;
+        double rotateAngle;
 
         MyPieChart(int N, int M, MyPoint center, double width, double height, double rotateAngle){
-            this.N = N;
-            this.M = M;
+            this.N = N; this.M = M;
             this.center = center;
-            this.width = width;
-            this.height = height;
-            this.rotateAngle = rotateAngle < 360 ? rotateAngle : rotateAngle - 360;
+            this.width = width; this.height = height;
+            this.rotateAngle = rotateAngle < 360? rotateAngle :rotateAngle-360;
             slices = getMyPieChart();
         }
-        public Map<Character, Slice> getMyPieChart(){
+
+        public Map<Character, Slice> getMyPieChart() {
             MyColor [] colors = MyColor.getMyColors();
-            int colorSize = colors.length;
+            int colorsSize = colors.length;
+
             Map<Character, Double> sortedProbability = sortDownProbability();
             Random rand = new Random();
             double sliceStartAngle = this.rotateAngle;
 
             for(Character key : sortedProbability.keySet()){
-                double sliceValue = sortedProbability.get(key);
-                double sliceArcAngle = 360.0 * sliceValue;
-                MyColor color = colors[rand.nextInt(colorSize)];
-                String sliceInformation = key + ": " + String.format("%.4f", sliceValue);
-                slices.put(key, new Slice(center, width, height, sliceStartAngle, sliceArcAngle, color, sliceInformation));
-                sliceStartAngle += sliceArcAngle;
-                sliceStartAngle += sliceStartAngle < 360 ? sliceStartAngle : sliceStartAngle - 360;
+
+                double sliceArcAngle = 360.0 * sortedProbability.get(key);
+                MyColor color = colors[rand.nextInt(colorsSize)];
+
+                String sliceInformation = key +": " + String.format("%.4f",sortedProbability.get(key));
+                slices.put(key,new Slice(center,width,height,sliceStartAngle,sliceArcAngle,color,sliceInformation));
+                sliceStartAngle = sliceStartAngle+sliceArcAngle;
+                sliceStartAngle = sliceArcAngle < 360.0? sliceStartAngle : sliceStartAngle-360;
             }
             return slices;
         }
-        public void draw(GraphicsContext GC){
+        public void draw(GraphicsContext gc){
             Map<Character, Double> sortedProbability = sortDownProbability();
-            GC.clearRect(0.0,0.0,GC.getCanvas().getWidth(), GC.getCanvas().getHeight());
-            GC.setFill(MyColor.GREY.getJavaFXColor());
-            GC.fillRect(0.0,0.0,GC.getCanvas().getWidth(), GC.getCanvas().getHeight());
+
+            gc.clearRect(0.0,0.0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
+            gc.setFill(MyColor.GRAY.getJavaFXColor());
+            gc.fillRect(0.0,0.0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
 
             int n = 0;
-            double probabilityAllOtherCharacter = 1.0;
+            double probabilityAllOtherCharacters = 1.0;
             for(Character key : sortedProbability.keySet()){
-                double sliceStartingAngle = slices.get(key).getStartAngle();
+                double sliceStartAngle = slices.get(key).getStartAngle();
                 double sliceArcAngle = slices.get(key).getArcAngle();
-
-                if(n<N){
-                    slices.get(key).draw(GC);
-                    probabilityAllOtherCharacter -= sortedProbability.get(key);
+                if(n < N){
+                    slices.get(key).draw(gc);
+                    probabilityAllOtherCharacters -= sortedProbability.get(key);
                     n++;
                 }
                 else{
-                    if(N != M){
-                        String information = "All other characters: " + String.format("%.4f", probabilityAllOtherCharacter);
-                        if(sliceStartingAngle < rotateAngle){
-                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, rotateAngle-sliceStartingAngle, MyColor.getRandomColor(), information);
-                            sliceAllOtherCharacters.draw(GC);
+                    if(N!=M) {
+                        String information = "All other characters: " + String.format("%.4f", probabilityAllOtherCharacters);
+                        if(sliceStartAngle < rotateAngle) {
+                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartAngle,
+                                    rotateAngle-sliceStartAngle, MyColor.getRandomColor(), information);
+                            sliceAllOtherCharacters.draw(gc);
                         }
-                        else{
-                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, 360-sliceStartingAngle+rotateAngle, MyColor.getRandomColor(), information);
-                            sliceAllOtherCharacters.draw(GC);
+                        else {
+                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartAngle,
+                                    360.0 - sliceStartAngle+rotateAngle, MyColor.getRandomColor(), information);
+                            sliceAllOtherCharacters.draw(gc);
                         }
                         break;
                     }
@@ -129,5 +135,5 @@ public class HistogramAlphaBet {
             }
         }
     }
-}
 
+}

@@ -23,11 +23,13 @@ import java.util.*;
 
 
 public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
-    Integer N, M;
-    double startAngle, scale;
-    String Title, filename, input;
-    List<String> barChartInputs = new ArrayList<>();
+    Integer N,M;
+    double startAngle;
+    String Title;
+    String filename;
+    Scanner input;
     List<String> pieChartInputs = new ArrayList<>();
+
 
     public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
         HBox HB = new HBox();
@@ -36,7 +38,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         HB.setStyle("-fx-background-color: #B2A4FF;");
 
         String [] nameImages = new String [] {"Oval", "Rectangle", "Intersection", "pieChart"};
-        String pathFile = "src/main/java/com/example/mycolor2/";
+        String pathFile = "src/main/resources/com/example/mycolor2/";
         Deque<MyShape> stackMyShapes = new ArrayDeque<>();
         HB.setSpacing(50);
         HB.setAlignment(Pos.CENTER);
@@ -57,7 +59,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
                     case "Intersection":
                         dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
                     case "pieChart":
-                        dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP, CP, TP, stackMyShapes);
+                        dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP);
                 }
             });
             HB.getChildren().add(geometricImage);
@@ -88,7 +90,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);
     }
 
-    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShape){
+    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) {
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("Pie Chart");
         dialog.setHeaderText(null);
@@ -105,7 +107,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         TextField startAngle = new TextField();
 
         ComboBox title = new ComboBox();
-        title.getItems().addAll("Alice in WonderLand", "A Tale of Two Cities", "David Copperfield", "Oliver Twist", "Emma", "Moby Dick");
+        title.getItems().addAll( "Moby Dick");
 
         gridDialog.add(new Label("Display"), 0,0);
         gridDialog.add(numberEvents,1,0);
@@ -132,7 +134,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
             this.M = Integer.parseInt(pieChartInputs.get(1));
             this.startAngle = Double.parseDouble(pieChartInputs.get(2));
             this.Title = pieChartInputs.get(3);
-            this.filename = "C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\java\\com\\example\\mycolor2" + Title + ".txt";
+            this.filename = "src/main/resources/com/example/mycolor2/" + Title + ".txt";
 
             openFile();
             String w = readFile();
@@ -142,38 +144,38 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
             Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
 
             Pane rightPane = new Pane();
-            rightPane.getChildren().add(addCanvasLegend(widthCenterCanvas, heightCenterCanvas, H));
+            rightPane.getChildren().add(addCanvasLegend(widthRightCanvas,heightCenterCanvas,H));
             BP.setRight(rightPane);
 
             Pane centerPane = new Pane();
-            rightPane.getChildren().add(addCanvasPieChart(widthCenterCanvas, heightCenterCanvas, H));
-            BP.setRight(centerPane);
+            centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas,heightCenterCanvas,H));
+            BP.setCenter(centerPane);
         });
     }
 
     public void openFile(){
         try{
-            input = String.valueOf(new Scanner(Paths.get(filename)));
-        } catch(IOException ioException){
-            System.err.println("File not found!");
+            input = new Scanner(Paths.get(filename));
+        }catch(IOException ioException){
+            System.err.println("File is not found");
         }
     }
     public String readFile(){
         String w ="";
-        try {
-            while (input.hasNext()){
-                w += input.nextLine().replaceAll("[^a-zA-Z]", "").toLowerCase();
+        try{
+            while(input.hasNext()){
+                w += input.nextLine().replaceAll("[^a-zA-Z]","").toLowerCase();
             }
-        }
-        catch (NoSuchElementException elementException){
-            System.err.println("Invalid input! Terminiating ...");
-        }
-        catch (IllegalStateException stateException){
-            System.out.println("Error processing file! Terminating ...");
+        }catch (NoSuchElementException elementException){
+            System.err.println("Invalid input! Terminating.....");
+        }catch (IllegalStateException stateException){
+            System.out.println("Error processing file! Terminating....");
         }
         return w;
     }
-    public void closeFile(){if(input != null) input.close();}
+    public void closeFile(){
+        if(input !=null) input.close();
+    }
 
     public Canvas addCanvasLegend(double widthCanvas, double heightCanvas, HistogramAlphaBet H){
         String information;
@@ -420,7 +422,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         MyColorPalette CP = new MyColorPalette(widthLeftCanvas, heightCenterCanvas);
         TilePane TP = CP.getPalette();
 
-        Image icon = new Image("C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\resources\\musicMakeYouLoseControl.png");
+        Image icon = new Image("C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\resources\\com\\example\\mycolor2\\musicMakeYouLoseControl.png");
         PS.getIcons().add(icon);
 
         Scene SC = new Scene(BP, widthCanvas, heightCanvas, MyColor.WHITE.getJavaFXColor());
