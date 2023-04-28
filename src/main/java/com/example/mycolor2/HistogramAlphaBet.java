@@ -5,7 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLExceptions;
 import java.util.*;
 import java.util.stream.Collectors;
-
+//missing some classes
+// MyPieChart
 public class HistogramAlphaBet {
     Map<Character, Integer> frequency = new HashMap<Character, Integer>();
     Map<Character, Double> probability = new HashMap<Character, Double>();
@@ -61,13 +62,13 @@ public class HistogramAlphaBet {
         return output;
     }
 
-    class myPieChart{
+    class MyPieChart{
         Map<Character, Slice> slices = new HashMap<Character, Slice>();
         int N, M;
         MyPoint center;
         double width, height, rotateAngle;
 
-        myPieChart(int N, int M, MyPoint center, double width, double height, double rotateAngle){
+        MyPieChart(int N, int M, MyPoint center, double width, double height, double rotateAngle){
             this.N = N;
             this.M = M;
             this.center = center;

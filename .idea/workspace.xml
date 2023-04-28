@@ -5,7 +5,10 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="added more photos of p3">
+      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/mobyDick.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -148,7 +151,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682706683826</updated>
     </task>
-    <option name="localTasksCounter" value="10" />
+    <task id="LOCAL-00010" summary="added more photos of p3">
+      <created>1682708761302</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1682708761302</updated>
+    </task>
+    <option name="localTasksCounter" value="11" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">

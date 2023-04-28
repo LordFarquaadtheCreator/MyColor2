@@ -22,7 +22,7 @@ import java.nio.file.Paths;
 import java.util.*;
 
 
-public class MyShapeApplication extends Application{ // formerly "testMyColor"
+public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
     Integer N, M;
     double startAngle, scale;
     String Title, filename, input;
@@ -138,8 +138,8 @@ public class MyShapeApplication extends Application{ // formerly "testMyColor"
             String w = readFile();
             closeFile();
 
-            HistogramAlphabet H = new HistogramAlphabet(w);
-            Map<Character, Integer> sortedFrequency = H.sortDownFrenquency();
+            HistogramAlphaBet H = new HistogramAlphaBet(w);
+            Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
 
             Pane rightPane = new Pane();
             rightPane.getChildren().add(addCanvasLegend(widthCenterCanvas, heightCenterCanvas, H));
@@ -175,7 +175,7 @@ public class MyShapeApplication extends Application{ // formerly "testMyColor"
     }
     public void closeFile(){if(input != null) input.close();}
 
-    public Canvas addCanvasLegend(double widthCanvas, double heightCanvas, HistrogramAlphaBet H){
+    public Canvas addCanvasLegend(double widthCanvas, double heightCanvas, HistogramAlphaBet H){
         String information;
         Canvas CV = new Canvas(widthCanvas, heightCanvas);
         GraphicsContext GC = CV.getGraphicsContext2D();
