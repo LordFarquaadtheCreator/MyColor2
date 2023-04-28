@@ -1,0 +1,1032 @@
+Index: src/main/java/com/example/mycolor2/myColorPalette.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myColorPalette.java b/src/main/java/com/example/mycolor2/MyColorPalette.java
+rename from src/main/java/com/example/mycolor2/myColorPalette.java
+rename to src/main/java/com/example/mycolor2/MyColorPalette.java
+--- a/src/main/java/com/example/mycolor2/myColorPalette.java	
++++ b/src/main/java/com/example/mycolor2/MyColorPalette.java	
+@@ -10,20 +10,20 @@
+ import java.util.Arrays;
+ 
+ //left box that contains the color palette that the user can click on
+-public class myColorPalette {
++public class MyColorPalette {
+ 
+-    myColor colorPicked;
+-    myColor[]colors = myColor.getMyColors();
++    MyColor colorPicked;
++    MyColor[]colors = MyColor.getMyColors();
+     int sizeMyColor = colors.length;
+     double widthTile, heightTile;
+ 
+-    public myColorPalette(double widthPalette, double heightPalette){
++    public MyColorPalette(double widthPalette, double heightPalette){
+         this.widthTile = widthPalette / 12.0;
+         this.heightTile = this.widthTile;
+     }
+ 
+-    public void setColorsPicked(myColor color){colorPicked = color;}
+-    public myColor getColorPicked(){return colorPicked;}
++    public void setColorsPicked(MyColor color){colorPicked = color;}
++    public MyColor getColorPicked(){return colorPicked;}
+     public TilePane getPalette(){
+         TilePane TP = new TilePane();
+         TP.setPrefTileWidth(widthTile);
+@@ -33,7 +33,7 @@
+         TP.setPadding(new Insets(1));
+ 
+         for (int j = 0; j < sizeMyColor; j++){
+-            myColor color = colors[j];
++            MyColor color = colors[j];
+             String tileId = color.toString();
+ 
+             Pane tileMyColor = new Pane();
+@@ -41,14 +41,14 @@
+             tileMyColor.setBackground((new Background(new BackgroundFill(color.getJavaFXColor(), CornerRadii.EMPTY, Insets.EMPTY))));
+ 
+             tileMyColor.setOnMouseClicked(e->{
+-                myColor colorClicked = colors[Arrays.asList(myColor.getMyColorIds()).indexOf(tileId)];
++                MyColor colorClicked = colors[Arrays.asList(MyColor.getMyColorIds()).indexOf(tileId)];
+                 setColorsPicked(colorClicked);
+             });
+ 
+             tileMyColor.setOnMouseClicked(new EventHandler<MouseEvent>(){
+                 @Override
+                 public void handle(MouseEvent mouseEvent){
+-                    myColor colorClicked = colors[Arrays.asList(myColor.getMyColorIds()).indexOf(tileId)];
++                    MyColor colorClicked = colors[Arrays.asList(MyColor.getMyColorIds()).indexOf(tileId)];
+                     setColorsPicked(colorClicked);
+                 }
+             });
+Index: src/main/java/com/example/mycolor2/myRectangle.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myRectangle.java b/src/main/java/com/example/mycolor2/MyRectangle.java
+rename from src/main/java/com/example/mycolor2/myRectangle.java
+rename to src/main/java/com/example/mycolor2/MyRectangle.java
+--- a/src/main/java/com/example/mycolor2/myRectangle.java	
++++ b/src/main/java/com/example/mycolor2/MyRectangle.java	
+@@ -4,28 +4,28 @@
+ 
+ import java.util.Optional;
+ 
+-public class myRectangle extends myShape{
+-    myPoint pTLC;
++public class MyRectangle extends MyShape {
++    MyPoint pTLC;
+     double width, height;
+-    myColor color;
++    MyColor color;
+ 
+-    myRectangle(myPoint p, double w, double h, myColor color){
+-        super(new myPoint(), null);
++    MyRectangle(MyPoint p, double w, double h, MyColor color){
++        super(new MyPoint(), null);
+         this.pTLC = p; this.width = w; this.height = h;
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+-    myRectangle(myRectangle r, myColor color){
+-        super(new myPoint(),null);
++    MyRectangle(MyRectangle r, MyColor color){
++        super(new MyPoint(),null);
+         this.pTLC = r.getTLC(); this.width = r.getWidth(); this.height = r.getHeight();
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+ 
+     @Override
+-    public void setColor(myColor color){this.color = color;}
+-    public myPoint getTLC(){return pTLC;}
++    public void setColor(MyColor color){this.color = color;}
++    public MyPoint getTLC(){return pTLC;}
+     public double getWidth(){return width;}
+     public double getHeight(){return height;}
+-    public myColor getColor(){return color;}
++    public MyColor getColor(){return color;}
+ //
+     @Override
+     public double perimeter(){return 2*(width+height);}
+@@ -43,16 +43,16 @@
+         GC.fillRect(pTLC.getX(),pTLC.getY(),width,height);
+     }
+ 
+-    public myRectangle getMyBoundingRectangle(){return new myRectangle(pTLC,width,height,null);}
++    public MyRectangle getMyBoundingRectangle(){return new MyRectangle(pTLC,width,height,null);}
+     @Override
+-    public boolean containsMyPoint(myPoint p){
++    public boolean containsMyPoint(MyPoint p){
+         double x = p.getX(); double y = p.getY();
+         double xR = pTLC.getX(); double yR = pTLC.getY();
+         return (xR <= x && x <= xR+width) && (yR <= y && y <= yR+height);
+     }
+-    public boolean similarObject(myShape S){
++    public boolean similarObject(MyShape S){
+         if(S.getClass().toString().equals("class myRectangle")){
+-            myRectangle r = (myRectangle) S;
++            MyRectangle r = (MyRectangle) S;
+             return (width == r.getWidth() && height == r.getHeight());
+         }
+         else{return false;}
+Index: src/main/java/com/example/mycolor2/myColor.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myColor.java b/src/main/java/com/example/mycolor2/MyColor.java
+rename from src/main/java/com/example/mycolor2/myColor.java
+rename to src/main/java/com/example/mycolor2/MyColor.java
+--- a/src/main/java/com/example/mycolor2/myColor.java	
++++ b/src/main/java/com/example/mycolor2/MyColor.java	
+@@ -8,7 +8,7 @@
+ */
+ 
+ //the whole file is an enum
+-public enum myColor {
++public enum MyColor {
+     //enums seperated by COMMAS not semicolons
+     WHITE(255,255,255,255),
+     ALICEBLUE(240,248,255,255),
+@@ -150,7 +150,7 @@
+ 
+     private int r,g,b,a,argb; // ints that store rgba values
+ 
+-    myColor(int r, int g, int b, int a){ //constructors that set rgba values
++    MyColor(int r, int g, int b, int a){ //constructors that set rgba values
+         setR(r);
+         setG(g);
+         setB(b);
+@@ -183,21 +183,21 @@
+         return Color.rgb(r,g,b,(double)(a)/255.0);
+     }
+ //    public Color getJavaFXOpaqueColor(){return Color.rgb(r,g,b);}
+-    public static myColor[] getMyColors(){return myColor.values();}
++    public static MyColor[] getMyColors(){return MyColor.values();}
+     public static String[] getMyColorIds(){
+-        myColor[] colors = getMyColors();
++        MyColor[] colors = getMyColors();
+         String[] myColorsID = new String[colors.length];
+         int i = 0;
+-        for(myColor color : colors){
++        for(MyColor color : colors){
+             myColorsID[i] = color.toString();
+             ++i;
+         }
+         return myColorsID;
+     }
+ 
+-    public static myColor getRandomColor(){
++    public static MyColor getRandomColor(){
+         Random rand = new Random();
+-        return myColor.values()[rand.nextInt(myColor.values().length - 1)];
++        return MyColor.values()[rand.nextInt(MyColor.values().length - 1)];
+     }
+     public Color getRandomOpaqueColor(){
+         Random rand = new Random();
+@@ -207,7 +207,7 @@
+         return Color.rgb(255-r,255-g,255-b,(double)(a)/255.0);
+     }
+ 
+-    public Color blendColors(myColor otherColor, double scale) {
++    public Color blendColors(MyColor otherColor, double scale) {
+         int rBlend, gBlend, bBlend;
+         double aBlend;
+ 
+Index: src/main/java/com/example/mycolor2/myShapeInterface.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myShapeInterface.java b/src/main/java/com/example/mycolor2/MyShapeInterface.java
+rename from src/main/java/com/example/mycolor2/myShapeInterface.java
+rename to src/main/java/com/example/mycolor2/MyShapeInterface.java
+--- a/src/main/java/com/example/mycolor2/myShapeInterface.java	
++++ b/src/main/java/com/example/mycolor2/MyShapeInterface.java	
+@@ -6,30 +6,30 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ 
+-public interface myShapeInterface {
++public interface MyShapeInterface {
+ 
+-    myRectangle getMyBoundingRectangle();
+-    boolean containsMyPoint(myPoint p);
+-    boolean similarObject(myShape S);
++    MyRectangle getMyBoundingRectangle();
++    boolean containsMyPoint(MyPoint p);
++    boolean similarObject(MyShape S);
+ 
+-    static boolean similarObject(myShape S1, myShape S2) {
++    static boolean similarObject(MyShape S1, MyShape S2) {
+         String sClassS1 = S1.getClass().toString();
+         String sClassS2 = S2.getClass().toString();
+         if (sClassS1.equals(sClassS2)) {
+             switch (sClassS1) {
+ 
+                 case "class MyRectangle":
+-                    myRectangle R1 = (myRectangle) S1;
+-                    myRectangle R2 = (myRectangle) S2;
++                    MyRectangle R1 = (MyRectangle) S1;
++                    MyRectangle R2 = (MyRectangle) S2;
+                     return R1.getWidth() == R2.getWidth() && R1.getHeight() == R2.getHeight();
+ 
+                 case "class MyOval":
+-                    myOval O1 = (myOval) S1;
+-                    myOval O2 = (myOval) S2;
++                    MyOval O1 = (MyOval) S1;
++                    MyOval O2 = (MyOval) S2;
+                     return O1.getSemiMajor() == O2.getSemiMajor() && O1.getSemiMinor() == O2.getSemiMinor();
+                 case "class MyCircle":
+-                    myCircle C1 = (myCircle) S1;
+-                    myCircle C2 = (myCircle) S2;
++                    MyCircle C1 = (MyCircle) S1;
++                    MyCircle C2 = (MyCircle) S2;
+                     return C1.getRadius() == C2.getRadius();
+ 
+                 default:
+@@ -40,10 +40,10 @@
+         }
+     }
+ 
+-    static List<myPoint> intersectMyShapes(myShape s1, myShape s2) {
+-        myRectangle r1 = s1.getMyBoundingRectangle();
+-        myRectangle r2 = s2.getMyBoundingRectangle();
+-        myRectangle r = overlapMyShapes(r1,r2);
++    static List<MyPoint> intersectMyShapes(MyShape s1, MyShape s2) {
++        MyRectangle r1 = s1.getMyBoundingRectangle();
++        MyRectangle r2 = s2.getMyBoundingRectangle();
++        MyRectangle r = overlapMyShapes(r1,r2);
+ 
+         if(r!=null) {
+ 
+@@ -52,12 +52,12 @@
+             double w = r.getWidth();
+             double h = r.getHeight();
+ 
+-            List<myPoint> intersect = new ArrayList<>();
++            List<MyPoint> intersect = new ArrayList<>();
+ 
+             for (double i = 0; i <= w; i++) {
+                 double xi = x + i;
+                 for (double j = 0; j <= h; j++) {
+-                    myPoint p = new myPoint(xi, y + j, null);
++                    MyPoint p = new MyPoint(xi, y + j, null);
+                     if (s1.containsMyPoint(p) && s2.containsMyPoint(p)) {
+                         intersect.add(p);
+                     }
+@@ -68,28 +68,28 @@
+         else{return null;}
+     }
+ 
+-    static myRectangle overlapMyShapes(myShape s1,myShape s2) {
+-        myRectangle r1 = s1.getMyBoundingRectangle();
+-        myRectangle r2 = s2.getMyBoundingRectangle();
++    static MyRectangle overlapMyShapes(MyShape s1,MyShape s2) {
++        MyRectangle r1 = s1.getMyBoundingRectangle();
++        MyRectangle r2 = s2.getMyBoundingRectangle();
+         return intersectMyRectangles(r1,r2);
+     }
+ 
+-    default Canvas drawIntersectMyShapes(myShape s1, myShape s2, double w, double h, myColor color) {
+-        List<myPoint> intersect = intersectMyShapes(s1,s2);
++    default Canvas drawIntersectMyShapes(MyShape s1, MyShape s2, double w, double h, MyColor color) {
++        List<MyPoint> intersect = intersectMyShapes(s1,s2);
+         Canvas overlayCV = new Canvas(w,h);
+         GraphicsContext overlayGC = overlayCV.getGraphicsContext2D();
+ 
+         s1.draw(overlayGC);
+         s2.draw(overlayGC);
+ 
+-        myRectangle r = overlapMyShapes(s1,s2);
+-        myColor colorR = myColor.AQUA;
++        MyRectangle r = overlapMyShapes(s1,s2);
++        MyColor colorR = MyColor.AQUA;
+         r.setColor(colorR);
+ 
+         if(intersect !=null)
+         {
+             System.out.println("intersect");
+-            for(myPoint p : intersect)
++            for(MyPoint p : intersect)
+             {
+                 p.setColor(color);
+                 p.draw(overlayGC);
+@@ -99,7 +99,7 @@
+         return  overlayCV;
+     }
+ 
+-    static myRectangle intersectMyRectangles(myRectangle R1, myRectangle R2) {
++    static MyRectangle intersectMyRectangles(MyRectangle R1, MyRectangle R2) {
+         double x1 = R1.getTLC().getX();
+         double y1 = R1.getTLC().getY();
+         double w1 = R1.getWidth();
+@@ -119,7 +119,7 @@
+         double xMin = Math.min(x1+w1,x2+w2);
+         double yMin = Math.min(y1 +h1,y2 + h2);
+ 
+-        myPoint p = new myPoint(xMax,yMax, null);
+-        return new myRectangle(p,Math.abs(xMax - xMin), Math.abs(yMax - yMin), null);
++        MyPoint p = new MyPoint(xMax,yMax, null);
++        return new MyRectangle(p,Math.abs(xMax - xMin), Math.abs(yMax - yMin), null);
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/example/mycolor2/myPoint.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myPoint.java b/src/main/java/com/example/mycolor2/MyPoint.java
+rename from src/main/java/com/example/mycolor2/myPoint.java
+rename to src/main/java/com/example/mycolor2/MyPoint.java
+--- a/src/main/java/com/example/mycolor2/myPoint.java	
++++ b/src/main/java/com/example/mycolor2/MyPoint.java	
+@@ -3,40 +3,40 @@
+ import javafx.scene.canvas.GraphicsContext;
+ import java.util.Optional;
+ 
+-public class myPoint {
++public class MyPoint {
+     double x,y;
+-    myColor color;
++    MyColor color;
+ 
+-    myPoint(){
++    MyPoint(){
+         setPoint(0,0);
+-        this.color = myColor.YELLOW;
++        this.color = MyColor.YELLOW;
+     }
+-    myPoint(double x, double y, myColor color){
++    MyPoint(double x, double y, MyColor color){
+         setPoint(x,y);
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+-    myPoint(myPoint p, myColor color){
++    MyPoint(MyPoint p, MyColor color){
+         setPoint(p);
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+ 
+     public void setPoint(double x, double y){this.x = x; this.y = y;}
+-    public void setPoint(myPoint p){this.x = p.getX(); this.y=p.getY();}
+-    public void setColor(myColor color){this.color = color;}
++    public void setPoint(MyPoint p){this.x = p.getX(); this.y=p.getY();}
++    public void setColor(MyColor color){this.color = color;}
+ 
+     public double getX(){return x;}
+     public double getY(){return y;}
+-    public myColor getColor(){return color;}
++    public MyColor getColor(){return color;}
+ 
+     public void translate(double u, double v){setPoint(x+u,y+v);}
+     public double distanceFromOrigin(){return Math.sqrt(x*x+y*y);}
+-    public double distance(myPoint p) {
++    public double distance(MyPoint p) {
+         double dx = p.getX() - x;
+         double dy = p.getY() -y;
+         return Math.sqrt(dx*dx + dy+dy);
+     }
+ 
+-    public double angleX(myPoint p){
++    public double angleX(MyPoint p){
+         double dx = x-p.getX();
+         double dy = y-p.getY();
+         double angle = Math.toDegrees(Math.atan2(dy,dx));
+Index: src/main/java/com/example/mycolor2/myOval.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myOval.java b/src/main/java/com/example/mycolor2/MyOval.java
+rename from src/main/java/com/example/mycolor2/myOval.java
+rename to src/main/java/com/example/mycolor2/MyOval.java
+--- a/src/main/java/com/example/mycolor2/myOval.java	
++++ b/src/main/java/com/example/mycolor2/MyOval.java	
+@@ -2,30 +2,30 @@
+ import javafx.scene.canvas.GraphicsContext;
+ import java.util.Optional;
+ 
+-public class myOval extends myShape{
+-    myPoint center;
++public class MyOval extends MyShape {
++    MyPoint center;
+     double width, height;
+     double halfWidth, halfHeight;
+     double semiMajor, semiMinor;
+-    myColor color;
++    MyColor color;
+ 
+     double focus;
+     double eccentricity;
+ 
+-    myOval(myPoint center, double width, double height, myColor color){
+-        super(new myPoint(), null);
++    MyOval(MyPoint center, double width, double height, MyColor color){
++        super(new MyPoint(), null);
+         this.center = center; this.width = width; this.height = height;
+         this.halfWidth = 0.5*this.width; this.halfHeight = 0.5*this.height;
+         semiMajor = Math.max(halfWidth,halfHeight);
+         semiMinor = Math.min(halfHeight, halfWidth);
+ 
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+         focus = Math.sqrt(Math.pow(semiMajor,2)-Math.pow(semiMinor,2));
+         eccentricity = focus/semiMajor;
+     }
+ 
+-    myOval(myOval o, myColor color){
+-        super(new myPoint(),null);
++    MyOval(MyOval o, MyColor color){
++        super(new MyPoint(),null);
+         this.center = o.getCenter();
+         this.width = o.getWidth();
+         this.height = o.getHeight();
+@@ -34,21 +34,21 @@
+         semiMajor = Math.max(halfWidth, halfHeight);
+         semiMinor = Math.min(halfWidth, halfHeight);
+ 
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+ 
+         focus = o.getFocus();
+         eccentricity = o.getEccentricity();
+     }
+ 
+     @Override
+-    public void setColor(myColor color){this.color = color;}
+-    public myPoint getCenter(){return center;}
++    public void setColor(MyColor color){this.color = color;}
++    public MyPoint getCenter(){return center;}
+     public double getWidth(){return width;}
+     public double getHeight(){return height;}
+     public double getSemiMajor(){return semiMajor;}
+     public double getSemiMinor(){return semiMinor;}
+ //    @Override
+-    public myColor getColor(){return color;}
++    public MyColor getColor(){return color;}
+     public double getFocus(){return focus;}
+     public double getEccentricity(){return eccentricity;}
+ 
+@@ -69,13 +69,13 @@
+         GC.fillOval(center.getX()-halfWidth, center.getY()-halfHeight,width,height);
+     }
+ 
+-    public myRectangle getMyBoundingRectangle(){
++    public MyRectangle getMyBoundingRectangle(){
+         double x = center.getX()-halfWidth;
+         double y = center.getY()-halfHeight;
+-        myPoint pLTC = new myPoint(x,y,null);
+-        return new myRectangle(pLTC,width,height,null);
++        MyPoint pLTC = new MyPoint(x,y,null);
++        return new MyRectangle(pLTC,width,height,null);
+     }
+-    public boolean containsMyPoint(myPoint p){
++    public boolean containsMyPoint(MyPoint p){
+         if(halfWidth==halfHeight){
+             return p.distance(center) <= halfWidth;
+         }
+@@ -86,9 +86,9 @@
+             return dx*dx+dy*dy<=hxh*hxh;
+         }
+     }
+-    public boolean similarObject(myShape s){
++    public boolean similarObject(MyShape s){
+         if(s.getClass().toString().equals("class myOval")){
+-            myOval o = (myOval) s;
++            MyOval o = (MyOval) s;
+             return semiMajor == o.getSemiMajor() && semiMinor == o.getSemiMinor();
+         }
+         else {return false;}
+Index: src/main/java/com/example/mycolor2/myTriangle.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myTriangle.java b/src/main/java/com/example/mycolor2/MyTriangle.java
+rename from src/main/java/com/example/mycolor2/myTriangle.java
+rename to src/main/java/com/example/mycolor2/MyTriangle.java
+--- a/src/main/java/com/example/mycolor2/myTriangle.java	
++++ b/src/main/java/com/example/mycolor2/MyTriangle.java	
+@@ -2,21 +2,20 @@
+ 
+ import javafx.scene.canvas.GraphicsContext;
+ 
+-import java.lang.reflect.Array;
+ import java.util.Arrays;
+ import java.util.Optional;
+ 
+-public class myTriangle extends myShape{
+-    myPoint p1,p2,p3;
+-    myColor color;
++public class MyTriangle extends MyShape{
++    MyPoint p1,p2,p3;
++    MyColor color;
+     double s1,s2,s3;
+     double s;
+     double a1,a2,a3;
+ 
+-    myTriangle(myPoint p1, myPoint p2, myPoint p3, myColor color){
++    MyTriangle(MyPoint p1, MyPoint p2, MyPoint p3, MyColor color){
+ //        super(new myPoint(),null);
+         this.p1 = p1; this.p2 = p2; this.p3 = p3;
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+ 
+         s1 = p2.distance(p3);
+         s2 = p3.distance(p1);
+@@ -28,11 +27,11 @@
+         a3 = Math.toDegrees(Math.acos((s2*s2+s1*s1-s3*s3)/(2.0*s1*s2)));
+     }
+ 
+-    myTriangle(double s1, double s2, double s3, myColor color){
++    MyTriangle(double s1, double s2, double s3, MyColor color){
+ //        super(new myPoint(),null);
+         this.s1 = s1; this.s2 = s2; this.s3 = s3;
+         s = 0.5*(s1+s2+s3);
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+ 
+         if(!isTriangle()){
+             System.out.println("\nThe side lenghts (" + s1 + ", " + s2 + ", " + s3 + ") do not form a proper triangle");
+@@ -44,30 +43,30 @@
+         a3 = Math.toDegrees(Math.acos((s2*s2+s1*s1-s3*s3)/(2.0*s1*s2)));
+     }
+ 
+-    myTriangle(double side, double angle, myColor color){
++    MyTriangle(double side, double angle, MyColor color){
+         this.s1 = side;
+         this.s2 = side;
+         this.s3 = 2.0*s*Math.sin(Math.PI*angle/360.0);
+         s=0.5*(s1+s2+s3);
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+ 
+         a1 = 0.5*(100-angle);
+         a2 = a1;
+         a3 = angle;
+     }
+ 
+-    myTriangle(double side, myColor color){
++    MyTriangle(double side, MyColor color){
+ //        super(new myPoint(),null);
+         this.s1 =side; this.s2 = side; this.s3 = side;
+         s = 1.5 * side;
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+ 
+         a1=60.0; a2=60.0; a3=60.0;
+     }
+ 
+-    public void setColor(myColor color){this.color = color;}
+-    public myPoint[] getVertices(){
+-        myPoint[] vertices = new myPoint[4];
++    public void setColor(MyColor color){this.color = color;}
++    public MyPoint[] getVertices(){
++        MyPoint[] vertices = new MyPoint[4];
+         vertices[0] = p1; vertices[1] = p2; vertices[2] = p3; vertices[3] = p1;
+         return vertices;
+     }
+@@ -82,10 +81,10 @@
+         return angles;
+     }
+ //    @Override
+-    public myColor getColor(){return color;}
++    public MyColor getColor(){return color;}
+     public boolean isTriangle(){return (s-s1)>0 && (s-s2) >0 && (s-s3)>0;}
+-    public myPoint centroid(){
+-        return new myPoint(p1.getX()+p2.getX()+p3.getX()/3.0,
++    public MyPoint centroid(){
++        return new MyPoint(p1.getX()+p2.getX()+p3.getX()/3.0,
+                         p2.getY()+p1.getY()+p3.getY()/3.0, null);
+     }
+ //    @Override
+@@ -98,7 +97,7 @@
+ 
+     //    @Override
+     public double area(){return Math.sqrt(s*(s-s1)*(s-s2)*(s-s3));}
+-    public myRectangle getMyBoundingRectangle(){
++    public MyRectangle getMyBoundingRectangle(){
+         double x1 = p1.getX(); double y1 = p1.getY();
+         double x2 = p2.getX(); double y2 = p2.getY();
+         double x3 = p3.getX(); double y3 = p3.getY();
+@@ -107,13 +106,13 @@
+         double xmin = Math.min(Math.min(x1,x2),x3);
+         double ymin = Math.min(Math.min(y1,y2),y3);
+ 
+-        myPoint pTLC = new myPoint(xmin, ymin, null);
+-        return new myRectangle(pTLC, Math.abs(xmax-xmin), Math.abs(ymax-ymin),null);
++        MyPoint pTLC = new MyPoint(xmin, ymin, null);
++        return new MyRectangle(pTLC, Math.abs(xmax-xmin), Math.abs(ymax-ymin),null);
+     }
+-    public boolean containsMyPoint(myPoint p){
++    public boolean containsMyPoint(MyPoint p){
+         double x = p.getX(); double y =p.getY();
+         int windingNumber =0;
+-        myPoint[] verticies = this.getVertices();
++        MyPoint[] verticies = this.getVertices();
+         double x1 = verticies[0].getX();
+         double y1 = verticies[0].getY();
+         for(int i =1;i<4; ++i){
+@@ -132,9 +131,9 @@
+         }
+         return windingNumber !=0;
+     }
+-    public boolean similiarObject(myShape S){
++    public boolean similiarObject(MyShape S){
+         if(S.getClass().toString().equals("class myTriangle")){
+-            myTriangle T = (myTriangle) S;
++            MyTriangle T = (MyTriangle) S;
+             double [] sideThis = this.getSides(); Arrays.sort(sideThis);
+             double [] sidesT = T.getSides(); Arrays.sort(sidesT);
+             return (sideThis[0] == sidesT[0] && sideThis[1] == sidesT[1] && sideThis[2] == sidesT[2]);
+Index: src/main/java/com/example/mycolor2/myShape.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myShape.java b/src/main/java/com/example/mycolor2/MyShape.java
+rename from src/main/java/com/example/mycolor2/myShape.java
+rename to src/main/java/com/example/mycolor2/MyShape.java
+--- a/src/main/java/com/example/mycolor2/myShape.java	
++++ b/src/main/java/com/example/mycolor2/MyShape.java	
+@@ -5,35 +5,35 @@
+ 
+ import java.util.Optional;
+ 
+-public abstract class myShape implements myShapeInterface {
+-    myPoint p;
+-    myColor color;
++public abstract class MyShape implements MyShapeInterface {
++    MyPoint p;
++    MyColor color;
+ 
+-    myShape() {
+-        this.p = new myPoint();
+-        this.color = myColor.BLACK;
++    MyShape() {
++        this.p = new MyPoint();
++        this.color = MyColor.BLACK;
+     }
+-    myShape(myPoint p, myColor color) {
++    MyShape(MyPoint p, MyColor color) {
+         setPoint(p);
+         setColor(color);
+     }
+ 
+-    myShape(double x , double y, myColor color) {
++    MyShape(double x , double y, MyColor color) {
+         setPoint(p);
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+ 
+-    public void setPoint(myPoint p) {
++    public void setPoint(MyPoint p) {
+         this.p = p;
+     }
+     //public void setPoint(double x,double y){p.setPoint(x,y);}
+ 
+-    public void setColor(myColor color) {
++    public void setColor(MyColor color) {
+         this.color = color;
+     }
+ 
+-    public myPoint getPoint() {return p;}
+-    public myColor getColor() {return color;}
++    public MyPoint getPoint() {return p;}
++    public MyColor getColor() {return color;}
+     public double getX(){return p.getX();}
+     public double getY(){return p.getY();}
+ 
+@@ -50,22 +50,22 @@
+     //public abstract boolean similarObject(myShape S);
+ 
+ //    @Override
+-    public Canvas drawIntersectMyShapes(double widthCenterCanvas, double heightCenterCanvas, myShape s1, myShape s2, myColor color) {
+-        return myShapeInterface.super.drawIntersectMyShapes(s1, s2, widthCenterCanvas, heightCenterCanvas, color);
++    public Canvas drawIntersectMyShapes(double widthCenterCanvas, double heightCenterCanvas, MyShape s1, MyShape s2, MyColor color) {
++        return MyShapeInterface.super.drawIntersectMyShapes(s1, s2, widthCenterCanvas, heightCenterCanvas, color);
+     }
+ 
+     @Override
+-    public myRectangle getMyBoundingRectangle() {
++    public MyRectangle getMyBoundingRectangle() {
+         return null;
+     }
+ 
+     @Override
+-    public boolean containsMyPoint(myPoint p) {
++    public boolean containsMyPoint(MyPoint p) {
+         return false;
+     }
+ 
+     @Override
+-    public boolean similarObject(myShape S) {
++    public boolean similarObject(MyShape S) {
+         return false;
+     }
+ }
+\ No newline at end of file
+Index: src/main/java/com/example/mycolor2/myShapeApplication.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myShapeApplication.java b/src/main/java/com/example/mycolor2/MyShapeApplication.java
+rename from src/main/java/com/example/mycolor2/myShapeApplication.java
+rename to src/main/java/com/example/mycolor2/MyShapeApplication.java
+--- a/src/main/java/com/example/mycolor2/myShapeApplication.java	
++++ b/src/main/java/com/example/mycolor2/MyShapeApplication.java	
+@@ -12,18 +12,14 @@
+ import javafx.scene.image.Image;
+ import javafx.scene.image.ImageView;
+ import javafx.scene.layout.*;
+-import javafx.scene.text.Font;
+-import javafx.scene.text.Text;
+ import javafx.stage.Stage;
+-import java.io.File;
++
+ import java.io.FileInputStream;
+ import java.io.FileNotFoundException;
+-import javafx.scene.Scene.*;
+-import java.io.LineNumberInputStream;
+ import java.util.*;
+ 
+-public class myShapeApplication extends Application{ // formerly "testMyColor"
+-    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
++public class MyShapeApplication extends Application{ // formerly "testMyColor"
++    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
+         HBox HB = new HBox();
+         HB.setPrefWidth(widthTopCanvas);
+         HB.setPrefHeight(heightTopCanvas);
+@@ -31,7 +27,7 @@
+ 
+         String [] nameImages = new String [] {"Oval", "Rectangle", "Intersection"};
+         String pathFile = "src/main/java/com/example/mycolor2/";
+-        Deque<myShape> stackMyShapes = new ArrayDeque<>();
++        Deque<MyShape> stackMyShapes = new ArrayDeque<>();
+         HB.setSpacing(50);
+         HB.setAlignment(Pos.CENTER);
+ 
+@@ -57,7 +53,7 @@
+         return HB;
+     }
+ 
+-    public VBox addLeftVBox(double widthLeftCanvas, double heightLeftCanvas, TilePane TP, myColor color){
++    public VBox addLeftVBox(double widthLeftCanvas, double heightLeftCanvas, TilePane TP, MyColor color){
+         //make a vbox node
+         VBox VB = new VBox();
+         VB.setPrefWidth(widthLeftCanvas);
+@@ -68,19 +64,19 @@
+         //make label my color palette
+         Label lblMyColorPalette = new Label("MyColor Palette");
+         lblMyColorPalette.setPrefWidth(widthLeftCanvas);
+-        lblMyColorPalette.setTextFill(myColor.WHITE.getJavaFXColor());
+-        lblMyColorPalette.setBackground(new Background(new BackgroundFill(Optional.ofNullable(color).orElse(myColor.GREY).getJavaFXColor(), CornerRadii.EMPTY, Insets.EMPTY)));
++        lblMyColorPalette.setTextFill(MyColor.WHITE.getJavaFXColor());
++        lblMyColorPalette.setBackground(new Background(new BackgroundFill(Optional.ofNullable(color).orElse(MyColor.GREY).getJavaFXColor(), CornerRadii.EMPTY, Insets.EMPTY)));
+ 
+         //make a mycolorpalette of all mycolor objects and add into the vbox together with the label
+         VB.getChildren().addAll(lblMyColorPalette, TP);
+         return VB;
+     }
+ 
+-    public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, myShape s1, myShape s2, myColor color){
++    public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, MyShape s1, MyShape s2, MyColor color){
+         return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);
+     }
+ 
+-    public void dialogOval(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShape, Pane centerPane){
++    public void dialogOval(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShape, Pane centerPane){
+         Dialog<List<String>> dialog = new Dialog<>();
+         dialog.setTitle("MyOval");
+         dialog.setHeaderText(null);
+@@ -128,16 +124,16 @@
+         Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
+         GraphicsContext GC = CV.getGraphicsContext2D();
+         Result.ifPresent(event -> {
+-            myPoint pTLC = new myPoint(Double.parseDouble(geometricImageInputs.get(0))*widthCenterCanvas, Double.parseDouble(geometricImageInputs.get(1))*heightCenterCanvas, null);
++            MyPoint pTLC = new MyPoint(Double.parseDouble(geometricImageInputs.get(0))*widthCenterCanvas, Double.parseDouble(geometricImageInputs.get(1))*heightCenterCanvas, null);
+             double w = Double.parseDouble(geometricImageInputs.get(2))*widthCenterCanvas;
+             double h = Double.parseDouble(geometricImageInputs.get(3))*heightCenterCanvas;
+ 
+             TP.setOnMouseClicked(e-> {
+-                myColor color = CP.getColorPicked();
++                MyColor color = CP.getColorPicked();
+                 String tileId = color.toString();
+                 for (Node tile : TP.getChildren()) {
+                     if (tile.getId() == tileId) {
+-                        myOval O = new myOval(pTLC, w, h, color);
++                        MyOval O = new MyOval(pTLC, w, h, color);
+ 
+                         GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
+                         O.draw(GC);
+@@ -153,7 +149,7 @@
+         });
+     }
+ 
+-    public void dialogRectangle(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes, Pane centerPane){
++    public void dialogRectangle(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShapes, Pane centerPane){
+         Dialog<List<String>> dialog = new Dialog<>();
+         dialog.setTitle("myRectangle");
+         dialog.setHeaderText(null);
+@@ -198,16 +194,16 @@
+         Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
+         GraphicsContext GC = CV.getGraphicsContext2D();
+         Result.ifPresent(event ->{
+-            myPoint pTLC = new myPoint(Double.parseDouble(geometericImageInputs.get(0))*widthCenterCanvas, Double.parseDouble(geometericImageInputs.get(1))*heightCenterCanvas, null);
++            MyPoint pTLC = new MyPoint(Double.parseDouble(geometericImageInputs.get(0))*widthCenterCanvas, Double.parseDouble(geometericImageInputs.get(1))*heightCenterCanvas, null);
+             double w = Double.parseDouble(geometericImageInputs.get(2))*widthCenterCanvas;
+             double h = Double.parseDouble(geometericImageInputs.get(3))*heightCenterCanvas;
+ 
+             TP.setOnMouseClicked(e->{
+-                myColor color = CP.getColorPicked();
++                MyColor color = CP.getColorPicked();
+                 String tileId = color.toString();
+                 for(Node tile : TP.getChildren()) {
+                     if (tile.getId() == tileId) {
+-                        myRectangle R = new myRectangle(pTLC, w, h, color);
++                        MyRectangle R = new MyRectangle(pTLC, w, h, color);
+                         GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
+                         R.draw(GC);
+                         R.getMyBoundingRectangle().stroke(GC);
+@@ -223,7 +219,7 @@
+         });
+     }
+ 
+-    public void dialogIntersection(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, myColorPalette CP, TilePane TP, Deque<myShape> stackMyShapes, Pane centerPane){
++    public void dialogIntersection(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShapes, Pane centerPane){
+         Dialog dialog = new Dialog<>();
+         dialog.setTitle("Intersection of 2 myShape Objects");
+         dialog.setHeaderText(null);
+@@ -241,12 +237,12 @@
+         dialog.showAndWait().ifPresent(response ->{
+             if(response == ButtonType.OK){
+                 TP.setOnMouseClicked(e->{
+-                    myColor color = CP.getColorPicked();
++                    MyColor color = CP.getColorPicked();
+                     String tileId = color.toString();
+                     for(Node tile : TP.getChildren()) {
+                         if (tile.getId() == tileId) {
+-                            myShape s1 = stackMyShapes.pop();
+-                            myShape s2 = stackMyShapes.pop();
++                            MyShape s1 = stackMyShapes.pop();
++                            MyShape s2 = stackMyShapes.pop();
+                             centerPane.getChildren().add(addCenterCanvas(widthCenterCanvas, heightCenterCanvas, s1, s2, color));
+                             BP.setCenter(centerPane);
+                             break;
+@@ -272,20 +268,20 @@
+         double heightTopCanvas = 0.15 * heightCanvas;
+         double widthCenterCanvas = widthCanvas - widthLeftCanvas;
+         double heightCenterCanvas = heightCanvas - heightTopCanvas;
+-        myColorPalette CP = new myColorPalette(widthLeftCanvas, heightCenterCanvas);
++        MyColorPalette CP = new MyColorPalette(widthLeftCanvas, heightCenterCanvas);
+         TilePane TP = CP.getPalette();
+ 
+-        Image icon = new Image("C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\resources\\musicMakeYouLoseControl.png");
++        Image icon = new Image("/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/musicMakeYouLoseControl.png");
+         PS.getIcons().add(icon);
+ 
+-        Scene SC = new Scene(BP, widthCanvas, heightCanvas, myColor.WHITE.getJavaFXColor());
++        Scene SC = new Scene(BP, widthCanvas, heightCanvas, MyColor.WHITE.getJavaFXColor());
+         PS.setTitle("MyShape!");
+         PS.setScene(SC);
+ 
+         topPane.getChildren().add(addTopHBox(widthCanvas, heightTopCanvas, widthCenterCanvas, heightCenterCanvas, BP, CP, TP, centerPane));
+         BP.setTop(topPane);
+ 
+-        leftPane.getChildren().add(addLeftVBox(widthLeftCanvas, heightCenterCanvas, TP, myColor.ORANGE));
++        leftPane.getChildren().add(addLeftVBox(widthLeftCanvas, heightCenterCanvas, TP, MyColor.ORANGE));
+         BP.setLeft(leftPane);
+         PS.setResizable(false);
+         PS.show();
+Index: src/main/java/com/example/mycolor2/myLine.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myLine.java b/src/main/java/com/example/mycolor2/MyLine.java
+rename from src/main/java/com/example/mycolor2/myLine.java
+rename to src/main/java/com/example/mycolor2/MyLine.java
+--- a/src/main/java/com/example/mycolor2/myLine.java	
++++ b/src/main/java/com/example/mycolor2/MyLine.java	
+@@ -1,33 +1,32 @@
+ package com.example.mycolor2;
+ 
+ import javafx.scene.canvas.GraphicsContext;
+-import javafx.scene.shape.Rectangle;
+ 
+ import java.util.Optional;
+ 
+-public class myLine extends myShape{
+-    myPoint p1,p2;
+-    myPoint[] pLine = new myPoint[2];
+-    myColor color;
++public class MyLine extends MyShape {
++    MyPoint p1,p2;
++    MyPoint[] pLine = new MyPoint[2];
++    MyColor color;
+ 
+-    myLine(myPoint p1, myPoint p2, myColor color){
++    MyLine(MyPoint p1, MyPoint p2, MyColor color){
+ //        super(new myPoint(), null);
+         this.p1 = p1; this.p2 = p2;
+         pLine[0] = p1; pLine[1] =p2;
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+-    myLine(myLine l, myColor color){
++    MyLine(MyLine l, MyColor color){
+ //        super(new myPoint(), null);
+         this.p1 = (l.getLine())[0]; this.p2 = (l.getLine())[1];
+         pLine[0] = p1; pLine[1] = p2;
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+ 
+ //    @Override
+-    public void setColor(myColor color){this.color = color;}
+-    public myPoint[] getLine(){return pLine;}
++    public void setColor(MyColor color){this.color = color;}
++    public MyPoint[] getLine(){return pLine;}
+ //    @Override
+-    public myColor getColor(){return color;}
++    public MyColor getColor(){return color;}
+     public double angleX(){return p1.angleX(p2);}
+     public double length(){return p1.distance(p2);}
+ //    @Override
+@@ -44,16 +43,16 @@
+         GC.setStroke(color.getJavaFXColor());
+         GC.strokeLine(p1.getX(),p1.getY(),p2.getX(),p2.getY());
+     }
+-    public myRectangle getMyBoundingRectangle(){
++    public MyRectangle getMyBoundingRectangle(){
+         double x1 = p1.getX(); double y1 = p1.getY();
+         double x2 = p2.getX(); double y2 = p2.getY();
+-        myPoint pTLC = new myPoint(Math.min(x1,x2), Math.min(y1,y2),null);
+-        return new myRectangle(pTLC, Math.abs(x1-x2), Math.abs(y1-y2), null);
++        MyPoint pTLC = new MyPoint(Math.min(x1,x2), Math.min(y1,y2),null);
++        return new MyRectangle(pTLC, Math.abs(x1-x2), Math.abs(y1-y2), null);
+     }
+-    public boolean containsMyPoint(myPoint p){return (p1.distance(p)+p2.distance(p) == length());}
+-    public boolean similarObject(myShape s){
++    public boolean containsMyPoint(MyPoint p){return (p1.distance(p)+p2.distance(p) == length());}
++    public boolean similarObject(MyShape s){
+         if(s.getClass().toString().equals("class myLine")){
+-            myLine l = (myLine) s;
++            MyLine l = (MyLine) s;
+             return (this.length() == l.length());
+         }
+         else {return false;}
+Index: src/main/java/com/example/mycolor2/myCircle.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/myCircle.java b/src/main/java/com/example/mycolor2/MyCircle.java
+rename from src/main/java/com/example/mycolor2/myCircle.java
+rename to src/main/java/com/example/mycolor2/MyCircle.java
+--- a/src/main/java/com/example/mycolor2/myCircle.java	
++++ b/src/main/java/com/example/mycolor2/MyCircle.java	
+@@ -2,24 +2,24 @@
+ 
+ import java.util.Optional;
+ 
+-public class myCircle extends myOval{
+-    myPoint center; double radius; myColor color;
+-    myCircle(myPoint p, double r, myColor color){
++public class MyCircle extends MyOval {
++    MyPoint center; double radius; MyColor color;
++    MyCircle(MyPoint p, double r, MyColor color){
+         super(p,2.0*r,2.0*r,color);
+         this.center = p; this.radius = r;
+-        this.color = Optional.ofNullable(color).orElse(myColor.YELLOW);
++        this.color = Optional.ofNullable(color).orElse(MyColor.YELLOW);
+     }
+ 
+     @Override
+-    public void setColor(myColor color){this.color = color;}
+-    public myPoint getCenter(){return center;}
++    public void setColor(MyColor color){this.color = color;}
++    public MyPoint getCenter(){return center;}
+     public double getRadius(){return radius;}
+     @Override
+-    public myColor getColor(){return color;}
++    public MyColor getColor(){return color;}
+     @Override
+-    public boolean similarObject(myShape S){
++    public boolean similarObject(MyShape S){
+         if(S.getClass().toString().equals("class myCicle")){
+-            myCircle C = (myCircle) S;
++            MyCircle C = (MyCircle) S;
+             return radius == C.getRadius();
+         }
+         else {return false;}
