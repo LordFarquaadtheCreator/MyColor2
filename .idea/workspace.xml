@@ -4,8 +4,145 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="some changes">
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115509.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115509.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115518.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115518.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115527.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115527.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115534.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115534.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115642.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115642.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115653.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115653.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115658.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115658.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115706.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115706.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115714.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115714.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115717.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115717.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115723.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115723.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115726.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115726.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115729.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115729.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115756.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115756.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115803.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115803.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115810.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115810.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_120223.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_120223.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425 122809-1.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425 122809-1.mp4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121421.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121421.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121424.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121424.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121429.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121429.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121440.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121440.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121450.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121450.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121533.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121533.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121536.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121536.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121539.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121539.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121543.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121543.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121547.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121547.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121551.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121551.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121555.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121555.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121558.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121558.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121601.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121601.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121605.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121605.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121606.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121606.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121610.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121610.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121613.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121613.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121621.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121621.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121623.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121623.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121634.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121634.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121637.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121637.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121907.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121907.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122003.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122003.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122007.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122007.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122010.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122010.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122022.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122022.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122624.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122624.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122627.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122627.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122630.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122630.jpg" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122922-1.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122922-1.mp4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_123020.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_123020.mp4" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/CSc 22100 46252 M Assignment 2 03-11-2023.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/CSc 22100 46252 M Assignment 2 03-11-2023.pdf" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7208.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7208.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7209.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7209.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7210.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7210.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7211.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7211.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7212.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7212.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7213.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7213.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7214.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7214.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7215.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7215.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7216.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7216.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7217.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7217.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7218.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7218.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7219.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7219.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7220.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7220.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7221.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7221.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7222.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7222.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7223.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7223.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7224.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7224.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7225.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7225.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7226.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7226.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7227.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7227.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7228.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7228.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7229.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7229.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7230.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7230.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7231.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7231.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7232.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7232.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7233.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7233.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7234.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7234.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7235.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7235.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7236.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7236.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7237.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7237.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7238.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7238.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7239.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7239.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7240.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7240.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7241.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7241.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7242.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7242.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7243.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7243.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7244.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7244.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7245.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7245.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7246.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7246.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7247.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7247.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7248.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7248.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7249.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7249.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7250.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7250.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7251.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7251.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7252.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7252.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7253.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7253.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7254.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7254.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7255.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7255.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7256.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7256.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7257.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7257.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7258.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7258.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7259.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7259.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7260.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7260.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7261.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7261.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7262.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7262.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7263.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7263.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7264.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7264.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7265.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7265.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7266.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7266.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7267.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7267.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7268.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7268.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7269.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7269.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7270.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7270.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7271.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7271.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7272.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7272.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7273.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7273.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7274.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7274.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7275.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7275.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7276.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7276.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7277.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7277.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7278.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7278.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7279.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7279.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7280.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7280.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7281.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7281.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7282.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7282.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7283.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7283.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7284.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7284.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7285.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7285.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7286.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7286.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7287.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7287.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7288.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7288.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7289.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7289.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7290.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7290.HEIC" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,6 +211,11 @@
       <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\java\com\example\mycolor2" />
       <recent name="C:\Users\Fahad\IdeaProjects\MyColor2\src\main\resources" />
     </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="" />
+      <recent name="recources" />
+      <recent name="com.example.mycolor2" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -133,7 +275,14 @@
       <option name="project" value="LOCAL" />
       <updated>1682288796271</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="p3 is functional but theres formatting errors, the pie chart icon is artifacty and not padded for some reason?&#10;i dont really understand what the things in the dialog box mean ... and that causes issues">
+      <created>1682716803432</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1682716803432</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -155,7 +304,9 @@
     <MESSAGE value="p2 done!" />
     <MESSAGE value="p3 started, needs a whole extra file and new functions" />
     <MESSAGE value="some changes" />
-    <option name="LAST_COMMIT_MESSAGE" value="some changes" />
+    <MESSAGE value="p3 is functional but theres formatting errors, the pie chart icon is artifacty and not padded for some reason?&#10;i dont really understand what the things in the dialog box mean ... and that causes issues" />
+    <MESSAGE value="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it" />
+    <option name="LAST_COMMIT_MESSAGE" value="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

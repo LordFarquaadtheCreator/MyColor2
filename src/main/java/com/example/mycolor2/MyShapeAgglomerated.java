@@ -106,24 +106,24 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         TextField totalNumberEvents = new TextField();
         TextField startAngle = new TextField();
 
-        ComboBox title = new ComboBox();
-        title.getItems().addAll( "Moby Dick");
+//        ComboBox title = new ComboBox();
+//        title.getItems().addAll( "Moby Dick");
 
-        gridDialog.add(new Label("Display"), 0,0);
+        gridDialog.add(new Label("Number of Characters to Show"), 0,0);
         gridDialog.add(numberEvents,1,0);
-        gridDialog.add(new Label("Total"),2,0);
+        gridDialog.add(new Label("Number of Unique Characters (26)"),2,0); //isnt this redundant?
         gridDialog.add(totalNumberEvents,3,0);
-        gridDialog.add(new Label("Starting Angle"),0,1);
+        gridDialog.add(new Label("Starting Angle of First Slice"),0,1);
         gridDialog.add(startAngle,1,1);
-        gridDialog.add(new Label("Title"), 0,2);
-        gridDialog.add(title, 1,2);
+//        gridDialog.add(new Label("Title"), 0,2);
+//        gridDialog.add(title, 1,2); // i can remove the need for a combobox altogether
 
         dialog.getDialogPane().setContent(gridDialog);
 
         Platform.runLater(() -> numberEvents.requestFocus());
         dialog.setResultConverter(dialogButton -> {
             if(dialogButton == ButtonType.OK){
-                pieChartInputs.add(numberEvents.getText()); pieChartInputs.add(totalNumberEvents.getText()); pieChartInputs.add(startAngle.getText()); pieChartInputs.add(title.getValue().toString());
+                pieChartInputs.add(numberEvents.getText()); pieChartInputs.add(totalNumberEvents.getText()); pieChartInputs.add(startAngle.getText()); //pieChartInputs.add(title.getValue().toString());
                 return pieChartInputs;
             }
             return null;
@@ -133,8 +133,8 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
             this.N = Integer.parseInt(pieChartInputs.get(0));
             this.M = Integer.parseInt(pieChartInputs.get(1));
             this.startAngle = Double.parseDouble(pieChartInputs.get(2));
-            this.Title = pieChartInputs.get(3);
-            this.filename = "src/main/resources/com/example/mycolor2/" + Title + ".txt";
+//            this.Title = pieChartInputs.get(3);
+            this.filename = "src/main/resources/com/example/mycolor2/Moby Dick.txt";
 
             openFile();
             String w = readFile();
@@ -143,13 +143,13 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
             HistogramAlphaBet H = new HistogramAlphaBet(w);
             Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
 
-            Pane rightPane = new Pane();
-            rightPane.getChildren().add(addCanvasLegend(widthRightCanvas,heightCenterCanvas,H));
-            BP.setRight(rightPane);
-
             Pane centerPane = new Pane();
-            centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas,heightCenterCanvas,H));
+            centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas-widthRightCanvas,heightCenterCanvas,H, sortedFrequency));
             BP.setCenter(centerPane);
+
+            Pane rightPane = new Pane();
+            rightPane.getChildren().add(addCanvasLegend(widthRightCanvas,heightCenterCanvas,H, sortedFrequency));
+            BP.setRight(rightPane);
         });
     }
 
@@ -177,37 +177,12 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         if(input !=null) input.close();
     }
 
-    public Canvas addCanvasLegend(double widthCanvas, double heightCanvas, HistogramAlphaBet H){
-        String information;
-        Canvas CV = new Canvas(widthCanvas, heightCanvas);
+    public Canvas addCanvasPieChart(double widthCenterCanvas, double heightCenterCanvas, HistogramAlphaBet H, Map<Character, Integer> sortedFrequency){
+        Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);
         GraphicsContext GC = CV.getGraphicsContext2D();
 
-        MyColor colorLeftCanvas = MyColor.LINEN;
-        GC.setFill(colorLeftCanvas.getJavaFXColor());
-        GC.fillRect(0.0,0.0, widthCanvas, heightCanvas);
-
-        double xText = 20; double yText = 0.03625*heightCanvas;
-        MyColor colorStroke = MyColor.GRAY;
-        GC.setStroke(colorStroke.invertColor());
-        GC.setFont(Font.font("Comic Sans", 13));
-        GC.strokeText("Frequency: Cumulative " + H.getCumulativeFrequency(), xText, yText);
-
-        Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
-        double yStep = 0.03625*heightCanvas;
-        for(Character K : sortedFrequency.keySet()){
-            yText += yStep;
-            information = K+":\t"+sortedFrequency.get(K);
-            GC.strokeText(information,xText,yText);
-        }
-        return CV;
-    }
-
-    public Canvas addCanvasPieChart(double widthCanvas, double heightCanvas, HistogramAlphaBet H){
-        Canvas CV = new Canvas(widthCanvas, heightCanvas);
-        GraphicsContext GC = CV.getGraphicsContext2D();
-
-        MyPoint center = new MyPoint(0.4*widthCanvas, 0.5*heightCanvas, null);
-        double diameterPieChart = 0.60*Math.min(widthCanvas,heightCanvas);
+        MyPoint center = new MyPoint(0.5*widthCenterCanvas, 0.5*heightCenterCanvas, null);
+        double diameterPieChart = 0.50*Math.min(widthCenterCanvas,heightCenterCanvas);
         HistogramAlphaBet.MyPieChart pieChart = H.new MyPieChart(N,M, center, diameterPieChart, diameterPieChart, startAngle);
         Map<Character, Slice> slices = pieChart.getMyPieChart();
 
@@ -220,6 +195,30 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         }
         System.out.println("\nSum of Angles: " + sumOfAngles);
         pieChart.draw(GC);
+        return CV;
+    }
+
+    public Canvas addCanvasLegend(double widthRightCanvas, double heightCanvas, HistogramAlphaBet H, Map<Character, Integer> sortedFrequency){
+        String information;
+        Canvas CV = new Canvas(widthRightCanvas, heightCanvas);
+        GraphicsContext GC = CV.getGraphicsContext2D();
+
+        MyColor colorLeftCanvas = MyColor.LINEN;
+        GC.setFill(colorLeftCanvas.getJavaFXColor());
+        GC.fillRect(0.0,0.0, widthRightCanvas, heightCanvas);
+
+        double xText = 20; double yText = 0.03625*heightCanvas; //makes sure text is within bounds
+        MyColor colorStroke = MyColor.GRAY;
+        GC.setStroke(colorStroke.getJavaFXColor());
+        GC.setFont(Font.font("Comic Sans MS", 13));
+        GC.strokeText(" Frequency", xText, yText);
+
+        double yStep = 0.03625*heightCanvas;
+        for(Character K : sortedFrequency.keySet()){
+            yText += yStep;
+            information = K+":\t"+sortedFrequency.get(K);
+            GC.strokeText(information,xText,yText);
+        }
         return CV;
     }
 

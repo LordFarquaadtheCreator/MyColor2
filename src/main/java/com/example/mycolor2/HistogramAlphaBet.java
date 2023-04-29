@@ -64,19 +64,20 @@ public class HistogramAlphaBet {
 
     class MyPieChart{
         Map<Character, Slice> slices = new HashMap<Character, Slice>();
-        int N, M;
+        int numSlices, totalChars;
         MyPoint center;
         double width, height, rotateAngle;
 
-        MyPieChart(int N, int M, MyPoint center, double width, double height, double rotateAngle){
-            this.N = N;
-            this.M = M;
+        MyPieChart(int numSlices, int totalChars, MyPoint center, double width, double height, double rotateAngle){
+            this.numSlices = numSlices;
+            this.totalChars = totalChars;
             this.center = center;
             this.width = width;
             this.height = height;
             this.rotateAngle = rotateAngle < 360 ? rotateAngle : rotateAngle - 360;
             slices = getMyPieChart();
         }
+
         public Map<Character, Slice> getMyPieChart(){
             MyColor [] colors = MyColor.getMyColors();
             int colorSize = colors.length;
@@ -85,13 +86,14 @@ public class HistogramAlphaBet {
             double sliceStartAngle = this.rotateAngle;
 
             for(Character key : sortedProbability.keySet()){
-                double sliceValue = sortedProbability.get(key);
-                double sliceArcAngle = 360.0 * sliceValue;
+
+                double sliceArcAngle = 360.0 * sortedProbability.get(key);
                 MyColor color = colors[rand.nextInt(colorSize)];
-                String sliceInformation = key + ": " + String.format("%.4f", sliceValue);
-                slices.put(key, new Slice(center, width, height, sliceStartAngle, sliceArcAngle, color, sliceInformation));
-                sliceStartAngle += sliceArcAngle;
-                sliceStartAngle += sliceStartAngle < 360 ? sliceStartAngle : sliceStartAngle - 360;
+
+                String sliceInformation = key +": " + String.format("%.4f",sortedProbability.get(key));
+                slices.put(key,new Slice(center,width,height,sliceStartAngle,sliceArcAngle,color,sliceInformation));
+                sliceStartAngle = sliceStartAngle+sliceArcAngle;
+                sliceStartAngle = sliceArcAngle < 360.0? sliceStartAngle : sliceStartAngle-360;
             }
             return slices;
         }
@@ -102,18 +104,25 @@ public class HistogramAlphaBet {
             GC.fillRect(0.0,0.0,GC.getCanvas().getWidth(), GC.getCanvas().getHeight());
 
             int n = 0;
+
             double probabilityAllOtherCharacter = 1.0;
+            double i = 0.0;
+            for(Character key : sortedProbability.keySet()) {
+                i += sortedProbability.get(key);
+            }
+            System.out.println("total = "+ i);
+
             for(Character key : sortedProbability.keySet()){
                 double sliceStartingAngle = slices.get(key).getStartAngle();
                 double sliceArcAngle = slices.get(key).getArcAngle();
 
-                if(n<N){
+                if(n< numSlices){
                     slices.get(key).draw(GC);
                     probabilityAllOtherCharacter -= sortedProbability.get(key);
                     n++;
                 }
                 else{
-                    if(N != M){
+                    if(numSlices < totalChars){
                         String information = "All other characters: " + String.format("%.4f", probabilityAllOtherCharacter);
                         if(sliceStartingAngle < rotateAngle){
                             Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, rotateAngle-sliceStartingAngle, MyColor.getRandomColor(), information);

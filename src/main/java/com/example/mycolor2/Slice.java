@@ -27,11 +27,9 @@ public class Slice {
 
     public void draw (GraphicsContext GC){
         GC.setFill(color.getJavaFXColor());
-        GC.fillArc(center.getX()- 0.5 * width,center.getY() - 0.5 * height,width,height,startAngle,
-                arcAngle, ArcType.ROUND);
+        GC.fillArc(center.getX()- 0.5 * width,center.getY() - 0.5 * height,width,height,startAngle, arcAngle, ArcType.ROUND);
         GC.setStroke(MyColor.WHITE.getJavaFXColor());
-        GC.fillArc(center.getX()-0.5*width,center.getY()-0.5*height,width,height,startAngle,
-                arcAngle, ArcType.ROUND);
+        GC.fillArc(center.getX()-0.5*width,center.getY()-0.5*height,width,height,startAngle, arcAngle, ArcType.ROUND);
 
         double x = center.getX();double y = center.getY();
         double a = 0.55 * width; double b = 0.55 * height;
