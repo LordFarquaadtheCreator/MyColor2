@@ -85,15 +85,14 @@ public class HistogramAlphaBet {
             Random rand = new Random();
             double sliceStartAngle = this.rotateAngle;
 
-            for(Character key : sortedProbability.keySet()){
+            for(Character key : sortedProbability.keySet()){ // this does NOT take numSlices, totalChars into account at ALL and this is the main code that prints it
+                double sliceArcAngle = 360.0 * sortedProbability.get(key); // this will build the whole pie chart regardless of numSlices
+                MyColor keyColor = colors[rand.nextInt(colorSize)]; // each key's random color.
 
-                double sliceArcAngle = 360.0 * sortedProbability.get(key);
-                MyColor color = colors[rand.nextInt(colorSize)];
-
-                String sliceInformation = key +": " + String.format("%.4f",sortedProbability.get(key));
-                slices.put(key,new Slice(center,width,height,sliceStartAngle,sliceArcAngle,color,sliceInformation));
-                sliceStartAngle = sliceStartAngle+sliceArcAngle;
-                sliceStartAngle = sliceArcAngle < 360.0? sliceStartAngle : sliceStartAngle-360;
+                String sliceInformation = key + ": " + String.format("%.4f", sortedProbability.get(key)); // the little string that displays the slice's value
+                slices.put(key, new Slice(center, width, height, sliceStartAngle, sliceArcAngle, keyColor, sliceInformation)); // look into this function
+                sliceStartAngle += sliceArcAngle; // remembers our old angle that we just consumed
+                sliceStartAngle = sliceStartAngle < 360 ? sliceStartAngle : sliceStartAngle - 360; //basically an if statement that ensures the angles don't add up to more than 360
             }
             return slices;
         }
