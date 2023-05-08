@@ -421,9 +421,6 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         MyColorPalette CP = new MyColorPalette(widthLeftCanvas, heightCenterCanvas);
         TilePane TP = CP.getPalette();
 
-        Image icon = new Image("C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\resources\\com\\example\\mycolor2\\musicMakeYouLoseControl.png");
-        PS.getIcons().add(icon);
-
         Scene SC = new Scene(BP, widthCanvas, heightCanvas, MyColor.WHITE.getJavaFXColor());
         PS.setTitle("MyShape!");
         PS.setScene(SC);
