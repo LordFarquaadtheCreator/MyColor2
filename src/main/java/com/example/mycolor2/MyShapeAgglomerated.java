@@ -31,7 +31,7 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
     List<String> pieChartInputs = new ArrayList<>();
     boolean isGrades;
 
-    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException, SQLException {
+    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
         HBox HB = new HBox();
         HB.setPrefWidth(widthTopCanvas);
         HB.setPrefHeight(heightTopCanvas);
@@ -59,9 +59,8 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
                     case "Intersection":
                         dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
                     case "pieChart":
-                        typeChoser();
                         try {
-                            dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP);
+                            typeChooser(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP);
                         } catch (SQLException ex) {
                             throw new RuntimeException(ex);
                         }
@@ -97,29 +96,8 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
 //gotta change "text" option to chose between the text and the sql data
     // maybe have a check box be like, do u wanna chose text or upload your own?
     // then from there you can launch a file explorer? or maybe hardcode it to only open that text file
-    public void typeChoser(){
-        System.out.println("typeChoser executed");
 
-        ToggleGroup choser = new ToggleGroup();
-        RadioButton mobyDick = new RadioButton("Frequency of Characters");
-        mobyDick.setToggleGroup(choser);
-
-        RadioButton gradeButton = new RadioButton("Frequency of Grades");
-        gradeButton.setToggleGroup(choser);
-
-        Dialog<List<String>> preDialog = new Dialog<>();
-        preDialog.setTitle("Pie Chart Choser");
-        preDialog.setHeaderText(null);
-        preDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-
-        preDialog.setResultConverter(dialogButton -> {
-            this.isGrades = gradeButton.isSelected();
-            return null;
-        });
-        System.out.println("typeChoser executed");
-    }
-
-    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) throws SQLException {
+    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) {
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("Pie Chart");
         dialog.setHeaderText(null);
@@ -159,7 +137,6 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
                 this.N = Integer.parseInt(pieChartInputs.get(0));
                 this.M = Integer.parseInt(pieChartInputs.get(1));
                 this.startAngle = Double.parseDouble(pieChartInputs.get(2));
-                //            this.Title = pieChartInputs.get(3);
                 this.filename = "src/main/resources/com/example/mycolor2/Moby Dick.txt";
 
                 openFile();
@@ -177,7 +154,8 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
                 rightPane.getChildren().add(addCanvasLegend(widthRightCanvas, heightCenterCanvas, H, sortedFrequency));
                 BP.setRight(rightPane);
             });
-        } else {
+        }
+        else {
             ComboBox textFiles = new ComboBox();
             textFiles.getItems().addAll("/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt");
             gridDialog.add(new Label("Data will be taken from Text File: "), 0, 0);
@@ -248,6 +226,33 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
                 BP.setRight(rightPane);
             });
         }
+    }
+
+    public void typeChooser(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) throws SQLException {
+        Dialog<List<String>> preDialog = new Dialog<>();
+        preDialog.setTitle("Pie Chart Chooser");
+        preDialog.setHeaderText(null);
+        preDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK);
+
+
+        ToggleGroup chooser = new ToggleGroup();
+        RadioButton mobyDick = new RadioButton("Frequency of Characters");
+        mobyDick.setToggleGroup(chooser);
+
+        RadioButton gradeButton = new RadioButton("Frequency of Grades");
+        gradeButton.setToggleGroup(chooser);
+
+        VBox content = new VBox();
+        content.getChildren().addAll(mobyDick, gradeButton);
+
+
+        preDialog.setResultConverter(dialogButton -> {
+            this.isGrades = gradeButton.isSelected();
+            dialogPieChart(widthCenterCanvas, heightCenterCanvas, widthRightCanvas, BP);
+            return null;
+        });
+        preDialog.getDialogPane().setContent(content);
+        preDialog.showAndWait(); // Show the dialog box
     }
 
     public void openFile(){
