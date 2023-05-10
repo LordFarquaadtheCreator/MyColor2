@@ -33,7 +33,7 @@ public interface StudentsDatabaseInterface {
             "semester CHAR(6), " +
             "grade CHAR CHECK(grade = 'A' OR grade = 'B' OR grade = 'C' OR grade = 'D' OR grade = 'F' OR grade = 'W'), "+
             "PRIMARY KEY(emplId, courseId, sectionNo))";
-
+//CHANGE IT UP, THIS IS WHAT BILLY HAD
     String ddlInsertTableClasses = "INSERT INTO Classes VALUES ('10000 PP', 23530615,'34143',2021,'Spring','A'),"+
             "('10200 CC1',23530616,'32118',2021,'Spring','B'), "+
             "('10200 CC2',23530617,'32119',2021,'Spring','B'), "+
@@ -66,6 +66,7 @@ public interface StudentsDatabaseInterface {
 
     String ddlCreateTableAggregateGrades = "CREATE TABLE AggregateGrades(grade CHAR, numberStudents INT)";
 
+//    CHANGE IT UP THIS IS WHAT BILLY HAD
     String ddlInsertTableStudents = "INSERT INTO Students VALUES (23530615, 'Billy','Mei','hsbilly1@hotmail.com','M'), "+
             "(23530616, 'Yorhs', 'Diaz', 'yorhs123@gmail.com','M'), " +
             "(23530617, 'Sinead', 'So', 'sinead123@gmail.com', 'F'), "+

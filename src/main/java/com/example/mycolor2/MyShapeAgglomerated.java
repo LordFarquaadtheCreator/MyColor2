@@ -25,11 +25,9 @@ import java.util.*;
 public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
     Integer N,M;
     double startAngle;
-    String Title;
     String filename;
     Scanner input;
     List<String> pieChartInputs = new ArrayList<>();
-
 
     public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
         HBox HB = new HBox();
@@ -89,7 +87,9 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
     public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, MyShape s1, MyShape s2, MyColor color){
         return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);
     }
-
+//gotta change "text" option to chose between the text and the sql data
+    // maybe have a check box be like, do u wanna chose text or upload your own?
+    // then from there you can launch a file explorer? or maybe hardcode it to only open that text file
     public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) {
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("Pie Chart");
@@ -220,10 +220,6 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
             GC.strokeText(information,xText,yText);
         }
         return CV;
-    }
-
-    public Canvas addInterectionCanvas(double widthCenterCanvas, double heightCenterCanvas, MyShape S1, MyShape S2, MyColor color){
-        return S1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, S1, S2, color);
     }
 
     public void dialogOval(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShape, Pane centerPane){
@@ -406,6 +402,39 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
 
     @Override
     public void start(Stage PS) throws FileNotFoundException {
+        String url = "jdbc:mysql://localhost:3306/Students?allowLoadLocalInfile=true";
+        String username = "root";
+        String password = "Ldo5tp9A";
+        StudentsDatabase DB = new StudentsDatabase (urt, username, password);
+
+        String ddlCreateTable;
+        String filename, nameTable;
+
+        filename = "C: /Users/Admin/Desktop/CCNY Classes/CSc 22100 Software Design Laboratory/Lectures/Lectures/Lecture 12-14 Database
+        nameTable = "Students. Schedule";
+        StudentsDatabase.Schedule schedule = DB.new Schedule (filename, nameTable);
+
+        String nameToTable = "Students Courses";
+        String nameFromTable = "Students.Schedule";
+        StudentsDatabase.Courses courses = DB.new Courses (nameToTable, nameFromTable);
+
+        nameTable = "Students.Students";
+        StudentsDatabase.Students students = DB. new Students (nameTable);
+
+        nameTable = "Students.Classes";
+        StudentsDatabase.Classes classes = DB. new Classes (nameTable);
+
+        nameToTable = "Students.AggregateGrades";
+        namefromTable = "Students Classes";
+        StudentsDatabase.AggregateGrades aggregateGrades = DB.new AggregateGrades (nameToTable, nameFromTable);
+        Map<Character, Integer> AG = aggregateGrades.getAggregateGrades(nameToTable);
+        System.out.println("\nAggregate Grades: " + AG);
+
+        //creates histogram, center and creates the pie chart (should go in dialog pie chart)
+        HistogramAlphaBet H = new HistogramAlphaBet (AG);
+        MyPoint center = new MyPoint( 0.5 * widthCanvas, 8.5 * heightCanvas, null);
+        P.getChildren ().add(addCanvasPieChart (widthCanvas, heightCanvas, H));
+
         double widthCanvas = 800.0;
         double heightCanvas = 600.0;
 
