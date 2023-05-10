@@ -19,6 +19,7 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Paths;
+import java.sql.SQLException;
 import java.util.*;
 
 
@@ -105,9 +106,6 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         TextField numberEvents = new TextField();
         TextField totalNumberEvents = new TextField();
         TextField startAngle = new TextField();
-
-//        ComboBox title = new ComboBox();
-//        title.getItems().addAll( "Moby Dick");
 
         gridDialog.add(new Label("Number of Characters to Show"), 0,0);
         gridDialog.add(numberEvents,1,0);
@@ -401,31 +399,40 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
     }
 
     @Override
-    public void start(Stage PS) throws FileNotFoundException {
+    public void start(Stage PS) throws SQLException, FileNotFoundException {
+        double widthCanvas = 800.0;
+        double heightCanvas = 600.0;
+
+        BorderPane BP = new BorderPane();
+        Pane topPane = new Pane();
+        Pane leftPane = new Pane();
+        Pane centerPane = new Pane();
+
+        // bullshit start here !!
         String url = "jdbc:mysql://localhost:3306/Students?allowLoadLocalInfile=true";
         String username = "root";
         String password = "Ldo5tp9A";
-        StudentsDatabase DB = new StudentsDatabase (urt, username, password);
+        StudentsDatabase DB = new StudentsDatabase (url, username, password);
 
         String ddlCreateTable;
-        String filename, nameTable;
+        String scheduleFileName, nameTable;
 
-        filename = "C: /Users/Admin/Desktop/CCNY Classes/CSc 22100 Software Design Laboratory/Lectures/Lectures/Lecture 12-14 Database
-        nameTable = "Students. Schedule";
-        StudentsDatabase.Schedule schedule = DB.new Schedule (filename, nameTable);
+        scheduleFileName = "/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt";
+        nameTable = "Students.Schedule";
+        StudentsDatabase.Schedule schedule = DB.new Schedule(scheduleFileName, nameTable);
 
         String nameToTable = "Students Courses";
         String nameFromTable = "Students.Schedule";
-        StudentsDatabase.Courses courses = DB.new Courses (nameToTable, nameFromTable);
+        StudentsDatabase.Courses courses = DB.new Courses(nameToTable, nameFromTable);
 
         nameTable = "Students.Students";
-        StudentsDatabase.Students students = DB. new Students (nameTable);
+        StudentsDatabase.Students students = DB. new Students(nameTable);
 
         nameTable = "Students.Classes";
-        StudentsDatabase.Classes classes = DB. new Classes (nameTable);
+        StudentsDatabase.Classes classes = DB. new Classes(nameTable);
 
         nameToTable = "Students.AggregateGrades";
-        namefromTable = "Students Classes";
+        nameFromTable = "Students Classes";
         StudentsDatabase.AggregateGrades aggregateGrades = DB.new AggregateGrades (nameToTable, nameFromTable);
         Map<Character, Integer> AG = aggregateGrades.getAggregateGrades(nameToTable);
         System.out.println("\nAggregate Grades: " + AG);
@@ -433,15 +440,10 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         //creates histogram, center and creates the pie chart (should go in dialog pie chart)
         HistogramAlphaBet H = new HistogramAlphaBet (AG);
         MyPoint center = new MyPoint( 0.5 * widthCanvas, 8.5 * heightCanvas, null);
-        P.getChildren ().add(addCanvasPieChart (widthCanvas, heightCanvas, H));
+        // adds the pie chart to the
+        P.getChildren().add(addCanvasPieChart(widthCanvas, heightCanvas, H));
 
-        double widthCanvas = 800.0;
-        double heightCanvas = 600.0;
-
-        BorderPane BP = new BorderPane();
-        Pane topPane = new Pane();
-        Pane leftPane = new Pane();
-        Pane centerPane = new Pane(); // apparently that's normal
+        // bullshit end here !!
 
         double widthLeftCanvas = 0.3 * widthCanvas;
         double heightTopCanvas = 0.15 * heightCanvas;
