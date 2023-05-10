@@ -29,8 +29,9 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
     String filename;
     Scanner input;
     List<String> pieChartInputs = new ArrayList<>();
+    boolean isGrades;
 
-    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {
+    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException, SQLException {
         HBox HB = new HBox();
         HB.setPrefWidth(widthTopCanvas);
         HB.setPrefHeight(heightTopCanvas);
@@ -58,7 +59,12 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
                     case "Intersection":
                         dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);
                     case "pieChart":
-                        dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP);
+                        typeChoser();
+                        try {
+                            dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP);
+                        } catch (SQLException ex) {
+                            throw new RuntimeException(ex);
+                        }
                 }
             });
             HB.getChildren().add(geometricImage);
@@ -91,64 +97,157 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
 //gotta change "text" option to chose between the text and the sql data
     // maybe have a check box be like, do u wanna chose text or upload your own?
     // then from there you can launch a file explorer? or maybe hardcode it to only open that text file
-    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) {
+    public void typeChoser(){
+        System.out.println("typeChoser executed");
+
+        ToggleGroup choser = new ToggleGroup();
+        RadioButton mobyDick = new RadioButton("Frequency of Characters");
+        mobyDick.setToggleGroup(choser);
+
+        RadioButton gradeButton = new RadioButton("Frequency of Grades");
+        gradeButton.setToggleGroup(choser);
+
+        Dialog<List<String>> preDialog = new Dialog<>();
+        preDialog.setTitle("Pie Chart Choser");
+        preDialog.setHeaderText(null);
+        preDialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        preDialog.setResultConverter(dialogButton -> {
+            this.isGrades = gradeButton.isSelected();
+            return null;
+        });
+        System.out.println("typeChoser executed");
+    }
+
+    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) throws SQLException {
         Dialog<List<String>> dialog = new Dialog<>();
         dialog.setTitle("Pie Chart");
         dialog.setHeaderText(null);
-
         dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
 
         GridPane gridDialog = new GridPane();
         gridDialog.setHgap(10);
         gridDialog.setVgap(10);
-        gridDialog.setPadding(new Insets(20,150,10,10));
+        gridDialog.setPadding(new Insets(20, 150, 10, 10));
 
-        TextField numberEvents = new TextField();
-        TextField totalNumberEvents = new TextField();
-        TextField startAngle = new TextField();
+        if (!isGrades) {
+            TextField numberEvents = new TextField();
+            TextField totalNumberEvents = new TextField();
+            TextField startAngle = new TextField();
 
-        gridDialog.add(new Label("Number of Characters to Show"), 0,0);
-        gridDialog.add(numberEvents,1,0);
-        gridDialog.add(new Label("Number of Unique Characters (26)"),2,0); //isnt this redundant?
-        gridDialog.add(totalNumberEvents,3,0);
-        gridDialog.add(new Label("Starting Angle of First Slice"),0,1);
-        gridDialog.add(startAngle,1,1);
-//        gridDialog.add(new Label("Title"), 0,2);
-//        gridDialog.add(title, 1,2); // i can remove the need for a combobox altogether
+            gridDialog.add(new Label("Number of Characters to Show"), 0, 0);
+            gridDialog.add(numberEvents, 1, 0);
+            gridDialog.add(new Label("Number of Unique Characters (26)"), 2, 0); //isnt this redundant?
+            gridDialog.add(totalNumberEvents, 3, 0);
+            gridDialog.add(new Label("Starting Angle of First Slice"), 0, 1);
+            gridDialog.add(startAngle, 1, 1);
 
-        dialog.getDialogPane().setContent(gridDialog);
+            dialog.getDialogPane().setContent(gridDialog);
 
-        Platform.runLater(() -> numberEvents.requestFocus());
-        dialog.setResultConverter(dialogButton -> {
-            if(dialogButton == ButtonType.OK){
-                pieChartInputs.add(numberEvents.getText()); pieChartInputs.add(totalNumberEvents.getText()); pieChartInputs.add(startAngle.getText()); //pieChartInputs.add(title.getValue().toString());
-                return pieChartInputs;
-            }
-            return null;
-        });
-        Optional<List<String>> Result = dialog.showAndWait();
-        Result.ifPresent(event -> {
-            this.N = Integer.parseInt(pieChartInputs.get(0));
-            this.M = Integer.parseInt(pieChartInputs.get(1));
-            this.startAngle = Double.parseDouble(pieChartInputs.get(2));
-//            this.Title = pieChartInputs.get(3);
-            this.filename = "src/main/resources/com/example/mycolor2/Moby Dick.txt";
+            Platform.runLater(() -> numberEvents.requestFocus());
+            dialog.setResultConverter(dialogButton -> {
+                if (dialogButton == ButtonType.OK) {
+                    pieChartInputs.add(numberEvents.getText());
+                    pieChartInputs.add(totalNumberEvents.getText());
+                    pieChartInputs.add(startAngle.getText()); //pieChartInputs.add(title.getValue().toString());
+                    return pieChartInputs;
+                }
+                return null;
+            });
+            Optional<List<String>> Result = dialog.showAndWait();
+            Result.ifPresent(event -> {
+                this.N = Integer.parseInt(pieChartInputs.get(0));
+                this.M = Integer.parseInt(pieChartInputs.get(1));
+                this.startAngle = Double.parseDouble(pieChartInputs.get(2));
+                //            this.Title = pieChartInputs.get(3);
+                this.filename = "src/main/resources/com/example/mycolor2/Moby Dick.txt";
 
-            openFile();
-            String w = readFile();
-            closeFile();
+                openFile();
+                String w = readFile();
+                closeFile();
 
-            HistogramAlphaBet H = new HistogramAlphaBet(w);
-            Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
+                HistogramAlphaBet H = new HistogramAlphaBet(w);
+                Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
 
-            Pane centerPane = new Pane();
-            centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas-widthRightCanvas,heightCenterCanvas,H, sortedFrequency));
-            BP.setCenter(centerPane);
+                Pane centerPane = new Pane();
+                centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas - widthRightCanvas, heightCenterCanvas, H, sortedFrequency));
+                BP.setCenter(centerPane);
 
-            Pane rightPane = new Pane();
-            rightPane.getChildren().add(addCanvasLegend(widthRightCanvas,heightCenterCanvas,H, sortedFrequency));
-            BP.setRight(rightPane);
-        });
+                Pane rightPane = new Pane();
+                rightPane.getChildren().add(addCanvasLegend(widthRightCanvas, heightCenterCanvas, H, sortedFrequency));
+                BP.setRight(rightPane);
+            });
+        } else {
+            ComboBox textFiles = new ComboBox();
+            textFiles.getItems().addAll("/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt");
+            gridDialog.add(new Label("Data will be taken from Text File: "), 0, 0);
+            gridDialog.add(textFiles, 1, 0);
+            dialog.getDialogPane().setContent(gridDialog);
+
+            Optional<List<String>> Result = dialog.showAndWait();
+            Result.ifPresent(event -> {
+                String url = "jdbc:mysql://localhost:3306/Students?allowLoadLocalInfile=true";
+                String username = "root";
+                String password = "Ldo5tp9A";
+                MyDatabase DB = new MyDatabase(url, username, password);
+
+                String ddlCreateTable;
+                String scheduleFileName, nameTable;
+
+                scheduleFileName = "/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt";
+                nameTable = "Students.Schedule";
+                try {
+                    MyDatabase.Schedule schedule = DB.new Schedule(scheduleFileName, nameTable);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                String nameToTable = "Students Courses";
+                String nameFromTable = "Students.Schedule";
+                try {
+                    MyDatabase.Courses courses = DB.new Courses(nameToTable, nameFromTable);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                nameTable = "Students.Students";
+                try {
+                    MyDatabase.Students students = DB.new Students(nameTable);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                nameTable = "Students.Classes";
+                try {
+                    MyDatabase.Classes classes = DB.new Classes(nameTable);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+
+                nameToTable = "Students.AggregateGrades";
+                nameFromTable = "Students Classes";
+                MyDatabase.AggregateGrades aggregateGrades = null;
+                try {
+                    aggregateGrades = DB.new AggregateGrades(nameToTable, nameFromTable);
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+                Map<Character, Integer> AG = aggregateGrades.getAggregateGrades(nameToTable);
+                System.out.println("\nAggregate Grades: " + AG);
+
+                //creates histogram, center and creates the pie chart (should go in dialog pie chart
+                HistogramAlphaBet H = new HistogramAlphaBet(AG);
+                Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
+                // adds the pie chart to the
+                Pane centerPane = new Pane();
+                BP.getChildren().add(addCanvasPieChart(widthCenterCanvas - widthRightCanvas, heightCenterCanvas, H, sortedFrequency));
+                BP.setCenter(centerPane);
+
+                Pane rightPane = new Pane();
+                rightPane.getChildren().add(addCanvasLegend(widthRightCanvas, heightCenterCanvas, H, sortedFrequency));
+                BP.setRight(rightPane);
+            });
+        }
     }
 
     public void openFile(){
@@ -407,43 +506,6 @@ public class MyShapeAgglomerated extends Application{ // formerly "testMyColor"
         Pane topPane = new Pane();
         Pane leftPane = new Pane();
         Pane centerPane = new Pane();
-
-        // bullshit start here !!
-        String url = "jdbc:mysql://localhost:3306/Students?allowLoadLocalInfile=true";
-        String username = "root";
-        String password = "Ldo5tp9A";
-        StudentsDatabase DB = new StudentsDatabase (url, username, password);
-
-        String ddlCreateTable;
-        String scheduleFileName, nameTable;
-
-        scheduleFileName = "/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt";
-        nameTable = "Students.Schedule";
-        StudentsDatabase.Schedule schedule = DB.new Schedule(scheduleFileName, nameTable);
-
-        String nameToTable = "Students Courses";
-        String nameFromTable = "Students.Schedule";
-        StudentsDatabase.Courses courses = DB.new Courses(nameToTable, nameFromTable);
-
-        nameTable = "Students.Students";
-        StudentsDatabase.Students students = DB. new Students(nameTable);
-
-        nameTable = "Students.Classes";
-        StudentsDatabase.Classes classes = DB. new Classes(nameTable);
-
-        nameToTable = "Students.AggregateGrades";
-        nameFromTable = "Students Classes";
-        StudentsDatabase.AggregateGrades aggregateGrades = DB.new AggregateGrades (nameToTable, nameFromTable);
-        Map<Character, Integer> AG = aggregateGrades.getAggregateGrades(nameToTable);
-        System.out.println("\nAggregate Grades: " + AG);
-
-        //creates histogram, center and creates the pie chart (should go in dialog pie chart)
-        HistogramAlphaBet H = new HistogramAlphaBet (AG);
-        MyPoint center = new MyPoint( 0.5 * widthCanvas, 8.5 * heightCanvas, null);
-        // adds the pie chart to the
-        P.getChildren().add(addCanvasPieChart(widthCanvas, heightCanvas, H));
-
-        // bullshit end here !!
 
         double widthLeftCanvas = 0.3 * widthCanvas;
         double heightTopCanvas = 0.15 * heightCanvas;

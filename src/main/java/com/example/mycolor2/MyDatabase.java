@@ -1,5 +1,4 @@
 package com.example.mycolor2;
-import javafx.scene.control.Tab;
 
 import java.sql. DriverManager;
 import java. sql. Connection;
@@ -8,17 +7,17 @@ import java.sql. SQLException;
 
 import java.util. Map;
 import java.util. HashMap;
-public class StudentsDatabase implements TableInterface, StudentsDatabaseInterface{
-        String url, username, password;
-        Connection connection;
+public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
+    String url, username, password;
+    Connection connection;
 
-        StudentsDatabase (String url, String username, String password) {
-            this.url = url;
-            this.username = username;
-            this.password = password;
-            this.connection = getConnection(url, username, password);
-        }
-
+    //establishes connection
+    MyDatabase(String url, String username, String password) {
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.connection = getConnection(url, username, password);
+    }
     public Connection getConnection (String url, String username, String password) {
         Connection connection = null;
         try {

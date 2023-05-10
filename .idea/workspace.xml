@@ -4,12 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="added some stuff for p4">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/StudentsDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/StudentsDatabase.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/StudentsDatabaseInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/StudentsDatabaseInterface.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/StudentsDatabase.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyDatabase.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hello-view.fxml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hisHistrogram.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hisSlice.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/myApplication.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +103,7 @@
       <updated>1677703730750</updated>
       <workItem from="1683644622206" duration="1215000" />
       <workItem from="1683678374902" duration="3000" />
-      <workItem from="1683729429366" duration="4746000" />
+      <workItem from="1683729429366" duration="9340000" />
     </task>
     <task id="LOCAL-00001" summary="done, but i need to change it up a bit yk to make it my own">
       <created>1677992195374</created>
@@ -173,7 +175,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683731863187</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it">
+      <created>1683734640633</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1683734640633</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -203,7 +212,8 @@
     <MESSAGE value="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it" />
     <MESSAGE value="added intefaces for p4" />
     <MESSAGE value="added some stuff for p4" />
-    <option name="LAST_COMMIT_MESSAGE" value="added some stuff for p4" />
+    <MESSAGE value="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it" />
+    <option name="LAST_COMMIT_MESSAGE" value="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
