@@ -1,0 +1,1175 @@
+Index: src/main/java/com/example/mycolor2/HistogramAlphaBet.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mycolor2;\r\n\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport java.util.*;\r\nimport java.util.stream.Collectors;\r\n\r\npublic class HistogramAlphaBet {\r\n    Map<Character, Integer> frequency = new HashMap<>();\r\n    Map<Character, Double> probability = new HashMap<>();\r\n\r\n    HistogramAlphaBet(Map<Character, Integer> m){frequency.putAll(m);}\r\n    HistogramAlphaBet(HistogramAlphaBet h){\r\n        frequency.putAll(h.getFrequency());\r\n        probability.putAll(h.getProbability());\r\n    }\r\n    HistogramAlphaBet(String text){\r\n        String w = text.replace(\"[^a-zA-Z]\",\"\").toLowerCase();\r\n        for(int i = 0; i <w.length();i++){\r\n            Character key = w.charAt(i);\r\n            incrementFrequency(frequency,key);\r\n        }\r\n        probability = getProbability();\r\n    }\r\n    public Map<Character, Integer> getFrequency() {return frequency;}\r\n    public Integer getCumulativeFrequency(){return frequency.values().stream().reduce(0,Integer::sum);}\r\n\r\n    public Map<Character,Integer>sortUpFrequency(){\r\n        return frequency.entrySet().stream()\r\n                .sorted(Map.Entry.comparingByValue())\r\n                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));\r\n    }\r\n    public Map<Character,Integer> sortDownFrequency(){\r\n        return frequency.entrySet().stream()\r\n                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))\r\n                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));\r\n    }\r\n    public Map<Character, Double> getProbability() {\r\n        double inverseCumulativeFrequency = 1.0 / getCumulativeFrequency();\r\n        for(Character Key : frequency.keySet()){\r\n            probability.put(Key,(double)frequency.get(Key)*inverseCumulativeFrequency);\r\n        }\r\n        return probability;\r\n    }\r\n    public Map<Character,Double>sortDownProbability(){\r\n        return getProbability().entrySet().stream()\r\n                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))\r\n                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));\r\n    }\r\n    public Double getSumOfProbability(){return probability.values().stream().reduce(0.0,Double::sum);}\r\n    public boolean checkSumOfProbability(){return getSumOfProbability() == 1;}\r\n\r\n    @Override\r\n    public String toString() {\r\n        String output =\"Frequency of Characters:\\n\";\r\n        for(Character K :frequency.keySet()){\r\n            output += K + \": \" + frequency.get(K) + \"\\n\";\r\n        }\r\n        return output;\r\n    }\r\n    private static<k> void incrementFrequency(Map<k,Integer>m,k key){\r\n        m.putIfAbsent(key,0);\r\n        m.put(key,m.get(key)+1);\r\n    }\r\n\r\n    class MyPieChart{\r\n        Map<Character, Slice> slices = new HashMap<Character, Slice>();\r\n        int numSlices, totalChars;\r\n        MyPoint center;\r\n        double width, height, rotateAngle;\r\n\r\n        MyPieChart(int numSlices, int totalChars, MyPoint center, double width, double height, double rotateAngle){\r\n            this.numSlices = numSlices;\r\n            this.totalChars = totalChars;\r\n            this.center = center;\r\n            this.width = width;\r\n            this.height = height;\r\n            this.rotateAngle = rotateAngle < 360 ? rotateAngle : rotateAngle - 360;\r\n            slices = getMyPieChart();\r\n        }\r\n\r\n        public Map<Character, Slice> getMyPieChart(){\r\n            MyColor [] colors = MyColor.getMyColors();\r\n            int colorSize = colors.length;\r\n            Map<Character, Double> sortedProbability = sortDownProbability();\r\n            Random rand = new Random();\r\n            double sliceStartAngle = this.rotateAngle;\r\n\r\n            for(Character key : sortedProbability.keySet()){ // this does NOT take numSlices, totalChars into account at ALL and this is the main code that prints it\r\n                double sliceArcAngle = 360.0 * sortedProbability.get(key); // this will build the whole pie chart regardless of numSlices\r\n                MyColor keyColor = colors[rand.nextInt(colorSize)]; // each key's random color.\r\n\r\n                String sliceInformation = key + \": \" + String.format(\"%.4f\", sortedProbability.get(key)); // the little string that displays the slice's value\r\n                slices.put(key, new Slice(center, width, height, sliceStartAngle, sliceArcAngle, keyColor, sliceInformation)); // look into this function\r\n                sliceStartAngle += sliceArcAngle; // remembers our old angle that we just consumed\r\n                sliceStartAngle = sliceStartAngle < 360 ? sliceStartAngle : sliceStartAngle - 360; //basically an if statement that ensures the angles don't add up to more than 360\r\n            }\r\n            return slices;\r\n        }\r\n        public void draw(GraphicsContext GC){\r\n            Map<Character, Double> sortedProbability = sortDownProbability();\r\n            GC.clearRect(0.0,0.0,GC.getCanvas().getWidth(), GC.getCanvas().getHeight());\r\n            GC.setFill(MyColor.GREY.getJavaFXColor());\r\n            GC.fillRect(0.0,0.0,GC.getCanvas().getWidth(), GC.getCanvas().getHeight());\r\n\r\n            int n = 0;\r\n\r\n            double probabilityAllOtherCharacter = 1.0;\r\n            double i = 0.0;\r\n            for(Character key : sortedProbability.keySet()) {\r\n                i += sortedProbability.get(key);\r\n            }\r\n            System.out.println(\"total = \"+ i);\r\n\r\n            for(Character key : sortedProbability.keySet()){\r\n                double sliceStartingAngle = slices.get(key).getStartAngle();\r\n                double sliceArcAngle = slices.get(key).getArcAngle();\r\n\r\n                if(n< numSlices){\r\n                    slices.get(key).draw(GC);\r\n                    probabilityAllOtherCharacter -= sortedProbability.get(key);\r\n                    n++;\r\n                }\r\n                else{\r\n                    if(numSlices < totalChars){\r\n                        String information = \"All other characters: \" + String.format(\"%.4f\", probabilityAllOtherCharacter);\r\n                        if(sliceStartingAngle < rotateAngle){\r\n                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, rotateAngle-sliceStartingAngle, MyColor.getRandomColor(), information);\r\n                            sliceAllOtherCharacters.draw(GC);\r\n                        }\r\n                        else{\r\n                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, 360-sliceStartingAngle+rotateAngle, MyColor.getRandomColor(), information);\r\n                            sliceAllOtherCharacters.draw(GC);\r\n                        }\r\n                        break;\r\n                    }\r\n                }\r\n            }\r\n        }\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/HistogramAlphaBet.java b/src/main/java/com/example/mycolor2/HistogramAlphaBet.java
+--- a/src/main/java/com/example/mycolor2/HistogramAlphaBet.java	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ b/src/main/java/com/example/mycolor2/HistogramAlphaBet.java	(date 1682801257703)
+@@ -23,12 +23,6 @@
+     }
+     public Map<Character, Integer> getFrequency() {return frequency;}
+     public Integer getCumulativeFrequency(){return frequency.values().stream().reduce(0,Integer::sum);}
+-
+-    public Map<Character,Integer>sortUpFrequency(){
+-        return frequency.entrySet().stream()
+-                .sorted(Map.Entry.comparingByValue())
+-                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));
+-    }
+     public Map<Character,Integer> sortDownFrequency(){
+         return frequency.entrySet().stream()
+                 .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+@@ -63,7 +57,7 @@
+     }
+ 
+     class MyPieChart{
+-        Map<Character, Slice> slices = new HashMap<Character, Slice>();
++        Map<Character, MySlice> slices = new HashMap<Character, MySlice>();
+         int numSlices, totalChars;
+         MyPoint center;
+         double width, height, rotateAngle;
+@@ -78,7 +72,7 @@
+             slices = getMyPieChart();
+         }
+ 
+-        public Map<Character, Slice> getMyPieChart(){
++        public Map<Character, MySlice> getMyPieChart(){
+             MyColor [] colors = MyColor.getMyColors();
+             int colorSize = colors.length;
+             Map<Character, Double> sortedProbability = sortDownProbability();
+@@ -90,7 +84,7 @@
+                 MyColor keyColor = colors[rand.nextInt(colorSize)]; // each key's random color.
+ 
+                 String sliceInformation = key + ": " + String.format("%.4f", sortedProbability.get(key)); // the little string that displays the slice's value
+-                slices.put(key, new Slice(center, width, height, sliceStartAngle, sliceArcAngle, keyColor, sliceInformation)); // look into this function
++                slices.put(key, new MySlice(center, width, height, sliceStartAngle, sliceArcAngle, keyColor, sliceInformation)); // look into this function
+                 sliceStartAngle += sliceArcAngle; // remembers our old angle that we just consumed
+                 sliceStartAngle = sliceStartAngle < 360 ? sliceStartAngle : sliceStartAngle - 360; //basically an if statement that ensures the angles don't add up to more than 360
+             }
+@@ -103,13 +97,7 @@
+             GC.fillRect(0.0,0.0,GC.getCanvas().getWidth(), GC.getCanvas().getHeight());
+ 
+             int n = 0;
+-
+             double probabilityAllOtherCharacter = 1.0;
+-            double i = 0.0;
+-            for(Character key : sortedProbability.keySet()) {
+-                i += sortedProbability.get(key);
+-            }
+-            System.out.println("total = "+ i);
+ 
+             for(Character key : sortedProbability.keySet()){
+                 double sliceStartingAngle = slices.get(key).getStartAngle();
+@@ -124,12 +112,12 @@
+                     if(numSlices < totalChars){
+                         String information = "All other characters: " + String.format("%.4f", probabilityAllOtherCharacter);
+                         if(sliceStartingAngle < rotateAngle){
+-                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, rotateAngle-sliceStartingAngle, MyColor.getRandomColor(), information);
+-                            sliceAllOtherCharacters.draw(GC);
++                            MySlice mySliceAllOtherCharacters = new MySlice(center, width, height, sliceStartingAngle, rotateAngle-sliceStartingAngle, MyColor.getRandomColor(), information);
++                            mySliceAllOtherCharacters.draw(GC);
+                         }
+                         else{
+-                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartingAngle, 360-sliceStartingAngle+rotateAngle, MyColor.getRandomColor(), information);
+-                            sliceAllOtherCharacters.draw(GC);
++                            MySlice mySliceAllOtherCharacters = new MySlice(center, width, height, sliceStartingAngle, 360-sliceStartingAngle+rotateAngle, MyColor.getRandomColor(), information);
++                            mySliceAllOtherCharacters.draw(GC);
+                         }
+                         break;
+                     }
+Index: src/main/java/com/example/mycolor2/MyShapeAgglomerated.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.mycolor2;\r\n\r\nimport javafx.application.Application;\r\nimport javafx.application.Platform;\r\nimport javafx.geometry.Insets;\r\nimport javafx.geometry.Pos;\r\nimport javafx.scene.Node;\r\nimport javafx.scene.Scene;\r\nimport javafx.scene.canvas.Canvas;\r\nimport javafx.scene.canvas.GraphicsContext;\r\nimport javafx.scene.control.*;\r\nimport javafx.scene.image.Image;\r\nimport javafx.scene.image.ImageView;\r\nimport javafx.scene.layout.*;\r\nimport javafx.scene.text.Font;\r\nimport javafx.stage.Stage;\r\n\r\nimport java.io.FileInputStream;\r\nimport java.io.FileNotFoundException;\r\nimport java.io.IOException;\r\nimport java.nio.file.Paths;\r\nimport java.util.*;\r\n\r\n\r\npublic class MyShapeAgglomerated extends Application{ // formerly \"testMyColor\"\r\n    Integer N,M;\r\n    double startAngle;\r\n    String Title;\r\n    String filename;\r\n    Scanner input;\r\n    List<String> pieChartInputs = new ArrayList<>();\r\n\r\n\r\n    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Pane centerPane) throws FileNotFoundException {\r\n        HBox HB = new HBox();\r\n        HB.setPrefWidth(widthTopCanvas);\r\n        HB.setPrefHeight(heightTopCanvas);\r\n        HB.setStyle(\"-fx-background-color: #B2A4FF;\");\r\n\r\n        String [] nameImages = new String [] {\"Oval\", \"Rectangle\", \"Intersection\", \"pieChart\"};\r\n        String pathFile = \"src/main/resources/com/example/mycolor2/\";\r\n        Deque<MyShape> stackMyShapes = new ArrayDeque<>();\r\n        HB.setSpacing(50);\r\n        HB.setAlignment(Pos.CENTER);\r\n\r\n        for (String nameImage : nameImages){\r\n            String nameFile = pathFile + nameImage + \".png\";\r\n            ImageView geometricImage = new ImageView(new Image(new FileInputStream(nameFile), heightTopCanvas, heightTopCanvas, true, false));\r\n\r\n            //draw a geometric shape on mouse click: lambda expression\r\n            geometricImage.setOnMouseClicked(e -> {\r\n                switch (nameImage){\r\n                    case \"Oval\":\r\n                        dialogOval(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);\r\n                        break;\r\n                    case \"Rectangle\":\r\n                        dialogRectangle(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);\r\n                        break;\r\n                    case \"Intersection\":\r\n                        dialogIntersection(widthCenterCanvas, heightCenterCanvas, BP, CP, TP, stackMyShapes, centerPane);\r\n                    case \"pieChart\":\r\n                        dialogPieChart(widthCenterCanvas, heightCenterCanvas, 0.2*widthCenterCanvas, BP);\r\n                }\r\n            });\r\n            HB.getChildren().add(geometricImage);\r\n        }\r\n        return HB;\r\n    }\r\n\r\n    public VBox addLeftVBox(double widthLeftCanvas, double heightLeftCanvas, TilePane TP, MyColor color){\r\n        //make a vbox node\r\n        VBox VB = new VBox();\r\n        VB.setPrefWidth(widthLeftCanvas);\r\n        VB.setPrefHeight(heightLeftCanvas);\r\n        VB.setPadding(new Insets(5));\r\n        VB.setStyle(\"-fx-background-color: #FFB4B4;\");\r\n\r\n        //make label my color palette\r\n        Label lblMyColorPalette = new Label(\"MyColor Palette\");\r\n        lblMyColorPalette.setPrefWidth(widthLeftCanvas);\r\n        lblMyColorPalette.setTextFill(MyColor.WHITE.getJavaFXColor());\r\n        lblMyColorPalette.setBackground(new Background(new BackgroundFill(Optional.ofNullable(color).orElse(MyColor.GREY).getJavaFXColor(), CornerRadii.EMPTY, Insets.EMPTY)));\r\n\r\n        //make a mycolorpalette of all mycolor objects and add into the vbox together with the label\r\n        VB.getChildren().addAll(lblMyColorPalette, TP);\r\n        return VB;\r\n    }\r\n\r\n    public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, MyShape s1, MyShape s2, MyColor color){\r\n        return s1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, s1,s2,color);\r\n    }\r\n\r\n    public void dialogPieChart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane BP) {\r\n        Dialog<List<String>> dialog = new Dialog<>();\r\n        dialog.setTitle(\"Pie Chart\");\r\n        dialog.setHeaderText(null);\r\n\r\n        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);\r\n\r\n        GridPane gridDialog = new GridPane();\r\n        gridDialog.setHgap(10);\r\n        gridDialog.setVgap(10);\r\n        gridDialog.setPadding(new Insets(20,150,10,10));\r\n\r\n        TextField numberEvents = new TextField();\r\n        TextField totalNumberEvents = new TextField();\r\n        TextField startAngle = new TextField();\r\n\r\n//        ComboBox title = new ComboBox();\r\n//        title.getItems().addAll( \"Moby Dick\");\r\n\r\n        gridDialog.add(new Label(\"Number of Characters to Show\"), 0,0);\r\n        gridDialog.add(numberEvents,1,0);\r\n        gridDialog.add(new Label(\"Number of Unique Characters (26)\"),2,0); //isnt this redundant?\r\n        gridDialog.add(totalNumberEvents,3,0);\r\n        gridDialog.add(new Label(\"Starting Angle of First Slice\"),0,1);\r\n        gridDialog.add(startAngle,1,1);\r\n//        gridDialog.add(new Label(\"Title\"), 0,2);\r\n//        gridDialog.add(title, 1,2); // i can remove the need for a combobox altogether\r\n\r\n        dialog.getDialogPane().setContent(gridDialog);\r\n\r\n        Platform.runLater(() -> numberEvents.requestFocus());\r\n        dialog.setResultConverter(dialogButton -> {\r\n            if(dialogButton == ButtonType.OK){\r\n                pieChartInputs.add(numberEvents.getText()); pieChartInputs.add(totalNumberEvents.getText()); pieChartInputs.add(startAngle.getText()); //pieChartInputs.add(title.getValue().toString());\r\n                return pieChartInputs;\r\n            }\r\n            return null;\r\n        });\r\n        Optional<List<String>> Result = dialog.showAndWait();\r\n        Result.ifPresent(event -> {\r\n            this.N = Integer.parseInt(pieChartInputs.get(0));\r\n            this.M = Integer.parseInt(pieChartInputs.get(1));\r\n            this.startAngle = Double.parseDouble(pieChartInputs.get(2));\r\n//            this.Title = pieChartInputs.get(3);\r\n            this.filename = \"src/main/resources/com/example/mycolor2/Moby Dick.txt\";\r\n\r\n            openFile();\r\n            String w = readFile();\r\n            closeFile();\r\n\r\n            HistogramAlphaBet H = new HistogramAlphaBet(w);\r\n            Map<Character, Integer> sortedFrequency = H.sortDownFrequency();\r\n\r\n            Pane centerPane = new Pane();\r\n            centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas-widthRightCanvas,heightCenterCanvas,H, sortedFrequency));\r\n            BP.setCenter(centerPane);\r\n\r\n            Pane rightPane = new Pane();\r\n            rightPane.getChildren().add(addCanvasLegend(widthRightCanvas,heightCenterCanvas,H, sortedFrequency));\r\n            BP.setRight(rightPane);\r\n        });\r\n    }\r\n\r\n    public void openFile(){\r\n        try{\r\n            input = new Scanner(Paths.get(filename));\r\n        }catch(IOException ioException){\r\n            System.err.println(\"File is not found\");\r\n        }\r\n    }\r\n    public String readFile(){\r\n        String w =\"\";\r\n        try{\r\n            while(input.hasNext()){\r\n                w += input.nextLine().replaceAll(\"[^a-zA-Z]\",\"\").toLowerCase();\r\n            }\r\n        }catch (NoSuchElementException elementException){\r\n            System.err.println(\"Invalid input! Terminating.....\");\r\n        }catch (IllegalStateException stateException){\r\n            System.out.println(\"Error processing file! Terminating....\");\r\n        }\r\n        return w;\r\n    }\r\n    public void closeFile(){\r\n        if(input !=null) input.close();\r\n    }\r\n\r\n    public Canvas addCanvasPieChart(double widthCenterCanvas, double heightCenterCanvas, HistogramAlphaBet H, Map<Character, Integer> sortedFrequency){\r\n        Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);\r\n        GraphicsContext GC = CV.getGraphicsContext2D();\r\n\r\n        MyPoint center = new MyPoint(0.5*widthCenterCanvas, 0.5*heightCenterCanvas, null);\r\n        double diameterPieChart = 0.50*Math.min(widthCenterCanvas,heightCenterCanvas);\r\n        HistogramAlphaBet.MyPieChart pieChart = H.new MyPieChart(N,M, center, diameterPieChart, diameterPieChart, startAngle);\r\n        Map<Character, Slice> slices = pieChart.getMyPieChart();\r\n\r\n        System.out.println(\"\\nPie Chart\");\r\n        slices.forEach((K,V) -> System.out.println(K+\": \" + slices.get(K)));\r\n\r\n        double sumOfAngles = 0.0;\r\n        for(Character key : slices.keySet()){\r\n            sumOfAngles += slices.get(key).getArcAngle();\r\n        }\r\n        System.out.println(\"\\nSum of Angles: \" + sumOfAngles);\r\n        pieChart.draw(GC);\r\n        return CV;\r\n    }\r\n\r\n    public Canvas addCanvasLegend(double widthRightCanvas, double heightCanvas, HistogramAlphaBet H, Map<Character, Integer> sortedFrequency){\r\n        String information;\r\n        Canvas CV = new Canvas(widthRightCanvas, heightCanvas);\r\n        GraphicsContext GC = CV.getGraphicsContext2D();\r\n\r\n        MyColor colorLeftCanvas = MyColor.LINEN;\r\n        GC.setFill(colorLeftCanvas.getJavaFXColor());\r\n        GC.fillRect(0.0,0.0, widthRightCanvas, heightCanvas);\r\n\r\n        double xText = 20; double yText = 0.03625*heightCanvas; //makes sure text is within bounds\r\n        MyColor colorStroke = MyColor.GRAY;\r\n        GC.setStroke(colorStroke.getJavaFXColor());\r\n        GC.setFont(Font.font(\"Comic Sans MS\", 13));\r\n        GC.strokeText(\" Frequency\", xText, yText);\r\n\r\n        double yStep = 0.03625*heightCanvas;\r\n        for(Character K : sortedFrequency.keySet()){\r\n            yText += yStep;\r\n            information = K+\":\\t\"+sortedFrequency.get(K);\r\n            GC.strokeText(information,xText,yText);\r\n        }\r\n        return CV;\r\n    }\r\n\r\n    public Canvas addInterectionCanvas(double widthCenterCanvas, double heightCenterCanvas, MyShape S1, MyShape S2, MyColor color){\r\n        return S1.drawIntersectMyShapes(widthCenterCanvas, heightCenterCanvas, S1, S2, color);\r\n    }\r\n\r\n    public void dialogOval(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShape, Pane centerPane){\r\n        Dialog<List<String>> dialog = new Dialog<>();\r\n        dialog.setTitle(\"MyOval\");\r\n        dialog.setHeaderText(null);\r\n\r\n        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);\r\n\r\n        GridPane gridDialog = new GridPane();\r\n        gridDialog.setHgap(10); gridDialog.setVgap(10);\r\n        gridDialog.setPadding(new Insets(20,100,10,10));\r\n\r\n        TextField xCenter = new TextField();\r\n        TextField yCenter = new TextField();\r\n        TextField width = new TextField();\r\n        TextField height = new TextField();\r\n\r\n        gridDialog.add(new Label(\"Center\"), 0, 0);\r\n        gridDialog.add(xCenter,1,0);\r\n        gridDialog.add(new Label(\"x-Coordinate as fraction of canvas width\"), 2,0);\r\n        gridDialog.add(yCenter,1,1);\r\n        gridDialog.add(new Label(\"y-Coordinate as fraction of canvas width\"), 2, 1);\r\n        gridDialog.add(new Label(\"Width\"), 0,2);\r\n        gridDialog.add(width,1,2);\r\n        gridDialog.add(new Label(\"Width as fraction of canvas width\"), 2,2);\r\n        gridDialog.add(new Label(\"Height\"),0,3);\r\n        gridDialog.add(height,1,3);\r\n        gridDialog.add(new Label(\"Width as fraction of canvas width\"), 2,3);\r\n\r\n        dialog.getDialogPane().setContent(gridDialog);\r\n\r\n        Platform.runLater(() -> xCenter.requestFocus());\r\n\r\n        List<String> geometricImageInputs = new ArrayList();\r\n        dialog.setResultConverter(dialogButton -> {\r\n            if(dialogButton == ButtonType.OK){\r\n                geometricImageInputs.add(xCenter.getText());\r\n                geometricImageInputs.add(yCenter.getText());\r\n                geometricImageInputs.add(width.getText());\r\n                geometricImageInputs.add(height.getText());\r\n                return geometricImageInputs;\r\n            }\r\n            return null;\r\n        });\r\n\r\n        Optional<List<String>> Result = dialog.showAndWait();\r\n        Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);\r\n        GraphicsContext GC = CV.getGraphicsContext2D();\r\n        Result.ifPresent(event -> {\r\n            MyPoint pTLC = new MyPoint(Double.parseDouble(geometricImageInputs.get(0))*widthCenterCanvas, Double.parseDouble(geometricImageInputs.get(1))*heightCenterCanvas, null);\r\n            double w = Double.parseDouble(geometricImageInputs.get(2))*widthCenterCanvas;\r\n            double h = Double.parseDouble(geometricImageInputs.get(3))*heightCenterCanvas;\r\n\r\n            TP.setOnMouseClicked(e-> {\r\n                MyColor color = CP.getColorPicked();\r\n                String tileId = color.toString();\r\n                for (Node tile : TP.getChildren()) {\r\n                    if (tile.getId() == tileId) {\r\n                        MyOval O = new MyOval(pTLC, w, h, color);\r\n\r\n                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);\r\n                        O.draw(GC);\r\n                        O.getMyBoundingRectangle().stroke(GC);\r\n\r\n                        stackMyShape.push(O);\r\n                        break;\r\n                    }\r\n                }\r\n            });\r\n        centerPane.getChildren().add(CV);\r\n        BP.setCenter(centerPane);\r\n        });\r\n    }\r\n\r\n    public void dialogRectangle(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShapes, Pane centerPane){\r\n        Dialog<List<String>> dialog = new Dialog<>();\r\n        dialog.setTitle(\"MyRectangle\");\r\n        dialog.setHeaderText(null);\r\n\r\n        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);\r\n\r\n        GridPane gridDialog = new GridPane();\r\n        gridDialog.setHgap(10); gridDialog.setVgap(10);\r\n        gridDialog.setPadding(new Insets(20,100,10,10));\r\n\r\n        TextField xPTLC = new TextField(); TextField yPTLC = new TextField();\r\n        TextField width = new TextField(); TextField height = new TextField();\r\n\r\n        gridDialog.add(new Label(\"Top Left Corner Point\"),0,0);\r\n        gridDialog.add(xPTLC,1,0);\r\n        gridDialog.add(new Label(\"x-Coordiante as fraction of canvas width\"),2,0);\r\n        gridDialog.add(yPTLC,1,1);\r\n        gridDialog.add(new Label(\"y-Coordinate as fraction of canvas width\"),2,1);\r\n        gridDialog.add(new Label(\"Width\"),0,2);\r\n        gridDialog.add(width,1,2);\r\n        gridDialog.add(new Label(\"As fraction of canvas width\"),2,2);\r\n        gridDialog.add(new Label(\"Height\"),0,3);\r\n        gridDialog.add(height,1,3);\r\n        gridDialog.add(new Label(\"as fraction of canvas height\"),2,3);\r\n\r\n        dialog.getDialogPane().setContent(gridDialog);\r\n\r\n        Platform.runLater(() -> xPTLC.requestFocus());\r\n\r\n        List<String> geometericImageInputs = new ArrayList<>();\r\n        dialog.setResultConverter(dialogButton -> {\r\n            if(dialogButton == ButtonType.OK){\r\n                geometericImageInputs.add(xPTLC.getText()); geometericImageInputs.add(yPTLC.getText());\r\n                geometericImageInputs.add(width.getText()); geometericImageInputs.add(height.getText());\r\n                return geometericImageInputs;\r\n            }\r\n            return null;\r\n        });\r\n\r\n        Optional<List<String>> Result = dialog.showAndWait();\r\n\r\n        Canvas CV = new Canvas(widthCenterCanvas, heightCenterCanvas);\r\n        GraphicsContext GC = CV.getGraphicsContext2D();\r\n        Result.ifPresent(event ->{\r\n            MyPoint pTLC = new MyPoint(Double.parseDouble(geometericImageInputs.get(0))*widthCenterCanvas, Double.parseDouble(geometericImageInputs.get(1))*heightCenterCanvas, null);\r\n            double w = Double.parseDouble(geometericImageInputs.get(2))*widthCenterCanvas;\r\n            double h = Double.parseDouble(geometericImageInputs.get(3))*heightCenterCanvas;\r\n\r\n            TP.setOnMouseClicked(e->{\r\n                MyColor color = CP.getColorPicked();\r\n                String tileId = color.toString();\r\n                for(Node tile : TP.getChildren()) {\r\n                    if (tile.getId() == tileId) {\r\n                        MyRectangle R = new MyRectangle(pTLC, w, h, color);\r\n                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);\r\n                        R.draw(GC);\r\n                        R.getMyBoundingRectangle().stroke(GC);\r\n\r\n                        stackMyShapes.push(R);\r\n                        break;\r\n                    }\r\n                }\r\n            });\r\n\r\n            centerPane.getChildren().add(CV);\r\n            BP.setCenter(centerPane);\r\n        });\r\n    }\r\n\r\n    public void dialogIntersection(double widthCenterCanvas, double heightCenterCanvas, BorderPane BP, MyColorPalette CP, TilePane TP, Deque<MyShape> stackMyShapes, Pane centerPane){\r\n        Dialog dialog = new Dialog<>();\r\n        dialog.setTitle(\"Intersection of 2 MyShape Objects\");\r\n        dialog.setHeaderText(null);\r\n\r\n        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);\r\n\r\n        GridPane gridDialog = new GridPane();\r\n        gridDialog.setHgap(10);\r\n        gridDialog.setVgap(10);\r\n        gridDialog.setPadding(new Insets(20,100,10,10));\r\n\r\n        gridDialog.add(new Label(\"Click OK and chose a color for the intersection of the last two shapes (only works once)\"),1,0);\r\n\r\n        dialog.getDialogPane().setContent(gridDialog);\r\n        dialog.showAndWait().ifPresent(response ->{\r\n            if(response == ButtonType.OK){\r\n                TP.setOnMouseClicked(e->{\r\n                    MyColor color = CP.getColorPicked();\r\n                    String tileId = color.toString();\r\n                    for(Node tile : TP.getChildren()) {\r\n                        if (tile.getId() == tileId) {\r\n                            MyShape s1 = stackMyShapes.pop();\r\n                            MyShape s2 = stackMyShapes.pop();\r\n                            centerPane.getChildren().add(addCenterCanvas(widthCenterCanvas, heightCenterCanvas, s1, s2, color));\r\n                            BP.setCenter(centerPane);\r\n                            break;\r\n                        }\r\n                    }\r\n                });\r\n            }\r\n        });\r\n\r\n    }\r\n\r\n    @Override\r\n    public void start(Stage PS) throws FileNotFoundException {\r\n        double widthCanvas = 800.0;\r\n        double heightCanvas = 600.0;\r\n\r\n        BorderPane BP = new BorderPane();\r\n        Pane topPane = new Pane();\r\n        Pane leftPane = new Pane();\r\n        Pane centerPane = new Pane(); // apparently that's normal\r\n\r\n        double widthLeftCanvas = 0.3 * widthCanvas;\r\n        double heightTopCanvas = 0.15 * heightCanvas;\r\n        double widthCenterCanvas = widthCanvas - widthLeftCanvas;\r\n        double heightCenterCanvas = heightCanvas - heightTopCanvas;\r\n        MyColorPalette CP = new MyColorPalette(widthLeftCanvas, heightCenterCanvas);\r\n        TilePane TP = CP.getPalette();\r\n\r\n        Image icon = new Image(\"C:\\\\Users\\\\Fahad\\\\IdeaProjects\\\\MyColor2\\\\src\\\\main\\\\resources\\\\com\\\\example\\\\mycolor2\\\\musicMakeYouLoseControl.png\");\r\n        PS.getIcons().add(icon);\r\n\r\n        Scene SC = new Scene(BP, widthCanvas, heightCanvas, MyColor.WHITE.getJavaFXColor());\r\n        PS.setTitle(\"MyShape!\");\r\n        PS.setScene(SC);\r\n\r\n        topPane.getChildren().add(addTopHBox(widthCanvas, heightTopCanvas, widthCenterCanvas, heightCenterCanvas, BP, CP, TP, centerPane));\r\n        BP.setTop(topPane);\r\n\r\n        leftPane.getChildren().add(addLeftVBox(widthLeftCanvas, heightCenterCanvas, TP, MyColor.ORANGE));\r\n        BP.setLeft(leftPane);\r\n        PS.setResizable(false);\r\n        PS.show();\r\n    }\r\n\r\n    public static void main(String[] args) {launch(args);}\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java b/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java
+--- a/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ b/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java	(date 1682798277304)
+@@ -106,24 +106,24 @@
+         TextField totalNumberEvents = new TextField();
+         TextField startAngle = new TextField();
+ 
+-//        ComboBox title = new ComboBox();
+-//        title.getItems().addAll( "Moby Dick");
++        ComboBox title = new ComboBox();
++        title.getItems().addAll( "Moby Dick");
+ 
+         gridDialog.add(new Label("Number of Characters to Show"), 0,0);
+         gridDialog.add(numberEvents,1,0);
+         gridDialog.add(new Label("Number of Unique Characters (26)"),2,0); //isnt this redundant?
+         gridDialog.add(totalNumberEvents,3,0);
+-        gridDialog.add(new Label("Starting Angle of First Slice"),0,1);
++        gridDialog.add(new Label("Starting Angle of First MySlice"),0,1);
+         gridDialog.add(startAngle,1,1);
+-//        gridDialog.add(new Label("Title"), 0,2);
+-//        gridDialog.add(title, 1,2); // i can remove the need for a combobox altogether
++        gridDialog.add(new Label("Title"), 0,2);
++        gridDialog.add(title, 1,2); // i can remove the need for a combobox altogether
+ 
+         dialog.getDialogPane().setContent(gridDialog);
+ 
+         Platform.runLater(() -> numberEvents.requestFocus());
+         dialog.setResultConverter(dialogButton -> {
+             if(dialogButton == ButtonType.OK){
+-                pieChartInputs.add(numberEvents.getText()); pieChartInputs.add(totalNumberEvents.getText()); pieChartInputs.add(startAngle.getText()); //pieChartInputs.add(title.getValue().toString());
++                pieChartInputs.add(numberEvents.getText()); pieChartInputs.add(totalNumberEvents.getText()); pieChartInputs.add(startAngle.getText()); pieChartInputs.add(title.getValue().toString());
+                 return pieChartInputs;
+             }
+             return null;
+@@ -133,8 +133,8 @@
+             this.N = Integer.parseInt(pieChartInputs.get(0));
+             this.M = Integer.parseInt(pieChartInputs.get(1));
+             this.startAngle = Double.parseDouble(pieChartInputs.get(2));
+-//            this.Title = pieChartInputs.get(3);
+-            this.filename = "src/main/resources/com/example/mycolor2/Moby Dick.txt";
++            this.Title = pieChartInputs.get(3);
++            this.filename = "src/main/resources/com/example/mycolor2/" + Title + ".txt";
+ 
+             openFile();
+             String w = readFile();
+@@ -184,7 +184,7 @@
+         MyPoint center = new MyPoint(0.5*widthCenterCanvas, 0.5*heightCenterCanvas, null);
+         double diameterPieChart = 0.50*Math.min(widthCenterCanvas,heightCenterCanvas);
+         HistogramAlphaBet.MyPieChart pieChart = H.new MyPieChart(N,M, center, diameterPieChart, diameterPieChart, startAngle);
+-        Map<Character, Slice> slices = pieChart.getMyPieChart();
++        Map<Character, MySlice> slices = pieChart.getMyPieChart();
+ 
+         System.out.println("\nPie Chart");
+         slices.forEach((K,V) -> System.out.println(K+": " + slices.get(K)));
+Index: src/main/java/com/example/mycolor2/Slice.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main/java/com/example/mycolor2/Slice.java b/src/main/java/com/example/mycolor2/MySlice.java
+rename from src/main/java/com/example/mycolor2/Slice.java
+rename to src/main/java/com/example/mycolor2/MySlice.java
+--- a/src/main/java/com/example/mycolor2/Slice.java	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ b/src/main/java/com/example/mycolor2/MySlice.java	(date 1682798277309)
+@@ -4,17 +4,17 @@
+ import javafx.scene.shape.ArcType;
+ import javafx.scene.text.Font;
+ 
+-public class Slice {
++public class MySlice {
+     MyPoint center;
+     double width, height, startAngle, arcAngle;
+     MyColor color;
+     String information;
+ 
+-    Slice(MyPoint center, double width, double height, double startAngle, double arcAngle, MyColor color, String information){
++    MySlice(MyPoint center, double width, double height, double startAngle, double arcAngle, MyColor color, String information){
+         this.center = center; this.width = width; this.height = height; this.startAngle = startAngle; this.arcAngle = arcAngle;
+         this.color = color; this.information = information;
+     }
+-    Slice(Slice s){
++    MySlice(MySlice s){
+         this.center = s.getCenter(); this.width = s.getWidth(); this.height = s.getHeight(); this.startAngle = s.getStartAngle(); this.arcAngle = s.getArcAngle();
+         this.information = s.getInformation();
+     }
+@@ -54,7 +54,7 @@
+ 
+     @Override
+     public String toString(){
+-        return "Slice: Center(" + center.getX() +", " + center.getY()+ ")"
++        return "MySlice: Center(" + center.getX() +", " + center.getY()+ ")"
+                 + " Width " + width + " Height " + height
+                 + " (Starting Angle, Angle): (" + getStartAngle() + ", "+getArcAngle() +"),"
+                 + "Color " + color;
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23__12_22_PM__Changes_1.xml
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23__12_22_PM__Changes_1.xml b/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23__12_22_PM__Changes_1.xml
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23__12_22_PM__Changes_1.xml	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ /dev/null	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
+@@ -1,4 +0,0 @@
+-<changelist name="Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1" date="1682612543497" recycled="true" deleted="true">
+-  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1/shelved.patch" />
+-  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 4/27/23, 12:22 PM [Changes]" />
+-</changelist>
+\ No newline at end of file
+Index: src/main/resources/com/example/mycolor2/hisSlice.java
+===================================================================
+diff --git a/src/main/resources/com/example/mycolor2/hisSlice.java b/src/main/resources/com/example/mycolor2/hisSlice.java
+deleted file mode 100644
+--- a/src/main/resources/com/example/mycolor2/hisSlice.java	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ /dev/null	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
+@@ -1,76 +0,0 @@
+-package com.example.myshape;
+-
+-import javafx.scene.canvas.GraphicsContext;
+-import javafx.scene.shape.ArcType;
+-import javafx.scene.text.Font;
+-
+-public class Slice {
+-    MyPoint center;
+-    double width, height;
+-    double startAngle;
+-    double arcAngle;
+-    MyColor color;
+-    String information;
+-
+-    Slice(MyPoint center, double width, double height,double startAngle, double arcAngle, MyColor color,String info){
+-        this.center = center;
+-        this.width = width;
+-        this.height = height;
+-        this.startAngle = startAngle;
+-        this.arcAngle = arcAngle;
+-        this.color = color;
+-        this.information = info;
+-    }
+-    Slice(Slice s){
+-        this.center = s.getCenter();
+-        this.width =s.getWidth();
+-        this.height =s.getHeight();
+-        this.startAngle =s.getStartAngle();
+-        this.arcAngle = s.getArcAngle();
+-        this.information =s.getInformation();
+-    }
+-
+-    public MyPoint getCenter() {return center;}
+-    public double getWidth() {return width;}
+-    public double getHeight() {return height;}
+-    public double getStartAngle() {return startAngle;}
+-    public double getArcAngle() {return arcAngle;}
+-    public String getInformation() {return information;}
+-
+-    public void draw(GraphicsContext gc){
+-        gc.setFill(color.getJavaFXColor());
+-        gc.fillArc(center.getX()- 0.5 * width,center.getY() - 0.5 * height,width,height,startAngle,
+-                arcAngle, ArcType.ROUND);
+-        gc.setStroke(MyColor.WHITE.getJavaFXColor());
+-        gc.fillArc(center.getX()-0.5*width,center.getY()-0.5*height,width,height,startAngle,
+-                arcAngle, ArcType.ROUND);
+-
+-        double x = center.getX();double y = center.getY();
+-        double a = 0.55 * width; double b = 0.55 * height;
+-        double midAngle = startAngle + 0.5 * arcAngle;
+-        midAngle = midAngle < 360? midAngle : midAngle - 360;
+-
+-        double u = a *Math.abs(Math.sin(Math.toRadians(midAngle)));
+-        double v = b * Math.abs(Math.cos(Math.toRadians(midAngle)));
+-        double w = 1.0 / Math.sqrt(u*u+v*v);
+-
+-        u = (midAngle >= 0.0 && midAngle <= 180.0)? -u:u;
+-        v = (midAngle >= 90.0 && midAngle <= 270.0)? -v:v;
+-        double xText = x + a * v * w;
+-        double yText = y + b * u * w;
+-
+-        xText = (midAngle >= 90.0 && midAngle <=270.0)? xText - 0.125 * width : xText;
+-
+-        gc.setStroke(MyColor.WHITE.getJavaFXColor());
+-        gc.setFont(Font.font("Calibri", 13));
+-        gc.strokeText(information,xText,yText);
+-    }
+-
+-    @Override
+-    public String toString(){
+-        return "Slice: Center(" + center.getX() +", " + center.getY()+ ")"
+-                + " Width " + width + " Height " + height
+-                + " (Starting Angle, Angle): (" + getStartAngle() + ", "+getArcAngle() +"),"
+-                + "Color " + color;
+-    }
+-}
+Index: src/main/resources/com/example/mycolor2/hisHistrogram.java
+===================================================================
+diff --git a/src/main/resources/com/example/mycolor2/hisHistrogram.java b/src/main/resources/com/example/mycolor2/hisHistrogram.java
+deleted file mode 100644
+--- a/src/main/resources/com/example/mycolor2/hisHistrogram.java	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ /dev/null	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
+@@ -1,139 +0,0 @@
+-package com.example.myshape;
+-
+-import javafx.scene.canvas.GraphicsContext;
+-
+-import java.util.*;
+-import java.util.stream.Collectors;
+-
+-public class HistogramAlphaBet {
+-    Map<Character, Integer> frequency = new HashMap<>();
+-    Map<Character, Double> probability = new HashMap<>();
+-
+-    HistogramAlphaBet(Map<Character, Integer> m){frequency.putAll(m);}
+-    HistogramAlphaBet(HistogramAlphaBet h){
+-        frequency.putAll(h.getFrequency());
+-        probability.putAll(h.getProbability());
+-    }
+-    HistogramAlphaBet(String text){
+-        String w = text.replace("[^a-zA-Z]","").toLowerCase();
+-        for(int i = 0; i <w.length();i++){
+-            Character key = w.charAt(i);
+-            incrementFrequency(frequency,key);
+-        }
+-        probability = getProbability();
+-    }
+-    public Map<Character, Integer> getFrequency() {return frequency;}
+-    public Integer getCumulativeFrequency(){return frequency.values().stream().reduce(0,Integer::sum);}
+-
+-    public Map<Character,Integer>sortUpFrequency(){
+-        return frequency.entrySet().stream()
+-                .sorted(Map.Entry.comparingByValue())
+-                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));
+-    }
+-    public Map<Character,Integer> sortDownFrequency(){
+-        return frequency.entrySet().stream()
+-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+-                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));
+-    }
+-    public Map<Character, Double> getProbability() {
+-        double inverseCumulativeFrequency = 1.0 / getCumulativeFrequency();
+-        for(Character Key : frequency.keySet()){
+-            probability.put(Key,(double)frequency.get(Key)*inverseCumulativeFrequency);
+-        }
+-        return probability;
+-    }
+-    public Map<Character,Double>sortDownProbability(){
+-        return getProbability().entrySet().stream()
+-                .sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+-                .collect(Collectors.toMap(Map.Entry::getKey,Map.Entry::getValue,(e1,e2)->e2,LinkedHashMap::new));
+-    }
+-    public Double getSumOfProbability(){return probability.values().stream().reduce(0.0,Double::sum);}
+-    public boolean checkSumOfProbability(){return getSumOfProbability() == 1;}
+-
+-    @Override
+-    public String toString() {
+-        String output ="Frequency of Characters:\n";
+-        for(Character K :frequency.keySet()){
+-            output += K + ": " + frequency.get(K) + "\n";
+-        }
+-        return output;
+-    }
+-
+-    private static<k> void incrementFrequency(Map<k,Integer>m,k key){
+-        m.putIfAbsent(key,0);
+-        m.put(key,m.get(key)+1);
+-    }
+-
+-    class MyPieChart{
+-        Map<Character,Slice>slices = new HashMap<>();
+-        int N,M;
+-        MyPoint center;
+-        double width,height;
+-        double rotateAngle;
+-
+-        MyPieChart(int N, int M, MyPoint center, double width, double height, double rotateAngle){
+-            this.N = N; this.M = M;
+-            this.center = center;
+-            this.width = width; this.height = height;
+-            this.rotateAngle = rotateAngle < 360? rotateAngle :rotateAngle-360;
+-            slices = getMyPieChart();
+-        }
+-
+-        public Map<Character, Slice> getMyPieChart() {
+-            MyColor [] colors = MyColor.getMyColors();
+-            int colorsSize = colors.length;
+-
+-            Map<Character, Double> sortedProbability = sortDownProbability();
+-            Random rand = new Random();
+-            double sliceStartAngle = this.rotateAngle;
+-
+-            for(Character key : sortedProbability.keySet()){
+-
+-                double sliceArcAngle = 360.0 * sortedProbability.get(key);
+-                MyColor color = colors[rand.nextInt(colorsSize)];
+-
+-                String sliceInformation = key +": " + String.format("%.4f",sortedProbability.get(key));
+-                slices.put(key,new Slice(center,width,height,sliceStartAngle,sliceArcAngle,color,sliceInformation));
+-                sliceStartAngle = sliceStartAngle+sliceArcAngle;
+-                sliceStartAngle = sliceArcAngle < 360.0? sliceStartAngle : sliceStartAngle-360;
+-            }
+-            return slices;
+-        }
+-        public void draw(GraphicsContext gc){
+-            Map<Character, Double> sortedProbability = sortDownProbability();
+-
+-            gc.clearRect(0.0,0.0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
+-            gc.setFill(MyColor.GRAY.getJavaFXColor());
+-            gc.fillRect(0.0,0.0,gc.getCanvas().getWidth(),gc.getCanvas().getHeight());
+-
+-            int n = 0;
+-            double probabilityAllOtherCharacters = 1.0;
+-            for(Character key : sortedProbability.keySet()){
+-                double sliceStartAngle = slices.get(key).getStartAngle();
+-                double sliceArcAngle = slices.get(key).getArcAngle();
+-                if(n < N){
+-                    slices.get(key).draw(gc);
+-                    probabilityAllOtherCharacters -= sortedProbability.get(key);
+-                    n++;
+-                }
+-                else{
+-                    if(N!=M) {
+-                        String information = "All other characters: " + String.format("%.4f", probabilityAllOtherCharacters);
+-                        if(sliceStartAngle < rotateAngle) {
+-                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartAngle,
+-                                    rotateAngle-sliceStartAngle, MyColor.getRandomColor(), information);
+-                            sliceAllOtherCharacters.draw(gc);
+-                        }
+-                        else {
+-                            Slice sliceAllOtherCharacters = new Slice(center, width, height, sliceStartAngle,
+-                                    360.0 - sliceStartAngle+rotateAngle, MyColor.getRandomColor(), information);
+-                            sliceAllOtherCharacters.draw(gc);
+-                        }
+-                        break;
+-                    }
+-                }
+-            }
+-        }
+-    }
+-
+-}
+Index: .idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1/shelved.patch
+===================================================================
+diff --git a/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1/shelved.patch b/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1/shelved.patch
+deleted file mode 100644
+--- a/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1/shelved.patch	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ /dev/null	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
+@@ -1,52 +0,0 @@
+-Index: .idea/workspace.xml
+-IDEA additional info:
+-Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+-<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"AutoImportSettings\">\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\n  </component>\n  <component name=\"ChangeListManager\">\n    <list default=\"true\" id=\"5fea0124-52e2-40ca-a5d8-e41d2978ff7e\" name=\"Changes\" comment=\"got the other functions but myArc is missing, gotta debug\">\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java\" afterDir=\"false\" />\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java\" afterDir=\"false\" />\n    </list>\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\n  </component>\n  <component name=\"FileTemplateManagerImpl\">\n    <option name=\"RECENT_TEMPLATES\">\n      <list>\n        <option value=\"Class\" />\n      </list>\n    </option>\n  </component>\n  <component name=\"Git.Settings\">\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\n  </component>\n  <component name=\"GitHubPullRequestSearchHistory\"><![CDATA[{\n  \"lastFilter\": {\n    \"state\": \"OPEN\"\n  }\n}]]></component>\n  <component name=\"GithubPullRequestsUISettings\">\n    <option name=\"selectedUrlAndAccountId\">\n      <UrlAndAccount>\n        <option name=\"accountId\" value=\"0ff39af3-9e12-4f17-8252-95a2f5c3a9af\" />\n        <option name=\"url\" value=\"https://github.com/LordFarquaadtheCreator/MyColor2.git\" />\n      </UrlAndAccount>\n    </option>\n  </component>\n  <component name=\"MarkdownSettingsMigration\">\n    <option name=\"stateVersion\" value=\"1\" />\n  </component>\n  <component name=\"MavenImportPreferences\">\n    <option name=\"importingSettings\">\n      <MavenImportingSettings>\n        <option name=\"workspaceImportEnabled\" value=\"true\" />\n      </MavenImportingSettings>\n    </option>\n  </component>\n  <component name=\"ProjectId\" id=\"2MQdQxqQitsubZScf0X47GPdGbu\" />\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\n  </component>\n  <component name=\"ProjectViewState\">\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\n    <option name=\"showLibraryContents\" value=\"true\" />\n  </component>\n  <component name=\"PropertiesComponent\">{\n  &quot;keyToString&quot;: {\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\n    &quot;last_opened_file_path&quot;: &quot;C:/lib/javafx-sdk-19.0.2.1/lib&quot;,\n    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,\n    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;\n  }\n}</component>\n  <component name=\"RecentsManager\">\n    <key name=\"MoveFile.RECENT_KEYS\">\n      <recent name=\"C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\resources\" />\n      <recent name=\"C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\java\\com\\example\\mycolor2\" />\n    </key>\n  </component>\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\n  <component name=\"TaskManager\">\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\n      <changelist id=\"5fea0124-52e2-40ca-a5d8-e41d2978ff7e\" name=\"Changes\" comment=\"\" />\n      <created>1677703730750</created>\n      <option name=\"number\" value=\"Default\" />\n      <option name=\"presentableId\" value=\"Default\" />\n      <updated>1677703730750</updated>\n    </task>\n    <task id=\"LOCAL-00001\" summary=\"done, but i need to change it up a bit yk to make it my own\">\n      <created>1677992195374</created>\n      <option name=\"number\" value=\"00001\" />\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1677992195374</updated>\n    </task>\n    <task id=\"LOCAL-00002\" summary=\"missing some classes, gotta followup bout that\">\n      <created>1679696182521</created>\n      <option name=\"number\" value=\"00002\" />\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1679696182521</updated>\n    </task>\n    <task id=\"LOCAL-00003\" summary=\"some debugging\">\n      <created>1679761752033</created>\n      <option name=\"number\" value=\"00003\" />\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1679761752033</updated>\n    </task>\n    <task id=\"LOCAL-00004\" summary=\"got the other functions but myArc is missing, gotta debug\">\n      <created>1679792338027</created>\n      <option name=\"number\" value=\"00004\" />\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\n      <option name=\"project\" value=\"LOCAL\" />\n      <updated>1679792338027</updated>\n    </task>\n    <option name=\"localTasksCounter\" value=\"5\" />\n    <servers />\n  </component>\n  <component name=\"Vcs.Log.Tabs.Properties\">\n    <option name=\"TAB_STATES\">\n      <map>\n        <entry key=\"MAIN\">\n          <value>\n            <State />\n          </value>\n        </entry>\n      </map>\n    </option>\n  </component>\n  <component name=\"VcsManagerConfiguration\">\n    <MESSAGE value=\"done, but i need to change it up a bit yk to make it my own\" />\n    <MESSAGE value=\"missing some classes, gotta followup bout that\" />\n    <MESSAGE value=\"some debugging\" />\n    <MESSAGE value=\"got the other functions but myArc is missing, gotta debug\" />\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"got the other functions but myArc is missing, gotta debug\" />\n  </component>\n  <component name=\"XDebuggerManager\">\n    <breakpoint-manager>\n      <breakpoints>\n        <breakpoint enabled=\"true\" type=\"java-exception\">\n          <properties class=\"java.lang.IllegalArgumentException\" package=\"java.lang\" />\n          <option name=\"timeStamp\" value=\"6\" />\n        </breakpoint>\n      </breakpoints>\n    </breakpoint-manager>\n  </component>\n</project>
+-Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+-<+>UTF-8
+-===================================================================
+-diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+---- a/.idea/workspace.xml	
+-+++ b/.idea/workspace.xml	
+-@@ -4,13 +4,19 @@
+-     <option name="autoReloadType" value="SELECTIVE" />
+-   </component>
+-   <component name="ChangeListManager">
+--    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="got the other functions but myArc is missing, gotta debug">
+-+    <list default="true" id="ff6cabf5-6a06-43fe-9401-3beb51d1a91c" name="Changes" comment="pls work">
+-       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" afterDir="false" />
+--      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myCircle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyCircle.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColor.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myColorPalette.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyColorPalette.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myLine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyLine.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myOval.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyOval.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myPoint.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyPoint.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myRectangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyRectangle.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShape.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShape.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeApplication.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeApplication.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myShapeInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeInterface.java" afterDir="false" />
+-+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/myTriangle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyTriangle.java" afterDir="false" />
+-     </list>
+-     <option name="SHOW_DIALOG" value="false" />
+-     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+-@@ -27,11 +33,11 @@
+-   <component name="Git.Settings">
+-     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+-   </component>
+--  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+--  "lastFilter": {
+--    "state": "OPEN"
+-+  <component name="GitHubPullRequestSearchHistory">{
+-+  &quot;lastFilter&quot;: {
+-+    &quot;state&quot;: &quot;OPEN&quot;
+-   }
+--}]]></component>
+-+}</component>
+-   <component name="GithubPullRequestsUISettings">
+-     <option name="selectedUrlAndAccountId">
+-       <UrlAndAccount>
+Index: src/main/resources/com/example/mycolor2/myApplication.java
+===================================================================
+diff --git a/src/main/resources/com/example/mycolor2/myApplication.java b/src/main/resources/com/example/mycolor2/myApplication.java
+deleted file mode 100644
+--- a/src/main/resources/com/example/mycolor2/myApplication.java	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ /dev/null	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
+@@ -1,491 +0,0 @@
+-package com.example.myshape;
+-
+-import javafx.application.Application;
+-import javafx.application.Platform;
+-import javafx.geometry.Insets;
+-import javafx.scene.Node;
+-import javafx.scene.Scene;
+-import javafx.scene.canvas.Canvas;
+-import javafx.scene.canvas.GraphicsContext;
+-import javafx.scene.control.*;
+-import javafx.scene.image.Image;
+-import javafx.scene.image.ImageView;
+-import javafx.scene.layout.*;
+-import javafx.scene.text.Font;
+-import javafx.stage.Stage;
+-import java.io.FileInputStream;
+-import java.io.FileNotFoundException;
+-import java.io.IOException;
+-import java.nio.file.Paths;
+-import java.util.*;
+-
+-public class MyApplication extends Application {
+-    Integer N,M;
+-    double startAngle;
+-    String Title;
+-    String filename;
+-    Scanner input;
+-    List<String> piechartInputs = new ArrayList<>();
+-
+-
+-    public static void main(String[] args) {
+-        launch(args);
+-    }
+-
+-    @Override
+-    public void start(Stage stage) throws FileNotFoundException {
+-        double widthCenterCanvas = 500.0;
+-        double heightCenterCanvas = 400.0;
+-        BorderPane bp = new BorderPane();
+-        Pane topPane = new Pane();
+-        Pane leftPane =new Pane();
+-
+-        double widthLeftCanvas = 0.5 * widthCenterCanvas;
+-        double heightTopCanvas = heightCenterCanvas * 0.225;
+-        double widthRightCanvas = 0.4 *widthCenterCanvas;
+-        double widthCanvas = widthCenterCanvas + widthLeftCanvas + widthRightCanvas;
+-        double heightCanvas = heightCenterCanvas + heightTopCanvas;
+-
+-        MyColorPaletter cp = new MyColorPaletter(widthLeftCanvas,heightCenterCanvas);
+-        TilePane tp = cp.getPalette();
+-
+-        Scene sc = new Scene(bp,widthCanvas,heightCanvas,MyColor.WHITE.getJavaFXColor());
+-        stage.setTitle("MyShape!");
+-        stage.setScene(sc);
+-
+-        topPane.getChildren().add(addTopHBox(widthCanvas,heightTopCanvas,widthCenterCanvas,
+-                heightCenterCanvas,widthRightCanvas,bp,cp,tp));
+-        bp.setTop(topPane);
+-        leftPane.getChildren().add(addLeftVBox(widthLeftCanvas,heightCenterCanvas,tp,MyColor.BLACK));
+-        bp.setLeft(leftPane);
+-        stage.show();
+-    }
+-    public VBox addLeftVBox(double widthLeftCanvas, double heightLeftCanvas, TilePane TP, MyColor color){
+-        VBox VB = new VBox();
+-        VB.setPrefWidth(widthLeftCanvas);
+-        VB.setPadding(new Insets(5));
+-        Label label = new Label("MyColor Palette");
+-        label.setPrefWidth(widthLeftCanvas);
+-        label.setTextFill(MyColor.WHITE.getJavaFXColor());
+-        label.setBackground(new Background(new BackgroundFill(
+-                Optional.ofNullable(color).orElse(MyColor.NAVY).getJavaFXColor(),
+-                CornerRadii.EMPTY,Insets.EMPTY)));
+-        VB.getChildren().addAll(label,TP);
+-        return VB;
+-    }
+-    public HBox addTopHBox(double widthTopCanvas, double heightTopCanvas, double widthCenterCanvas,
+-                           double heightCenterCanvas,double widthRightCanvas, BorderPane BP,
+-                           MyColorPaletter CP, TilePane TP)throws FileNotFoundException{
+-        HBox HB = new HBox();
+-        HB.setPrefWidth(widthCenterCanvas);
+-        HB.setPadding(new Insets(5,5,5,5));
+-        String [] nameImages = new String[]{"Oval", "Rectangle", "Circle", "Intersection","pieChart"};
+-        String pathFile = "C:\\Users\\chaoh\\Documents\\CCNY\\CSC221\\New folder\\";
+-        Deque<MyShape> stackMyShape = new ArrayDeque<MyShape>();
+-        for(String nameImage :nameImages) {
+-            String nameFile = pathFile + nameImage + ".PNG";
+-            ImageView geometricImage = new ImageView(new Image(new FileInputStream(nameFile),
+-                    heightTopCanvas,heightCenterCanvas,true,false));
+-            geometricImage.setOnMouseClicked(e ->{
+-                switch (nameImage){
+-                    case"Oval":
+-                        dialogOval(widthCenterCanvas,heightCenterCanvas,BP,CP,TP,stackMyShape);
+-                        break;
+-                    case"Rectangle":
+-                        dialogRectangle(widthCenterCanvas,heightCenterCanvas,BP,CP,TP,stackMyShape);
+-                        break;
+-                    case"Circle":
+-                        dialogCircle(widthCenterCanvas,heightCenterCanvas,BP,CP,TP,stackMyShape);
+-                        break;
+-                    case"Intersection":
+-                        dialogIntersection(widthCenterCanvas,heightCenterCanvas,BP,CP,TP,stackMyShape);
+-                        break;
+-                    case"pieChart":
+-                        dialogPiechart(widthCenterCanvas,heightCenterCanvas,widthRightCanvas,BP);
+-                        break;
+-                }
+-            });
+-            HB.getChildren().add(geometricImage);
+-        }
+-        return HB;
+-    }
+-
+-    public void dialogPiechart(double widthCenterCanvas, double heightCenterCanvas, double widthRightCanvas, BorderPane bp) {
+-        Dialog<List<String>> dialog = new Dialog<>();
+-        dialog.setTitle("Pie Chart");
+-        dialog.setHeaderText(null);
+-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES,ButtonType.CANCEL);
+-        GridPane gridDialog = new GridPane();
+-        gridDialog.setHgap(10);
+-        gridDialog.setVgap(10);
+-        gridDialog.setPadding(new Insets(20,150,10,10));
+-
+-        TextField numberEvents = new TextField();
+-        TextField totalNumberEvents = new TextField();
+-        TextField startingAngle = new TextField();
+-
+-        ComboBox title = new ComboBox();
+-        title.getItems().addAll("Moby Dick");
+-        gridDialog.add(new Label("Display"),0,0);
+-        gridDialog.add(numberEvents,1,0);
+-        gridDialog.add(new Label("total"),2,0);
+-        gridDialog.add(totalNumberEvents,3,0);
+-        gridDialog.add(new Label("Starting Angle"),0,1);
+-        gridDialog.add(startingAngle,1,1);
+-        gridDialog.add(new Label("Title"),0,2);
+-        gridDialog.add(title,1,2);
+-        dialog.getDialogPane().setContent(gridDialog);
+-
+-        Platform.runLater(()->numberEvents.requestFocus());
+-
+-        dialog.setResultConverter(dialogButton -> {
+-            if(dialogButton == ButtonType.YES){
+-                piechartInputs.clear();
+-                piechartInputs.add(numberEvents.getText());
+-                piechartInputs.add(totalNumberEvents.getText());
+-                piechartInputs.add(startingAngle.getText());
+-                piechartInputs.add(title.getValue().toString());
+-                return piechartInputs;
+-            }
+-            return null;
+-        });
+-
+-        Optional<List<String>>Result = dialog.showAndWait();
+-        Result.ifPresent(event -> {
+-            this.N = Integer.parseInt(piechartInputs.get(0));
+-            this.M = Integer.parseInt(piechartInputs.get(1));
+-            this.startAngle = Double.parseDouble(piechartInputs.get(2));
+-            this.Title = piechartInputs.get(3);
+-            this.filename = "C:\\Users\\chaoh\\Documents\\CCNY\\CSC221\\New folder\\"+ Title + ".txt";
+-            openFile();
+-            String w =readFile();
+-            closeFile();
+-
+-            HistogramAlphaBet H = new HistogramAlphaBet(w);
+-            Map<Character, Integer> sortedFrequency = H.sortDownFrequency();
+-
+-            Pane rightPane = new Pane();
+-            rightPane.getChildren().add(addCanvasLegend(widthRightCanvas,heightCenterCanvas,H));
+-            bp.setRight(rightPane);
+-
+-            Pane centerPane = new Pane();
+-            centerPane.getChildren().add(addCanvasPieChart(widthCenterCanvas,heightCenterCanvas,H));
+-            bp.setCenter(centerPane);
+-        });
+-    }
+-    public void openFile(){
+-        try{
+-             input = new Scanner(Paths.get(filename));
+-        }catch(IOException ioException){
+-            System.err.println("File is not found");
+-        }
+-    }
+-    public String readFile(){
+-        String w ="";
+-        try{
+-            while(input.hasNext()){
+-                w += input.nextLine().replaceAll("[^a-zA-Z]","").toLowerCase();
+-            }
+-        }catch (NoSuchElementException elementException){
+-            System.err.println("Invalid input! Terminating.....");
+-        }catch (IllegalStateException stateException){
+-            System.out.println("Error processing file! Terminating....");
+-        }
+-        return w;
+-    }
+-    public void closeFile(){
+-        if(input !=null) input.close();
+-    }
+-
+-    public Canvas addCanvasLegend(double widthCanvas, double heightCanvas,HistogramAlphaBet h){
+-        String information;
+-        Canvas CV = new Canvas(widthCanvas,heightCanvas);
+-        GraphicsContext GC = CV.getGraphicsContext2D();
+-        MyColor colorLeftCanvas = MyColor.LINEN;
+-        GC.setFill(colorLeftCanvas.getJavaFXColor());
+-        GC.fillRect(0.0,0.0,widthCanvas,heightCanvas);
+-
+-        double xText = 15; double yText = 0.03625 * heightCanvas;
+-        MyColor colorStroke = MyColor.WHITE;
+-        GC.setStroke(colorStroke.invertColor());
+-        GC.setFont(Font.font("Calibri",13));
+-        GC.strokeText("Frequency: Cumulative "+ h.getCumulativeFrequency(),xText,yText);
+-
+-        Map<Character,Integer> sortedFrequency = h.sortDownFrequency();
+-
+-        double yStep = 0.03625 * heightCanvas;
+-        for(Character K : sortedFrequency.keySet()){
+-            yText += yStep;
+-            information = K + ":\t" + sortedFrequency.get(K);
+-            GC.strokeText(information,xText,yText);
+-        }
+-        return CV;
+-    }
+-    public Canvas addCanvasPieChart(double widthCanvas, double heightCanvas, HistogramAlphaBet h){
+-        Canvas CV = new Canvas(widthCanvas,heightCanvas);
+-        GraphicsContext GC = CV.getGraphicsContext2D();
+-        MyPoint center = new MyPoint(0.4*widthCanvas,0.5*heightCanvas,null);
+-
+-        double diameterPieChart = 0.6 * Math.min(widthCanvas,heightCanvas);
+-
+-        HistogramAlphaBet.MyPieChart pieChart = h.new MyPieChart(N,M,center,diameterPieChart, diameterPieChart, startAngle);
+-        Map<Character,Slice> slices = pieChart.getMyPieChart();
+-
+-
+-        System.out.println("\nPie Chart");
+-        slices.forEach((K,V) ->System.out.println(K+": "+slices.get(K)));
+-
+-        double sumOfAngles = 0.0;
+-        for(Character key : slices.keySet()){
+-            sumOfAngles += slices.get(key).getArcAngle();
+-        }
+-        System.out.println("\nSum of Angles: "+sumOfAngles);
+-        pieChart.draw(GC);
+-
+-        return CV;
+-    }
+-
+-
+-
+-    public void dialogIntersection(double widthCenterCanvas, double heightCenterCanvas,
+-                                   BorderPane bp, MyColorPaletter cp, TilePane tp, Deque<MyShape> stackMyShape){
+-        Dialog dialog = new Dialog<>();
+-        dialog.setTitle("Intersection of 2 MyShape Objects");
+-        dialog.setHeaderText(null);
+-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+-
+-        GridPane gridDialog = new GridPane();
+-        gridDialog.setHgap(10);
+-        gridDialog.setVgap(10);
+-        gridDialog.setPadding(new Insets(20,100,10,10));
+-
+-        gridDialog.add(new Label("Draw the intersection of the last two MyShape objects"),0,0);
+-        dialog.getDialogPane().setContent(gridDialog);
+-        dialog.showAndWait().ifPresent(response->{
+-            if(response == ButtonType.OK){
+-                tp.setOnMouseClicked(e->{
+-                    MyColor color = cp.getColorPicked();
+-                    String tileId = color.toString();
+-                    for(Node tile :tp.getChildren()){
+-                        if(tile.getId() == tileId){
+-                            Pane centerPane = new Pane();
+-                            MyShape S1 = stackMyShape.pop();
+-                            MyShape S2 = stackMyShape.pop();
+-                            centerPane.getChildren().add(
+-                                    addCenterCanvas(widthCenterCanvas,
+-                                            heightCenterCanvas,S1,S2,color));
+-                            bp.setCenter(centerPane);
+-                            break;
+-                        }
+-                    }
+-
+-                });
+-            }
+-        });
+-
+-    }
+-
+-    public Canvas addCenterCanvas(double widthCenterCanvas, double heightCenterCanvas, MyShape s1, MyShape s2, MyColor color){
+-        return s1.drawIntersectMyShapes(widthCenterCanvas,heightCenterCanvas,s1,s2,color);
+-    }
+-
+-    public void dialogCircle(double widthCenterCanvas, double heightCenterCanvas,
+-                             BorderPane bp, MyColorPaletter cp, TilePane tp, Deque<MyShape> stackMyShape) {
+-        Dialog<List<String>> dialog = new Dialog<>();
+-        dialog.setTitle("MyCircle");
+-        dialog.setHeaderText(null);
+-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.CANCEL);
+-        GridPane gridDialog = new GridPane();
+-        gridDialog.setHgap(10);
+-        gridDialog.setVgap(10);
+-        gridDialog.setPadding(new Insets(20,100,10,10));
+-        TextField xCenter = new TextField();
+-        TextField yCenter = new TextField();
+-        TextField radius = new TextField();
+-        gridDialog.add(new Label("Center"), 0,0);
+-        gridDialog.add(xCenter,1,0);
+-        gridDialog.add(new Label("X-Coordinate as fraction of canvas width"),2,0);
+-        gridDialog.add(yCenter,1,1);
+-        gridDialog.add(new Label("Y-Coordinate as fraction of canvas width"),2,1);
+-        gridDialog.add(new Label("Radius"),0,2);
+-        gridDialog.add(radius,1,2);
+-        gridDialog.add(new Label("Radius of circle"),2,2);
+-        dialog.getDialogPane().setContent(gridDialog);
+-        Platform.runLater(()->xCenter.requestFocus());
+-
+-        List<String>geometeriImageInputs = new ArrayList<>();
+-        dialog.setResultConverter(dialogButton ->{
+-            if(dialogButton == ButtonType.YES){
+-                geometeriImageInputs.add(xCenter.getText());
+-                geometeriImageInputs.add(yCenter.getText());
+-                geometeriImageInputs.add(radius.getText());
+-                return geometeriImageInputs;
+-            }
+-            return null;
+-        });
+-
+-        Optional<List<String>> Result = dialog.showAndWait();
+-        Pane centerPane = new Pane();
+-        Canvas CV = new Canvas(widthCenterCanvas , heightCenterCanvas);
+-        GraphicsContext GC = CV.getGraphicsContext2D();
+-        Result.ifPresent(event ->{
+-            MyPoint pTLC = new MyPoint(Double.parseDouble(geometeriImageInputs.get(0))*widthCenterCanvas,
+-                    Double.parseDouble(geometeriImageInputs.get(1))*heightCenterCanvas,null);
+-
+-            ////////////////////////**************
+-            double r = Double.parseDouble(geometeriImageInputs.get(2))*10;
+-            tp.setOnMouseClicked(e->{
+-                MyColor color = cp.getColorPicked();
+-                String tileId = color.toString();
+-                for(Node tile :tp.getChildren()){
+-                    if(tile.getId() == tileId) {
+-                        MyCircle C = new MyCircle(pTLC, r, color);
+-                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
+-                        C.draw(GC);
+-                        C.getMyBoundingRectangle().stroke(GC);
+-                        stackMyShape.push(C);
+-                        break;
+-                    }
+-                }
+-            });
+-            centerPane.getChildren().add(CV);
+-            bp.setCenter(centerPane);
+-        });
+-    }
+-    public void dialogRectangle(double widthCenterCanvas, double heightCenterCanvas,
+-                                BorderPane bp, MyColorPaletter cp, TilePane tp, Deque<MyShape> stackMyShape) {
+-        Dialog<List<String>> dialog = new Dialog<>();
+-        dialog.setTitle("MyRectangle");
+-        dialog.setHeaderText(null);
+-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.CANCEL);
+-        GridPane gridDialog = new GridPane();
+-        gridDialog.setHgap(10);
+-        gridDialog.setVgap(10);
+-        gridDialog.setPadding(new Insets(20,100,10,10));
+-        TextField xPTLC = new TextField();
+-        TextField yPTLC = new TextField();
+-        TextField width = new TextField();
+-        TextField height = new TextField();
+-        gridDialog.add(new Label("Top Left Corner Point"), 0,0);
+-        gridDialog.add(xPTLC,1,0);
+-        gridDialog.add(new Label("X-Coordinate as fraction of canvas width"),2,0);
+-        gridDialog.add(yPTLC,1,1);
+-        gridDialog.add(new Label("Y-Coordinate as fraction of canvas width"),2,1);
+-        gridDialog.add(new Label("Width"),0,2);
+-        gridDialog.add(width,1,2);
+-        gridDialog.add(new Label("as fraction of canvas width"),2,2);
+-        gridDialog.add(new Label("Height"),0,3);
+-        gridDialog.add(height,1,3);
+-        gridDialog.add(new Label(" as fraction of canvas height "),2,3);
+-
+-        dialog.getDialogPane().setContent(gridDialog);
+-        Platform.runLater(()->xPTLC.requestFocus());
+-        List<String>geometeriImageInputs = new ArrayList();
+-        dialog.setResultConverter(dialogButton ->{
+-            if(dialogButton == ButtonType.YES){
+-                geometeriImageInputs.add(xPTLC.getText());
+-                geometeriImageInputs.add(yPTLC.getText());
+-                geometeriImageInputs.add(width.getText());
+-                geometeriImageInputs.add(height.getText());
+-                return geometeriImageInputs;
+-            }
+-            return null;
+-        });
+-        Optional<List<String>> Result = dialog.showAndWait();
+-        Pane centerPane = new Pane();
+-        Canvas CV = new Canvas(widthCenterCanvas , heightCenterCanvas);
+-        GraphicsContext GC = CV.getGraphicsContext2D();
+-        Result.ifPresent(event ->{
+-            MyPoint pTLC = new MyPoint(Double.parseDouble(geometeriImageInputs.get(0))*widthCenterCanvas,
+-                    Double.parseDouble(geometeriImageInputs.get(1))*heightCenterCanvas,null);
+-            double w = Double.parseDouble(geometeriImageInputs.get(2))*widthCenterCanvas;
+-            double h = Double.parseDouble(geometeriImageInputs.get(3))*heightCenterCanvas;
+-            tp.setOnMouseClicked(e->{
+-                MyColor color = cp.getColorPicked();
+-                String tileId = color.toString();
+-                for(Node tile :tp.getChildren()){
+-                    if(tile.getId() == tileId) {
+-                        MyRectangle R = new MyRectangle(pTLC, w, h, color);
+-                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
+-                        R.draw(GC);
+-                        R.getMyBoundingRectangle().stroke(GC);
+-                        stackMyShape.push(R);
+-                        break;
+-                    }
+-                }
+-            });
+-            centerPane.getChildren().add(CV);
+-            bp.setCenter(centerPane);
+-        });
+-    }
+-
+-    public void dialogOval(double widthCenterCanvas, double heightCenterCanvas,
+-                           BorderPane bp, MyColorPaletter cp, TilePane tp, Deque<MyShape> stackMyShape) {
+-        Dialog<List<String>> dialog = new Dialog<>();
+-        dialog.setTitle("MyOval");
+-        dialog.setHeaderText(null);
+-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.YES, ButtonType.CANCEL);
+-        GridPane gridDialog = new GridPane();
+-        gridDialog.setHgap(10);
+-        gridDialog.setVgap(10);
+-        gridDialog.setPadding(new Insets(20,100,10,10));
+-
+-        TextField xCenter = new TextField();
+-        TextField yCenter = new TextField();
+-        TextField width = new TextField();
+-        TextField height = new TextField();
+-
+-        gridDialog.add(new Label("Center"), 0,0);
+-        gridDialog.add(xCenter,1,0);
+-        gridDialog.add(new Label("X-Coordinate as fraction of canvas width"),2,0);
+-        gridDialog.add(yCenter,1,1);
+-        gridDialog.add(new Label("Y-Coordinate as fraction of canvas width"),2,1);
+-        gridDialog.add(new Label("Width"),0,2);
+-        gridDialog.add(width,1,2);
+-        gridDialog.add(new Label("Width as fraction of canvas width"),2,2);
+-        gridDialog.add(new Label("Height"),0,3);
+-        gridDialog.add(height,1,3);
+-        gridDialog.add(new Label("Height as fraction of canvas height "),2,3);
+-
+-        dialog.getDialogPane().setContent(gridDialog);
+-        Platform.runLater(()->xCenter.requestFocus());
+-        List<String>geometeriImageInputs = new ArrayList<>();
+-        dialog.setResultConverter(dialogButton ->{
+-            if(dialogButton == ButtonType.YES){
+-                geometeriImageInputs.add(xCenter.getText());
+-                geometeriImageInputs.add(yCenter.getText());
+-                geometeriImageInputs.add(width.getText());
+-                geometeriImageInputs.add(height.getText());
+-                return geometeriImageInputs;
+-            }
+-            return null;
+-        });
+-        Optional<List<String>> Result = dialog.showAndWait();
+-        Pane centerPane = new Pane();
+-        Canvas CV = new Canvas(widthCenterCanvas , heightCenterCanvas);
+-        GraphicsContext GC = CV.getGraphicsContext2D();
+-        Result.ifPresent(event ->{
+-            MyPoint pTLC = new MyPoint(Double.parseDouble(geometeriImageInputs.get(0))*widthCenterCanvas,
+-                    Double.parseDouble(geometeriImageInputs.get(1))*heightCenterCanvas,null);
+-            double w = Double.parseDouble(geometeriImageInputs.get(2))*widthCenterCanvas;
+-            double h = Double.parseDouble(geometeriImageInputs.get(3))*heightCenterCanvas;
+-            tp.setOnMouseClicked(e->{
+-                MyColor color = cp.getColorPicked();
+-                String tileId = color.toString();
+-                for(Node tile :tp.getChildren()){
+-                    if(tile.getId() == tileId) {
+-                        MyOval O = new MyOval(pTLC, w, h, color);
+-                        GC.clearRect(0, 0, widthCenterCanvas, heightCenterCanvas);
+-                        O.draw(GC);
+-                        O.getMyBoundingRectangle().stroke(GC);
+-                        stackMyShape.push(O);
+-                        break;
+-                    }
+-                }
+-            });
+-            centerPane.getChildren().add(CV);
+-            bp.setCenter(centerPane);
+-        });
+-    }
+-
+-}
+Index: .idea/workspace.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"AutoImportSettings\">\r\n    <option name=\"autoReloadType\" value=\"SELECTIVE\" />\r\n  </component>\r\n  <component name=\"ChangeListManager\">\r\n    <list default=\"true\" id=\"5fea0124-52e2-40ca-a5d8-e41d2978ff7e\" name=\"Changes\" comment=\"everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it\">\r\n      <change beforePath=\"$PROJECT_DIR$/.idea/workspace.xml\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/.idea/workspace.xml\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115509.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115509.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115518.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115518.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115527.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115527.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115534.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115534.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115642.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115642.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115653.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115653.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115658.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115658.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115706.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115706.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115714.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115714.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115717.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115717.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115723.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115723.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115726.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115726.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115729.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115729.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115756.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115756.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115803.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115803.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115810.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115810.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_120223.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_120223.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425 122809-1.mp4\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425 122809-1.mp4\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121421.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121421.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121424.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121424.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121429.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121429.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121440.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121440.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121450.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121450.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121533.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121533.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121536.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121536.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121539.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121539.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121543.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121543.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121547.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121547.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121551.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121551.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121555.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121555.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121558.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121558.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121601.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121601.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121605.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121605.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121606.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121606.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121610.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121610.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121613.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121613.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121621.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121621.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121623.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121623.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121634.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121634.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121637.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121637.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121907.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121907.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122003.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122003.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122007.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122007.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122010.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122010.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122022.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122022.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122624.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122624.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122627.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122627.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122630.jpg\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122630.jpg\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122922-1.mp4\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122922-1.mp4\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_123020.mp4\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_123020.mp4\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/CSc 22100 46252 M Assignment 2 03-11-2023.pdf\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/CSc 22100 46252 M Assignment 2 03-11-2023.pdf\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7208.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7208.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7209.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7209.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7210.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7210.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7211.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7211.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7212.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7212.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7213.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7213.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7214.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7214.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7215.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7215.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7216.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7216.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7217.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7217.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7218.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7218.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7219.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7219.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7220.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7220.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7221.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7221.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7222.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7222.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7223.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7223.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7224.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7224.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7225.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7225.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7226.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7226.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7227.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7227.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7228.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7228.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7229.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7229.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7230.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7230.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7231.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7231.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7232.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7232.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7233.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7233.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7234.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7234.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7235.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7235.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7236.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7236.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7237.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7237.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7238.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7238.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7239.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7239.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7240.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7240.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7241.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7241.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7242.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7242.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7243.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7243.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7244.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7244.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7245.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7245.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7246.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7246.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7247.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7247.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7248.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7248.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7249.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7249.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7250.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7250.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7251.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7251.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7252.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7252.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7253.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7253.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7254.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7254.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7255.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7255.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7256.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7256.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7257.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7257.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7258.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7258.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7259.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7259.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7260.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7260.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7261.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7261.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7262.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7262.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7263.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7263.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7264.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7264.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7265.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7265.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7266.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7266.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7267.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7267.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7268.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7268.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7269.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7269.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7270.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7270.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7271.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7271.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7272.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7272.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7273.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7273.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7274.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7274.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7275.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7275.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7276.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7276.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7277.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7277.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7278.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7278.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7279.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7279.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7280.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7280.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7281.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7281.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7282.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7282.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7283.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7283.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7284.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7284.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7285.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7285.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7286.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7286.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7287.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7287.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7288.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7288.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7289.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7289.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7290.HEIC\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7290.HEIC\" afterDir=\"false\" />\r\n      <change beforePath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java\" beforeDir=\"false\" afterPath=\"$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java\" afterDir=\"false\" />\r\n    </list>\r\n    <option name=\"SHOW_DIALOG\" value=\"false\" />\r\n    <option name=\"HIGHLIGHT_CONFLICTS\" value=\"true\" />\r\n    <option name=\"HIGHLIGHT_NON_ACTIVE_CHANGELIST\" value=\"false\" />\r\n    <option name=\"LAST_RESOLUTION\" value=\"IGNORE\" />\r\n  </component>\r\n  <component name=\"FileTemplateManagerImpl\">\r\n    <option name=\"RECENT_TEMPLATES\">\r\n      <list>\r\n        <option value=\"Class\" />\r\n      </list>\r\n    </option>\r\n  </component>\r\n  <component name=\"Git.Settings\">\r\n    <option name=\"RECENT_BRANCH_BY_REPOSITORY\">\r\n      <map>\r\n        <entry key=\"$PROJECT_DIR$\" value=\"master\" />\r\n      </map>\r\n    </option>\r\n    <option name=\"RECENT_GIT_ROOT_PATH\" value=\"$PROJECT_DIR$\" />\r\n  </component>\r\n  <component name=\"GitHubPullRequestSearchHistory\">{\r\n  &quot;lastFilter&quot;: {\r\n    &quot;state&quot;: &quot;OPEN&quot;\r\n  }\r\n}</component>\r\n  <component name=\"GithubPullRequestsUISettings\">\r\n    <option name=\"selectedUrlAndAccountId\">\r\n      <UrlAndAccount>\r\n        <option name=\"accountId\" value=\"0ff39af3-9e12-4f17-8252-95a2f5c3a9af\" />\r\n        <option name=\"url\" value=\"https://github.com/LordFarquaadtheCreator/MyColor2.git\" />\r\n      </UrlAndAccount>\r\n    </option>\r\n  </component>\r\n  <component name=\"MarkdownSettingsMigration\">\r\n    <option name=\"stateVersion\" value=\"1\" />\r\n  </component>\r\n  <component name=\"MavenImportPreferences\">\r\n    <option name=\"importingSettings\">\r\n      <MavenImportingSettings>\r\n        <option name=\"workspaceImportEnabled\" value=\"true\" />\r\n      </MavenImportingSettings>\r\n    </option>\r\n  </component>\r\n  <component name=\"ProjectId\" id=\"2MQdQxqQitsubZScf0X47GPdGbu\" />\r\n  <component name=\"ProjectLevelVcsManager\" settingsEditedManually=\"true\">\r\n    <ConfirmationsSetting value=\"2\" id=\"Add\" />\r\n  </component>\r\n  <component name=\"ProjectViewState\">\r\n    <option name=\"hideEmptyMiddlePackages\" value=\"true\" />\r\n    <option name=\"showLibraryContents\" value=\"true\" />\r\n  </component>\r\n  <component name=\"PropertiesComponent\">{\r\n  &quot;keyToString&quot;: {\r\n    &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,\r\n    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,\r\n    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,\r\n    &quot;last_opened_file_path&quot;: &quot;C:/lib/javafx-sdk-19.0.2.1/lib&quot;,\r\n    &quot;project.structure.last.edited&quot;: &quot;Libraries&quot;,\r\n    &quot;project.structure.proportion&quot;: &quot;0.0&quot;,\r\n    &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;\r\n  }\r\n}</component>\r\n  <component name=\"RecentsManager\">\r\n    <key name=\"MoveFile.RECENT_KEYS\">\r\n      <recent name=\"C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\java\\com\\example\\mycolor2\" />\r\n      <recent name=\"C:\\Users\\Fahad\\IdeaProjects\\MyColor2\\src\\main\\resources\" />\r\n    </key>\r\n    <key name=\"MoveClassesOrPackagesDialog.RECENTS_KEY\">\r\n      <recent name=\"\" />\r\n      <recent name=\"recources\" />\r\n      <recent name=\"com.example.mycolor2\" />\r\n    </key>\r\n  </component>\r\n  <component name=\"SpellCheckerSettings\" RuntimeDictionaries=\"0\" Folders=\"0\" CustomDictionaries=\"0\" DefaultDictionary=\"application-level\" UseSingleDictionary=\"true\" transferred=\"true\" />\r\n  <component name=\"TaskManager\">\r\n    <task active=\"true\" id=\"Default\" summary=\"Default task\">\r\n      <changelist id=\"5fea0124-52e2-40ca-a5d8-e41d2978ff7e\" name=\"Changes\" comment=\"\" />\r\n      <created>1677703730750</created>\r\n      <option name=\"number\" value=\"Default\" />\r\n      <option name=\"presentableId\" value=\"Default\" />\r\n      <updated>1677703730750</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00001\" summary=\"done, but i need to change it up a bit yk to make it my own\">\r\n      <created>1677992195374</created>\r\n      <option name=\"number\" value=\"00001\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00001\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1677992195374</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00002\" summary=\"missing some classes, gotta followup bout that\">\r\n      <created>1679696182521</created>\r\n      <option name=\"number\" value=\"00002\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00002\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679696182521</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00003\" summary=\"some debugging\">\r\n      <created>1679761752033</created>\r\n      <option name=\"number\" value=\"00003\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00003\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679761752033</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00004\" summary=\"got the other functions but myArc is missing, gotta debug\">\r\n      <created>1679792338027</created>\r\n      <option name=\"number\" value=\"00004\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00004\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1679792338027</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00005\" summary=\"p2 done!\">\r\n      <created>1682198946805</created>\r\n      <option name=\"number\" value=\"00005\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00005\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1682198946805</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00006\" summary=\"p3 started, needs a whole extra file and new functions\">\r\n      <created>1682288462473</created>\r\n      <option name=\"number\" value=\"00006\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00006\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1682288462473</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00007\" summary=\"some changes\">\r\n      <created>1682288796271</created>\r\n      <option name=\"number\" value=\"00007\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00007\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1682288796271</updated>\r\n    </task>\r\n    <task id=\"LOCAL-00008\" summary=\"p3 is functional but theres formatting errors, the pie chart icon is artifacty and not padded for some reason?&#10;i dont really understand what the things in the dialog box mean ... and that causes issues\">\r\n      <created>1682716803432</created>\r\n      <option name=\"number\" value=\"00008\" />\r\n      <option name=\"presentableId\" value=\"LOCAL-00008\" />\r\n      <option name=\"project\" value=\"LOCAL\" />\r\n      <updated>1682716803432</updated>\r\n    </task>\r\n    <option name=\"localTasksCounter\" value=\"9\" />\r\n    <servers />\r\n  </component>\r\n  <component name=\"Vcs.Log.Tabs.Properties\">\r\n    <option name=\"TAB_STATES\">\r\n      <map>\r\n        <entry key=\"MAIN\">\r\n          <value>\r\n            <State />\r\n          </value>\r\n        </entry>\r\n      </map>\r\n    </option>\r\n  </component>\r\n  <component name=\"VcsManagerConfiguration\">\r\n    <MESSAGE value=\"done, but i need to change it up a bit yk to make it my own\" />\r\n    <MESSAGE value=\"missing some classes, gotta followup bout that\" />\r\n    <MESSAGE value=\"some debugging\" />\r\n    <MESSAGE value=\"got the other functions but myArc is missing, gotta debug\" />\r\n    <MESSAGE value=\"p2 done!\" />\r\n    <MESSAGE value=\"p3 started, needs a whole extra file and new functions\" />\r\n    <MESSAGE value=\"some changes\" />\r\n    <MESSAGE value=\"p3 is functional but theres formatting errors, the pie chart icon is artifacty and not padded for some reason?&#10;i dont really understand what the things in the dialog box mean ... and that causes issues\" />\r\n    <MESSAGE value=\"everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it\" />\r\n    <option name=\"LAST_COMMIT_MESSAGE\" value=\"everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it\" />\r\n  </component>\r\n  <component name=\"XDebuggerManager\">\r\n    <breakpoint-manager>\r\n      <breakpoints>\r\n        <breakpoint enabled=\"true\" type=\"java-exception\">\r\n          <properties class=\"java.lang.IllegalArgumentException\" package=\"java.lang\" />\r\n          <option name=\"timeStamp\" value=\"6\" />\r\n        </breakpoint>\r\n      </breakpoints>\r\n    </breakpoint-manager>\r\n  </component>\r\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/workspace.xml b/.idea/workspace.xml
+--- a/.idea/workspace.xml	(revision c8ef726ca4cdcc11ddadd06a721b8ace21e0a261)
++++ b/.idea/workspace.xml	(date 1683315291362)
+@@ -4,145 +4,15 @@
+     <option name="autoReloadType" value="SELECTIVE" />
+   </component>
+   <component name="ChangeListManager">
+-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it">
++    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="nvm figured it out, p3 done (might need to add combobox back)">
++      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_4_27_23,_12_22_PM_[Changes]1/shelved.patch" beforeDir="false" />
+       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/HistogramAlphaBet.java" afterDir="false" />
+       <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115509.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115509.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115518.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115518.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115527.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115527.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115534.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115534.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115642.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115642.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115653.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115653.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115658.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115658.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115706.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115706.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115714.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115714.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115717.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115717.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115723.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115723.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115726.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115726.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115729.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115729.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115756.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115756.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115803.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115803.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_115810.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_115810.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230418_120223.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230418_120223.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425 122809-1.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425 122809-1.mp4" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121421.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121421.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121424.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121424.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121429.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121429.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121440.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121440.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121450.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121450.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121533.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121533.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121536.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121536.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121539.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121539.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121543.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121543.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121547.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121547.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121551.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121551.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121555.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121555.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121558.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121558.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121601.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121601.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121605.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121605.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121606.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121606.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121610.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121610.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121613.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121613.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121621.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121621.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121623.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121623.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121634.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121634.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121637.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121637.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_121907.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_121907.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122003.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122003.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122007.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122007.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122010.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122010.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122022.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122022.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122624.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122624.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122627.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122627.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122630.jpg" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122630.jpg" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_122922-1.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_122922-1.mp4" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project #3/20230425_123020.mp4" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project #3/20230425_123020.mp4" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/CSc 22100 46252 M Assignment 2 03-11-2023.pdf" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/CSc 22100 46252 M Assignment 2 03-11-2023.pdf" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7208.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7208.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7209.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7209.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7210.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7210.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7211.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7211.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7212.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7212.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7213.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7213.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7214.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7214.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7215.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7215.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7216.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7216.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7217.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7217.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7218.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7218.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7219.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7219.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7220.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7220.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7221.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7221.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7222.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7222.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7223.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7223.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7224.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7224.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7225.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7225.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7226.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7226.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7227.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7227.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7228.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7228.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7229.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7229.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7230.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7230.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7231.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7231.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7232.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7232.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7233.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7233.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7234.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7234.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7235.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7235.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7236.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7236.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7237.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7237.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7238.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7238.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7239.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7239.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7240.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7240.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7241.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7241.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7242.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7242.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7243.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7243.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7244.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7244.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7245.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7245.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7246.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7246.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7247.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7247.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7248.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7248.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7249.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7249.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7250.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7250.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7251.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7251.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7252.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7252.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7253.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7253.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7254.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7254.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7255.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7255.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7256.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7256.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7257.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7257.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7258.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7258.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7259.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7259.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7260.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7260.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7261.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7261.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7262.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7262.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7263.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7263.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7264.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7264.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7265.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7265.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7266.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7266.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7267.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7267.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7268.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7268.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7269.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7269.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7270.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7270.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7271.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7271.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7272.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7272.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7273.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7273.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7274.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7274.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7275.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7275.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7276.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7276.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7277.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7277.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7278.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7278.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7279.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7279.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7280.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7280.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7281.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7281.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7282.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7282.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7283.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7283.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7284.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7284.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7285.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7285.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7286.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7286.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7287.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7287.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7288.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7288.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7289.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7289.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Photos/Project#2/IMG_7290.HEIC" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Photos/Project#2/IMG_7290.HEIC" afterDir="false" />
+-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/Slice.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MySlice.java" afterDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hisHistrogram.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/hisSlice.java" beforeDir="false" />
++      <change beforePath="$PROJECT_DIR$/src/main/resources/com/example/mycolor2/myApplication.java" beforeDir="false" />
+     </list>
+     <option name="SHOW_DIALOG" value="false" />
+     <option name="HIGHLIGHT_CONFLICTS" value="true" />
+@@ -282,7 +152,21 @@
+       <option name="project" value="LOCAL" />
+       <updated>1682716803432</updated>
+     </task>
+-    <option name="localTasksCounter" value="9" />
++    <task id="LOCAL-00009" summary="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it">
++      <created>1682795837749</created>
++      <option name="number" value="00009" />
++      <option name="presentableId" value="LOCAL-00009" />
++      <option name="project" value="LOCAL" />
++      <updated>1682795837749</updated>
++    </task>
++    <task id="LOCAL-00010" summary="nvm figured it out, p3 done (might need to add combobox back)">
++      <created>1682796008265</created>
++      <option name="number" value="00010" />
++      <option name="presentableId" value="LOCAL-00010" />
++      <option name="project" value="LOCAL" />
++      <updated>1682796008265</updated>
++    </task>
++    <option name="localTasksCounter" value="11" />
+     <servers />
+   </component>
+   <component name="Vcs.Log.Tabs.Properties">
+@@ -306,7 +190,8 @@
+     <MESSAGE value="some changes" />
+     <MESSAGE value="p3 is functional but theres formatting errors, the pie chart icon is artifacty and not padded for some reason?&#10;i dont really understand what the things in the dialog box mean ... and that causes issues" />
+     <MESSAGE value="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it" />
+-    <option name="LAST_COMMIT_MESSAGE" value="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it" />
++    <MESSAGE value="nvm figured it out, p3 done (might need to add combobox back)" />
++    <option name="LAST_COMMIT_MESSAGE" value="nvm figured it out, p3 done (might need to add combobox back)" />
+   </component>
+   <component name="XDebuggerManager">
+     <breakpoint-manager>

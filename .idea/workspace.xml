@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="everything works perfectly, i don't understand why tho. it all came down to copying that forloop. that was literally it">
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_8_23__2_58_PM__Changes_.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_8_23__2_58_PM__Changes_.xml" afterDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="it shows up now, just wont go away!">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/MyShapeAgglomerated.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/DatabaseApplication.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -42,6 +41,9 @@
         <option name="url" value="https://github.com/LordFarquaadtheCreator/MyColor2.git" />
       </UrlAndAccount>
     </option>
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/main/java/com/example/mycolor2/DatabaseApplication.java" root0="FORCE_HIGHLIGHTING" />
   </component>
   <component name="MarkdownSettingsMigration">
     <option name="stateVersion" value="1" />
@@ -178,7 +180,14 @@
       <option name="project" value="LOCAL" />
       <updated>1683734640633</updated>
     </task>
-    <option name="localTasksCounter" value="12" />
+    <task id="LOCAL-00012" summary="it shows up now, just wont go away!">
+      <created>1683756005473</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1683756005473</updated>
+    </task>
+    <option name="localTasksCounter" value="13" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -209,7 +218,8 @@
     <MESSAGE value="added intefaces for p4" />
     <MESSAGE value="added some stuff for p4" />
     <MESSAGE value="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it" />
-    <option name="LAST_COMMIT_MESSAGE" value="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it" />
+    <MESSAGE value="it shows up now, just wont go away!" />
+    <option name="LAST_COMMIT_MESSAGE" value="it shows up now, just wont go away!" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
