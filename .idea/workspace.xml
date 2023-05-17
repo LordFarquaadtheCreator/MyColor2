@@ -1,14 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="ArtifactsWorkspaceSettings">
+    <artifacts-to-build>
+      <artifact name="MyColor2:jar" />
+    </artifacts-to-build>
+  </component>
   <component name="AutoImportSettings">
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="final project DONE lets fucking go .. only thing left to do is change up some of the stuff that billy sent over!">
-      <change afterPath="$PROJECT_DIR$/src/main/resources/META-INF/MANIFEST.MF" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_8_23,_2_58_PM_[Changes]/shelved.patch" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_5_8_23__2_58_PM__Changes_.xml" beforeDir="false" />
+    <list default="true" id="5fea0124-52e2-40ca-a5d8-e41d2978ff7e" name="Changes" comment="updated some icons">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/DatabaseInterface.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/example/mycolor2/DatabaseInterface.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -105,7 +108,7 @@
       <workItem from="1683678374902" duration="3000" />
       <workItem from="1683729429366" duration="9340000" />
       <workItem from="1684349373413" duration="130000" />
-      <workItem from="1684349509510" duration="182000" />
+      <workItem from="1684349509510" duration="1667000" />
     </task>
     <task id="LOCAL-00001" summary="done, but i need to change it up a bit yk to make it my own">
       <created>1677992195374</created>
@@ -191,7 +194,14 @@
       <option name="project" value="LOCAL" />
       <updated>1684348576978</updated>
     </task>
-    <option name="localTasksCounter" value="13" />
+    <task id="LOCAL-00013" summary="updated some icons">
+      <created>1684349945317</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1684349945317</updated>
+    </task>
+    <option name="localTasksCounter" value="14" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -223,7 +233,8 @@
     <MESSAGE value="added some stuff for p4" />
     <MESSAGE value="added all necessary stuff, though i have no idea what data it's supposed to be showing in the pie chart which is kinda uhhhhh weird. read through it all and figure out how to structure the dialogpiechart and then we can submit it" />
     <MESSAGE value="final project DONE lets fucking go .. only thing left to do is change up some of the stuff that billy sent over!" />
-    <option name="LAST_COMMIT_MESSAGE" value="final project DONE lets fucking go .. only thing left to do is change up some of the stuff that billy sent over!" />
+    <MESSAGE value="updated some icons" />
+    <option name="LAST_COMMIT_MESSAGE" value="updated some icons" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -232,6 +243,11 @@
           <properties class="java.lang.IllegalArgumentException" package="java.lang" />
           <option name="timeStamp" value="6" />
         </breakpoint>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/example/mycolor2/DatabaseApplication.java</url>
+          <line>282</line>
+          <option name="timeStamp" value="9" />
+        </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
   </component>
