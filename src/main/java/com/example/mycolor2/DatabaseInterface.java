@@ -1,5 +1,5 @@
 package com.example.mycolor2;
-public interface StudentsDatabaseInterface {
+public interface DatabaseInterface {
 
     String ddlCreateTableSchedule = "CREATE TABLE Schedule("+
             "courseId CHAR(12) NOT NULL UNIQUE, " +
@@ -10,7 +10,7 @@ public interface StudentsDatabaseInterface {
             "year INT, " +
             "semester CHAR(6), " +
             "instructor VARCHAR(24), " +
-            "PRIMARY KEY(courseId, sectionNumber))";
+            "PRIMARY KEY(courseId, sectionNumber));";
 
     String ddlCreateTableStudents = "CREATE TABLE Students (" +
             "emplId INT PRIMARY KEY, " +
@@ -23,7 +23,7 @@ public interface StudentsDatabaseInterface {
             "courseId CHAR(12) PRIMARY KEY, " +
             "CourseTitle VARCHAR(64), " +
             "department CHAR(16)," +
-            "program VARCHAR(48))";
+            "program VARCHAR(48));";
 
     String ddlCreateTableClasses = "CREATE TABLE Classes(" +
             "courseID  CHAR(12) REFERENCES Schedule(courseId), " +
@@ -108,8 +108,7 @@ public interface StudentsDatabaseInterface {
                 " WHERE instructor = " + nameNewInstructor;
     }
 
-    static String ddlInsertTableCourses(String nameToTable, String nameFromTable)
-    {
+    static String ddlInsertTableCourses(String nameToTable, String nameFromTable) {
         return "INSERT INTO " + nameToTable +
                 " SELECT courseId, title, department, program" +
                 " FROM " + nameFromTable;

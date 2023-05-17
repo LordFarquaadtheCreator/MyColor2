@@ -7,23 +7,28 @@ import java.sql.SQLException;
 
 public interface TableInterface {
     Connection getConnection (String url, String username, String password);
-    static void createdSchema(Connection connection, String nameSchema)throws SQLException {
+    static void createSchema(Connection connection, String nameSchema)throws SQLException {
         PreparedStatement createTable = connection.prepareStatement("CREATE SCHEMA " + nameSchema);
-        try{ createTable.executeUpdate();} catch (SQLException e){System.out.println(e.getMessage());}
+        try{createTable.executeUpdate(); } catch (SQLException e){System.out.println(e.getMessage());}
     }
 
-    static void dropScheme(Connection connection, String nameSchema) throws  SQLException {
-        PreparedStatement psDropTable = connection.prepareStatement("DROP SCHEMA IF EXIST " + nameSchema );
+    static void selectDatabase(Connection connection, String nameSchema)throws SQLException {
+        PreparedStatement createTable = connection.prepareStatement("USE " + nameSchema);
+        try{createTable.executeUpdate();} catch (SQLException e){System.out.println(e.getMessage());}
+    }
+
+    static void dropSchema(Connection connection, String nameSchema) throws  SQLException {
+        PreparedStatement psDropTable = connection.prepareStatement("DROP SCHEMA " + nameSchema );
         try {psDropTable.executeUpdate();} catch(SQLException e) {System.out.println(e);}
     }
 
     static void dropTable(Connection connection, String nameTable) throws SQLException {
-        PreparedStatement psDropTable = connection.prepareStatement("DROP TABLE IF EXISTS " + nameTable);
-        try{psDropTable.executeUpdate();} catch(SQLException e){System.out.println(e);}
+        PreparedStatement psDropTable = connection.prepareStatement("DROP TABLE " + nameTable);
+        try{psDropTable.executeUpdate();} catch(SQLException e){System.out.println(e + "drop table " + nameTable);}
     }
     static void createTable(Connection connection, String ddlCreateTable) throws SQLException{
         PreparedStatement createTable = connection.prepareStatement(ddlCreateTable);
-        try{createTable.executeUpdate();} catch(SQLException e){System.out.println(e.getMessage());}
+        try{createTable.executeUpdate();} catch(SQLException e){System.out.println(e.getMessage() + "create table ");}
     }
 
     static void updateField(Connection connection,String ddlUpdateField) throws SQLException{
@@ -32,7 +37,7 @@ public interface TableInterface {
     }
 
     static void setLocalInFileLoading(Connection connection) throws SQLException {
-        PreparedStatement psSetLocalInFileLoading = connection.prepareStatement("SET GLOBAL local_infile = 1");
+        PreparedStatement psSetLocalInFileLoading = connection.prepareStatement("SET GLOBAL local_infile = 1;");
         try { psSetLocalInFileLoading.executeUpdate();
             System.out.println("\nGlobal local-infile set successfully");}
         catch (SQLException e){ System.out.println(e);}
@@ -42,12 +47,11 @@ public interface TableInterface {
         return "LOAD DATA LOCAL INFILE '" + nameFile + "' INTO TABLE " + nameTable +
                 " COLUMNS TERMINATED BY '\t'" +
                 " LINES TERMINATED BY '\n'" +
-                " IGNORE 1 LINES";
+                " IGNORE 1 LINES;";
     }
 
     static void populateTable(Connection connection,String ddlPopulateTable) throws SQLException{
         PreparedStatement populateTable = connection.prepareStatement(ddlPopulateTable);
-        //PreparedStatement populateTable = connection.prepareStatement(ddlPopulateTable);
         try{populateTable.executeUpdate();} catch(SQLException e){System.out.println(e);}
     }
 
@@ -71,7 +75,7 @@ public interface TableInterface {
         try{deleteRecord.executeUpdate();} catch(SQLException e){System.out.println(e.getMessage());}
     }
 
-    static ResultSet getTable(Connection connection,String nameTable) throws SQLException{
+    static ResultSet getTable(Connection connection, String nameTable) throws SQLException{
         ResultSet rs = null;
         PreparedStatement getTable = connection.prepareStatement("SELECT * FROM " + nameTable);
 
