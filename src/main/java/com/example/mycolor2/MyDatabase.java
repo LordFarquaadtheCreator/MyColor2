@@ -1,5 +1,7 @@
 package com.example.mycolor2;
 
+import javafx.scene.chart.PieChart;
+
 import java.sql. DriverManager;
 import java. sql. Connection;
 import java.sql.ResultSet;
@@ -7,16 +9,19 @@ import java.sql. SQLException;
 
 import java.util. Map;
 import java.util. HashMap;
-public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
+public class MyDatabase implements TableInterface, DatabaseInterface {
     String url, username, password;
     Connection connection;
 
-    //establishes connection
-    MyDatabase(String url, String username, String password) {
+    MyDatabase(String url, String username, String password) throws SQLException {
         this.url = url;
         this.username = username;
         this.password = password;
         this.connection = getConnection(url, username, password);
+        TableInterface.dropSchema(connection, "csc221Final");
+        TableInterface.createSchema(connection, "csc221Final");
+        TableInterface.selectDatabase(connection, "csc221Final"); //ughahaha
+        System.out.println("Database Selected");
     }
     public Connection getConnection (String url, String username, String password) {
         Connection connection = null;
@@ -37,26 +42,26 @@ public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
         Schedule(String filename, String nameTable) throws SQLException {
             this.filename = filename;
             this.nameTable = nameTable;
-            this.ddlCreateTable = StudentsDatabaseInterface.ddlCreateTableSchedule;
+            this.ddlCreateTable = DatabaseInterface.ddlCreateTableSchedule;
             this.ddlPopulateTable = TableInterface.loadDataInFileTable(filename, nameTable);
-            TableInterface.dropTable(connection, nameTable);
-            TableInterface.createTable(connection, ddlCreateTable);
-            System.out.println("\nTable Schedule created successfully");
+//            TableInterface.dropTable(connection, nameTable);  // deletes old instance -> no longer needed
+            TableInterface.createTable(connection, ddlCreateTableSchedule);
+            System.out.println("\nTable 'Schedule' created successfully");
 
             TableInterface.setLocalInFileLoading(connection);
             TableInterface.populateTable(connection, ddlPopulateTable);
-            System.out.println("\nTable Schedule populated successfully");
+            System.out.println("\nTable 'Schedule' populated successfully");
             ResultSet RS = TableInterface.getTable(connection, nameTable);
-            System.out.println("\nQuery on Schedule executed successfully");
+            System.out.println("\nQuery on 'Schedule' executed successfully");
         }
 
         public void upDateCourseInstructor(String courseID, String sectionNumber, String nameInstructor) throws SQLException {
-            this.ddlUpDateCourseInstructor = StudentsDatabaseInterface.ddlUpdateCourseInstructor(courseID, sectionNumber, nameInstructor);
+            this.ddlUpDateCourseInstructor = DatabaseInterface.ddlUpdateCourseInstructor(courseID, sectionNumber, nameInstructor);
             TableInterface.updateField(connection, ddlUpDateCourseInstructor);
         }
 
         public void upDateInstructor(String nameInstructor, String nameNewInstructor) throws SQLException {
-            this.ddlUpDateInstructor = StudentsDatabaseInterface.ddlUpdateInstructor(nameInstructor, nameNewInstructor);
+            this.ddlUpDateInstructor = DatabaseInterface.ddlUpdateInstructor(nameInstructor, nameNewInstructor);
             TableInterface.updateField(connection, ddlUpDateInstructor);
         }
     }
@@ -67,16 +72,17 @@ public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
         Courses(String nameToTable, String nameFromTable) throws SQLException {
             this.nameToTable = nameToTable;
             this.nameFromTable = nameFromTable;
-            this.ddlCreateTable = StudentsDatabaseInterface.ddlCreateTableCourses;
+            this.ddlCreateTable = DatabaseInterface.ddlCreateTableCourses;
+            String populateClasses = DatabaseInterface.ddlInsertTableCourses(nameToTable, nameFromTable);
 
-            TableInterface.dropTable(connection, nameToTable);
-            TableInterface.createTable(connection, ddlCreateTable);
-            System.out.println("\nTable Courses created successfully");
+//            TableInterface.dropTable(connection, nameToTable); //deletes old instance of courses
+            TableInterface.createTable(connection, ddlCreateTableCourses); //professor uses ddlCreateTable
+            System.out.println("\nTable 'Courses' created successfully");
 
-            TableInterface.insertFromSelect(connection, ddlPopulateTable);
-            System.out.println("InTable Courses populated successfully");
-            ResultSet R$ = TableInterface.getTable(connection, nameToTable);
-            System.out.println("\nQuery on Courses executed successfully");
+            TableInterface.insertFromSelect(connection, populateClasses);
+            System.out.println("Table 'Courses' populated successfully");
+            ResultSet RS = TableInterface.getTable(connection, nameToTable);
+            System.out.println("\nQuery on 'Courses' executed successfully");
         }
     }
 
@@ -85,18 +91,19 @@ public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
 
         Students(String nameTable) throws SQLException{
             this.nameTable = nameTable;
-            this.ddlCreateTable = StudentsDatabaseInterface.ddlCreateTableStudents;
-            this.ddlPopulateTable = StudentsDatabaseInterface.ddlInsertTableStudents;
-            System.out.println(ddlPopulateTable);
+            this.ddlCreateTable = DatabaseInterface.ddlCreateTableStudents;
+            this.ddlPopulateTable = DatabaseInterface.ddlInsertTableStudents;
+            //change student
+//            System.out.println(ddlPopulateTable);
 
-            TableInterface.dropTable(connection, nameTable);
+//            TableInterface.dropTable(connection, nameTable);
             TableInterface.createTable (connection, ddlCreateTable);
-            System.out.println("'nTable Students created successfully");
+            System.out.println("Table 'Students' created successfully");
 
             TableInterface.populateTable (connection, ddlPopulateTable);
-            System.out.println("\nTable Students populated Successfully");
+            System.out.println("Table 'Students' populated Successfully");
             ResultSet RS = TableInterface.getTable(connection, nameTable);
-            System.out.println("\nQuery on Students executed successfully");
+            System.out.println("Query on 'Students' executed successfully");
         }
     }
     class Classes {
@@ -104,18 +111,18 @@ public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
 
         Classes(String nameTable) throws SQLException {
             this.nameTable = nameTable;
-            this.ddlCreateTable = StudentsDatabaseInterface.ddlCreateTableClasses;
-            this.ddlPopulateTable = StudentsDatabaseInterface.ddlInsertTableClasses;
-            System.out.println(ddlPopulateTable);
+            this.ddlCreateTable = DatabaseInterface.ddlCreateTableClasses;
+            this.ddlPopulateTable = DatabaseInterface.ddlInsertTableClasses;
+//            System.out.println(ddlPopulateTable);
 
-            TableInterface.dropTable(connection, nameTable);
+//            TableInterface.dropTable(connection, nameTable);
             TableInterface.createTable(connection, ddlCreateTable);
-            System.out.println("\nTable Classes created successfully");
+            System.out.println("\nTable 'Classes' created successfully");
 
             TableInterface.populateTable(connection, ddlPopulateTable);
-            System.out.println("InTable Classes populated successfully");
+            System.out.println("InTable 'Classes' populated successfully");
             ResultSet RS = TableInterface.getTable(connection, nameTable);
-            System.out.println("\nQuery on Classes executed successfully");
+            System.out.println("\nQuery on 'Classes' executed successfully");
         }
     }
 
@@ -125,17 +132,17 @@ public class MyDatabase implements TableInterface, StudentsDatabaseInterface{
         AggregateGrades (String nameToTable, String nameFromTable) throws SQLException {
             this.nameToTable = nameToTable;
             this.nameFromTable = nameFromTable;
-            this.ddlCreateTable = StudentsDatabaseInterface.ddlCreateTableAggregateGrades;
-            this.ddlPopulateTable = StudentsDatabaseInterface.ddlInsertTableAggregateGrades(nameToTable, nameFromTable);
+            this.ddlCreateTable = DatabaseInterface.ddlCreateTableAggregateGrades;
+            this.ddlPopulateTable = DatabaseInterface.ddlInsertTableAggregateGrades(nameToTable, nameFromTable);
 
-            TableInterface.dropTable(connection, nameToTable);
+//            TableInterface.dropTable(connection, nameToTable);
             TableInterface.createTable(connection, ddlCreateTable);
-            System.out.println("\nTable courses created successfully");
+            System.out.println("Table 'AggregateGrades' created successfully");
 
             TableInterface.insertFromSelect(connection, ddlPopulateTable);
-            System.out.println("\nTable AggregateGrades populated successfully");
+            System.out.println("Table 'AggregateGrades' populated successfully");
             ResultSet RS = TableInterface.getTable(connection, nameToTable);
-            System.out.println("\nQueury on AggregateGrades executed successfully");
+            System.out.println("Queury on 'AggregateGrades' executed successfully");
         }
         public Map<Character, Integer> getAggregateGrades (String nameTable) {
             Map<Character, Integer> mapAggregateGrades = new HashMap();

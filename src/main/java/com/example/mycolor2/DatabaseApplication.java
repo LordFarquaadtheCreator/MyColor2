@@ -29,46 +29,9 @@ public class DatabaseApplication extends Application{ // formerly "testMyColor"
     double startAngle, scale;
     String Title;
     Scanner input; //he dont have this
-    Boolean isPiechart;
+    Boolean isPiechart = true;
     List<String > barChartInputs = new ArrayList<>();
     List<String> pieChartInputs = new ArrayList<>();
-
-    public void toggleGroup() {
-        ToggleGroup group = new ToggleGroup();
-
-        RadioButton radioBarChart = new RadioButton("Bar Chart");
-        radioBarChart.setToggleGroup(group);
-
-        RadioButton radioPieChart = new RadioButton("Pie Chart");
-        radioPieChart.setToggleGroup(group);
-
-        Dialog<Boolean> dialog = new Dialog<>();
-        dialog.setTitle("Chart Picker");
-        dialog.setHeaderText(null);
-
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        GridPane gridDialog = new GridPane();
-        gridDialog.setHgap(10);
-        gridDialog.setVgap(10);
-        gridDialog.setPadding(new Insets(20,200,20,10));
-
-        gridDialog.add(radioPieChart,0,0);
-        gridDialog.add(radioBarChart,0,0);
-        dialog.getDialogPane().setContent(gridDialog);
-
-        Platform.runLater(() -> radioPieChart.setSelected(true));
-        dialog.setResultConverter(dialogButton ->{
-            if (dialogButton == ButtonType.OK) {
-                this.isPiechart = radioPieChart.isSelected();
-                if (this.isPiechart) {
-                    dialogPieChart();
-                } else {
-                    dialogBarChart();
-                }
-            } return null;
-        });
-        Optional<Boolean> result = dialog.showAndWait();
-    }
 
     public void dialogPieChart() {
         Dialog<List<String>> dialog = new Dialog<>();
@@ -116,51 +79,6 @@ public class DatabaseApplication extends Application{ // formerly "testMyColor"
             this.M = Integer.parseInt(pieChartInputs.get(1));
             this.startAngle = Double.parseDouble(pieChartInputs.get(2));
             this.Title = pieChartInputs.get(3);
-        });
-    }
-
-    public void dialogBarChart () {
-        Dialog<List<String>> dialog = new Dialog<>();
-        dialog.setTitle("Bar Chart");
-        dialog.setHeaderText(null);
-
-        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
-        GridPane gridDialog = new GridPane();
-        gridDialog.setVgap(10); gridDialog.setHgap(10);
-        gridDialog.setPadding(new Insets(20,150,10,10));
-
-        TextField numberEvents = new TextField();
-        TextField totalNumberEvents = new TextField();
-        TextField Scale = new TextField();
-
-        ComboBox title = new ComboBox();
-        title.getItems().addAll("CSc 22100 Spring 2023");
-
-        gridDialog.add(new Label("Display"), 0, 0);
-        gridDialog.add(numberEvents, 1, 0);
-        gridDialog.add(new Label("Total"), 2, 0);
-        gridDialog.add(totalNumberEvents, 3, 0);
-        gridDialog.add(new Label("Scale"), 0, 1);
-        gridDialog.add(Scale, 1, 1);
-        gridDialog.add(new Label("Title"), 0, 2);
-        gridDialog.add(title, 1, 2);
-
-        dialog.getDialogPane().setContent(gridDialog);
-
-        Platform.runLater(() -> numberEvents.requestFocus());
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == ButtonType.OK) {
-                barChartInputs.add(numberEvents.getText()); barChartInputs.add(totalNumberEvents.getText());
-                barChartInputs.add(Scale.getText()); barChartInputs.add(title.getValue().toString());
-            }
-            return null;
-        });
-        Optional<List<String>> Result = dialog.showAndWait();
-        Result.ifPresent(event -> {
-            this.N = Integer.parseInt(barChartInputs.get(0));
-            this.M = Integer.parseInt(barChartInputs.get(1));
-            this.scale = Double.parseDouble(barChartInputs.get(2));
-            this.Title = barChartInputs.get(3);
         });
     }
 
@@ -234,30 +152,30 @@ public class DatabaseApplication extends Application{ // formerly "testMyColor"
 
     @Override
     public void start(Stage PS) throws SQLException {
-        String url = "jdbc:mysql://localhost:3306/Students?allowLoadLocalInfile=true";
+        String url = "jdbc:mysql://localhost:3306/?user=root";
         String username = "root";
         String password = "Ldo5tp9A";
-        MyDatabase DB = new MyDatabase(url, username, password);
+        //intantializes database -> makes connection
+        MyDatabase DB = new MyDatabase(url, username, password); //gucci
 
-        String ddlCreateTable;
-        String scheduleFileName, nameTable;
+        String scheduleFileName = "/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt";
+        String nameTable = "Schedule";
 
-        scheduleFileName = "/Users/fahadfaruqi/IdeaProjects/MyColor2/src/main/resources/com/example/mycolor2/ScheduleFall2023.txt";
-        nameTable = "Students.Schedule";
-        MyDatabase.Schedule schedule = DB.new Schedule(scheduleFileName, nameTable);
+        //creates a table called schedule
+        DB.new Schedule(scheduleFileName, nameTable); //gucci
 
-        String nameToTable = "Students.Courses";
-        String nameFromTable = "Students.Schedule";
-        MyDatabase.Courses courses = DB.new Courses(nameToTable, nameFromTable);
+        String nameToTable = "Courses";
+        String nameFromTable = "Schedule";
+        DB.new Courses(nameToTable, nameFromTable); //gucci
 
-        nameTable = "Students.Students";
-        MyDatabase.Students students = DB.new Students(nameTable);
+        nameTable = "Students";
+        DB.new Students(nameTable);
 
-        nameTable = "Students.Classes";
-        MyDatabase.Classes classes = DB.new Classes(nameTable);
+        nameTable = "Classes";
+        DB.new Classes(nameTable);
 
-        nameToTable = "Students.AggregateGrades";
-        nameFromTable = "Students.Classes";
+        nameToTable = "AggregateGrades";
+        nameFromTable = "Classes";
         MyDatabase.AggregateGrades aggregateGrades = DB.new AggregateGrades(nameToTable, nameFromTable);
         Map<Character, Integer> AG = aggregateGrades.getAggregateGrades(nameToTable);
         System.out.println("\nAggregate Grades: " + AG);
@@ -269,7 +187,7 @@ public class DatabaseApplication extends Application{ // formerly "testMyColor"
         Canvas CV = new Canvas(widthCanvas, heightCanvas);
         GraphicsContext GC = CV.getGraphicsContext2D();
 
-        toggleGroup();
+        dialogPieChart();
         HistogramAlphaBet H = new HistogramAlphaBet(AG);
         Pane P = new Pane();
         if (isPiechart){
